@@ -1,0 +1,13 @@
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Release\RejectDetailsService.exe.config
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Release\RejectDetailsService.exe
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Release\RejectDetailsService.pdb
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Release\libplctag.NativeImport.dll
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Release\LibplctagWrapper.dll
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Release\libplctag.NativeImport.xml
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Release\LibplctagWrapper.pdb
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\obj\Release\RejectDetailsService.ProjectInstaller.resources
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\obj\Release\RejectDetailsService.csproj.GenerateResource.cache
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\obj\Release\RejectDetailsService.csproj.CoreCompileInputs.cache
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\obj\Release\RejectDetailsService.exe
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\obj\Release\RejectDetailsService.pdb
+C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\obj\Release\RejectDetailsService.csproj.CopyComplete

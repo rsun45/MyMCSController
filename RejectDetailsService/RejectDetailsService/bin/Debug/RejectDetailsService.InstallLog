@@ -1,0 +1,119 @@
+﻿Installing assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+Installing service MCSservice...
+Service MCSservice has been successfully installed.
+Creating EventLog source MCSservice in log Application...
+Committing assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+Uninstalling assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+Removing EventLog source MCSservice.
+Service MCSservice is being removed from the system...
+Service MCSservice was successfully removed from the system.
+Attempt to stop service MCSservice.
+Installing assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+Installing service MCSservice...
+Service MCSservice has been successfully installed.
+Creating EventLog source MCSservice in log Application...
+Committing assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+Uninstalling assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+Removing EventLog source MCSservice.
+Service MCSservice is being removed from the system...
+Service MCSservice was successfully removed from the system.
+Installing assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+Installing service MCSservice...
+Service MCSservice has been successfully installed.
+Creating EventLog source MCSservice in log Application...
+Committing assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+Installing assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+Installing service MCSservice...
+Creating EventLog source MCSservice in log Application...
+Rolling back assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+Restoring event log to previous state for source MCSservice.
+Uninstalling assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+Removing EventLog source MCSservice.
+Service MCSservice is being removed from the system...
+Service MCSservice was successfully removed from the system.
+Installing assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+Installing service MCSservice...
+Service MCSservice has been successfully installed.
+Creating EventLog source MCSservice in log Application...
+Committing assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+Uninstalling assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+Removing EventLog source MCSservice.
+Service MCSservice is being removed from the system...
+Service MCSservice was successfully removed from the system.
+Installing assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+Installing service MCSservice...
+Service MCSservice has been successfully installed.
+Creating EventLog source MCSservice in log Application...
+Committing assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+Uninstalling assembly 'C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+   logfile = C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.InstallLog
+Removing EventLog source MCSservice.
+Service MCSservice is being removed from the system...
+Service MCSservice was successfully removed from the system.
