@@ -11,3 +11,15 @@ C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\o
 C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\obj\Debug\RejectDetailsService.ProjectInstaller.resources
 C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\obj\Debug\RejectDetailsService.csproj.GenerateResource.cache
 C:\Users\chaod\OneDrive\桌面\Mytox\RejectDetailsService\RejectDetailsService\obj\Debug\RejectDetailsService.csproj.CopyComplete
+D:\MCSController\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe.config
+D:\MCSController\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.exe
+D:\MCSController\RejectDetailsService\RejectDetailsService\bin\Debug\RejectDetailsService.pdb
+D:\MCSController\RejectDetailsService\RejectDetailsService\bin\Debug\libplctag.NativeImport.xml
+D:\MCSController\RejectDetailsService\RejectDetailsService\bin\Debug\LibplctagWrapper.pdb
+D:\MCSController\RejectDetailsService\RejectDetailsService\obj\Debug\RejectDetailsService.csproj.AssemblyReference.cache
+D:\MCSController\RejectDetailsService\RejectDetailsService\obj\Debug\RejectDetailsService.ProjectInstaller.resources
+D:\MCSController\RejectDetailsService\RejectDetailsService\obj\Debug\RejectDetailsService.csproj.GenerateResource.cache
+D:\MCSController\RejectDetailsService\RejectDetailsService\obj\Debug\RejectDetailsService.csproj.CoreCompileInputs.cache
+D:\MCSController\RejectDetailsService\RejectDetailsService\obj\Debug\RejectDetailsService.csproj.CopyComplete
+D:\MCSController\RejectDetailsService\RejectDetailsService\obj\Debug\RejectDetailsService.exe
+D:\MCSController\RejectDetailsService\RejectDetailsService\obj\Debug\RejectDetailsService.pdb
