@@ -47,7 +47,7 @@ namespace RejectDetailsService {
         {
             addLog("Stop...");
         }
-        public void addLog(string slog)
+        public static void addLog(string slog)
         {
             using (StreamWriter sw = File.AppendText(SystemKeys.LOG_FILE))
             {
@@ -56,13 +56,21 @@ namespace RejectDetailsService {
         }
         public void OnTimer(object sender, ElapsedEventArgs args)
         {
-            new RejectDetails().Start();
+            try {
+                new RejectDetails().Start();
+            } catch ( Exception e ) {
+                addLog(e.Message);
+            }
         }
 
         public void OnTimerCopy(object sender, ElapsedEventArgs args)
         {
-            new RejectDetails().CopyFile();
-            //addLog("END COPY");
+            try {
+                new RejectDetails().CopyFile();
+                //addLog("END COPY");
+            } catch ( Exception e ) {
+                addLog(e.Message);
+            }
         }
 
     }

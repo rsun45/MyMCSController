@@ -19,6 +19,7 @@ namespace RejectDetailsService {
         public static readonly int COPY_INTERVAL;
         public static readonly string LOG_FILE;
         public static readonly string DB_CONNECT;
+        public static readonly string IP_ADDRESS_THIS;
 
         private const string FILE_FOLDER_KEY = "fileFolder";
         private const string FILE_NAME_PREFIX_KEY = "fileNamePrefix";
@@ -31,6 +32,7 @@ namespace RejectDetailsService {
         private const string COPY_INTERVAL_KEY = "copyInterval";
         private const string LOG_FILE_KEY = "logFile";
         private const string DB_CONNECT_STRING_KEY = "DBConnect";
+        private const string IP_ADDRESS_THIS_KEY = "ThisIP";
 
         static SystemKeys() {
             var appSetings = ConfigurationManager.AppSettings;
@@ -45,7 +47,8 @@ namespace RejectDetailsService {
             VISIT_INTERVAL = int.Parse(appSetings[VISIT_INTERVAL_KEY] ?? @"500");
             COPY_INTERVAL = int.Parse(appSetings[COPY_INTERVAL_KEY] ?? @"31000");
             LOG_FILE = appSetings[LOG_FILE_KEY] ?? @"c:\temp\log.txt";
-            DB_CONNECT = appSetings[DB_CONNECT_STRING_KEY] ?? @"Server=.\\SQLExpress;Database=MCS;Trusted_Connection=True";
+            DB_CONNECT = (appSetings[DB_CONNECT_STRING_KEY] ?? @"Server=.\SQLExpress;Database=MCS;User Id=mcs;Password=") + "mcs";
+            IP_ADDRESS_THIS = appSetings[IP_ADDRESS_THIS_KEY] ?? @"192.168.0.100";
         }
 
 

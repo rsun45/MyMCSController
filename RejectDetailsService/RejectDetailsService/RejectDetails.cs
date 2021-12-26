@@ -59,11 +59,11 @@ namespace RejectDetailsService {
 
 
             //Bool
-            var tag1 = new Tag("192.168.1.10", "1,0", CpuType.LGX, "DBrequest", DataType.SINT, 1);
-            var tag10 = new Tag("192.168.1.10", "1,0", CpuType.LGX, "DBdone", DataType.SINT, 1);
+            var tag1 = new Tag(SystemKeys.IP_ADDRESS_THIS, "1,0", CpuType.LGX, "DBrequest", DataType.SINT, 1);
+            var tag10 = new Tag(SystemKeys.IP_ADDRESS_THIS, "1,0", CpuType.LGX, "DBdone", DataType.SINT, 1);
 
             //String
-            var tag7 = new Tag("192.168.1.10", "1,0", CpuType.LGX, "RejectDataCollect", DataType.String, 1, 1);
+            var tag7 = new Tag(SystemKeys.IP_ADDRESS_THIS, "1,0", CpuType.LGX, "RejectDataCollect", DataType.String, 1, 1);
             //var tag8 = new Tag("192.168.1.10", "1,0",CpuType.LGX,"CSharpTestS",DataType.String, 1, 1);
 
             using(var client = new Libplctag()) {
@@ -109,7 +109,7 @@ namespace RejectDetailsService {
 
                 if(DBrequest == true) {
 
-                    Console.WriteLine("save to file");
+                    //Console.WriteLine("save to file");
                     SaveToFile(HMI_Reject_Message.ToString());
 
                     //Done Bit
