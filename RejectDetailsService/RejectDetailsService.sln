@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RejectDetailsService", "RejectDetailsService\RejectDetailsService.csproj", "{F9B2DD87-A0D2-4303-B96E-4D613E7262A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCSWeb", "..\MCSWeb\MCSWeb.csproj", "{CAB393DE-8E23-4572-AD9F-D062AB186411}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F9B2DD87-A0D2-4303-B96E-4D613E7262A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9B2DD87-A0D2-4303-B96E-4D613E7262A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9B2DD87-A0D2-4303-B96E-4D613E7262A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAB393DE-8E23-4572-AD9F-D062AB186411}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAB393DE-8E23-4572-AD9F-D062AB186411}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAB393DE-8E23-4572-AD9F-D062AB186411}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAB393DE-8E23-4572-AD9F-D062AB186411}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
