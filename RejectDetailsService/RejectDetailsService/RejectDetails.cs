@@ -141,7 +141,7 @@ namespace RejectDetailsService {
             using(StreamWriter sw = File.AppendText(SystemKeys.getFullFileName())) {
                 sw.WriteLine(tag);
             }
-            Database.SetContent(tag);
+            Database.SetContent(tag, SystemKeys.IP_ADDRESS_THIS);
             /*try
             {
                 if (DateTime.Now.AddMinutes(-1) >= lastDT)

@@ -131,16 +131,16 @@ GO
 
 /***********************************************************************************************/
 /* create tables */
-
 USE [MCS]
 GO
 
-/****** Object:  Table [dbo].[tblTagContent]    Script Date: 12/25/2021 4:09:59 PM ******/
+
+/****** Object:  Table [dbo].[tblTagContent]    Script Date: 12/30/2021 9:25:55 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblTagContent]') AND type in (N'U'))
 DROP TABLE [dbo].[tblTagContent]
 GO
 
-/****** Object:  Table [dbo].[tblTagContent]    Script Date: 12/25/2021 4:09:59 PM ******/
+/****** Object:  Table [dbo].[tblTagContent]    Script Date: 12/30/2021 9:25:55 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -149,6 +149,11 @@ GO
 
 CREATE TABLE [dbo].[tblTagContent](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[tag_cont] [varchar](max) NULL
+	[tag_cont] [varchar](max) NULL,
+	[tag_add_dt] [datetime] NULL,
+	[controller_ip] [varchar](15) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblTagContent] ADD  CONSTRAINT [DF_tblTagContent_tag_add_dt]  DEFAULT (getdate()) FOR [tag_add_dt]
 GO
