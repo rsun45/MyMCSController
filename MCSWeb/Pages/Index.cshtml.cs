@@ -1,6 +1,7 @@
 ﻿using MCSWeb.Actions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,24 @@ namespace MCSWeb.Pages {
 
         public void OnGet() {
             this._listTag = Database.getTagContent();
+            var controllers = Database.getControllerList();
+            _Controller = new List<SelectListItem>();
+            foreach( (string, string) con in controllers ) {
+                _Controller.Add(new SelectListItem(con.Item1, con.Item2));
+            }
+        }
+
+        //public List<(string, string)> _Controller {
+        //    get;
+        //    set;
+        //}
+        public string _selectedController {
+            get;
+            set;
+        }
+        public List<SelectListItem> _Controller {
+            get;
+            set;
         }
     }
 }

@@ -7,10 +7,33 @@
 <div class="text-center">
     <h2 >Tag Content</h2>
     @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@    
-    <div id="divContent" style="width:100%;height:700px; overflow-y:auto;">
-    @foreach(string stag in Model._listTag) {
-        @stag
-        <br />
+    <div id="divContent" style="width:100%;height:100%;overflow-y:auto;">
+        <div class="">
+            Select Controller: 
+            @Html.DropDownListFor(m => m._selectedController, Model._Controller);
+        </div>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Content</th>
+                    <th scope="col">DateTime</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach(string stag in Model._listTag) {
+                    <tr>
+                        <td>@stag</td>
+                        <td>@DateTime.Now.ToString()</td>
+                    </tr>
+                }
+
+
+
+            </tbody>
+        </table>
+
     }
     </div>
 </div>
