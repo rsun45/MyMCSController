@@ -1,0 +1,24 @@
+﻿@page
+@model tagGridModel
+@{
+}
+<table class="table table-striped">
+    <thead style="background: blue; color: white">
+        <tr>
+            <th scope="col" style="width: 10px">#</th>
+            <th scope="col">Content</th>
+            <th scope="col" style="width: 200px">DateTime</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @for(int i = 1; i <= Model._tagList.Count; ++i) {   //foreach((string, string) stag in Model._listTag) {
+            (string, string) stag = Model._tagList[i - 1];
+            <tr>
+                <td>@i</td>
+                <td>@stag.Item1</td>
+                <td>@stag.Item2</td>
+            </tr>
+        }
+    </tbody>
+</table>

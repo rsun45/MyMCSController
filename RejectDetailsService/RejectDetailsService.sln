@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RejectDetailsService", "RejectDetailsService\RejectDetailsService.csproj", "{F9B2DD87-A0D2-4303-B96E-4D613E7262A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCSWeb", "..\MCSWeb\MCSWeb.csproj", "{CAB393DE-8E23-4572-AD9F-D062AB186411}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCSWeb", "..\MCSWeb\MCSWeb.csproj", "{CAB393DE-8E23-4572-AD9F-D062AB186411}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -151,9 +151,33 @@ CREATE TABLE [dbo].[tblTagContent](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[tag_cont] [varchar](max) NULL,
 	[tag_add_dt] [datetime] NULL,
-	[controller_ip] [varchar](15) NULL
+	[controller_ip] [varchar](15) NULL,
+	[category_id] [int] NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[tblTagContent] ADD  CONSTRAINT [DF_tblTagContent_tag_add_dt]  DEFAULT (getdate()) FOR [tag_add_dt]
+GO
+
+/******************************tblController*********************************************************/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblController]') AND type in (N'U'))
+DROP TABLE [dbo].[tblController]
+GO
+
+/****** Object:  Table [dbo].[tblController]    Script Date: 1/29/2022 10:15:39 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tblController](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[ip_address] [varchar](15) NOT NULL,
+	[description] [varchar](256) NULL,
+ CONSTRAINT [PK_tblController] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
 GO

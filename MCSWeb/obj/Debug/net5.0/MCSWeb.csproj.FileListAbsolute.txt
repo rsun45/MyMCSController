@@ -44,3 +44,4 @@ D:\MCSController\MCSWeb\obj\Debug\net5.0\MCSWeb.dll
 D:\MCSController\MCSWeb\obj\Debug\net5.0\ref\MCSWeb.dll
 D:\MCSController\MCSWeb\obj\Debug\net5.0\MCSWeb.pdb
 D:\MCSController\MCSWeb\obj\Debug\net5.0\MCSWeb.genruntimeconfig.cache
+D:\MCSController\MCSWeb\obj\Debug\net5.0\Razor\Pages\tagGrid.cshtml.g.cs
