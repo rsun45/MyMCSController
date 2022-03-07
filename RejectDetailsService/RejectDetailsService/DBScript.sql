@@ -5,9 +5,9 @@ GO
 CREATE DATABASE [MCS]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'chao', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\chao.mdf' , SIZE = 270336KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+( NAME = N'mcs', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\mcs.mdf' , SIZE = 270336KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
  LOG ON 
-( NAME = N'chao_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\chao_log.ldf' , SIZE = 794624KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+( NAME = N'mcs_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\mcs_log.ldf' , SIZE = 794624KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
  WITH CATALOG_COLLATION = DATABASE_DEFAULT
 GO
 
@@ -115,19 +115,19 @@ GO
 
 /***********************************************************************************************/
 /*create mcs user */
-USE [master]
-GO
+--USE [master]
+--GO
 
-/* For security reasons the login is created disabled and with a random password. */
-/****** Object:  Login [mcs]    Script Date: 12/26/2021 5:46:37 PM ******/
-CREATE LOGIN [mcs] WITH PASSWORD=N'XXr7zOoQJs+u3OSWJQIUC5ukUulpzQ6lcdd/DkBgcAs=', DEFAULT_DATABASE=[MCS], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
-GO
+--/* For security reasons the login is created disabled and with a random password. */
+--/****** Object:  Login [mcs]    Script Date: 12/26/2021 5:46:37 PM ******/
+--CREATE LOGIN [mcs] WITH PASSWORD=N'XXr7zOoQJs+u3OSWJQIUC5ukUulpzQ6lcdd/DkBgcAs=', DEFAULT_DATABASE=[MCS], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+--GO
 
-ALTER LOGIN [mcs] DISABLE
-GO
+--ALTER LOGIN [mcs] DISABLE
+--GO
 
-ALTER SERVER ROLE [sysadmin] ADD MEMBER [mcs]
-GO
+--ALTER SERVER ROLE [sysadmin] ADD MEMBER [mcs]
+--GO
 
 /***********************************************************************************************/
 /* create tables */

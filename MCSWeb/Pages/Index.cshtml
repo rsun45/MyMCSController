@@ -5,34 +5,44 @@
 }
 
 <div class="text-center">
-    <h2 >Tag Content</h2>
-    @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@    
+    <h2>Tag Content</h2>
+    @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
     <div id="divContent" style="width:100%;height:100%;overflow-y:auto;">
         <div class="h5">
-            @*Select Controller:*@ 
-            @Html.DropDownListFor(m => m._selectedController, Model._Controller, new { @class= "form-select" })
+            @*Select Controller:*@
+            @*@using(Html.BeginForm()) {*@
+            @*@Html.DropDownListFor(m => m._selectedController, Model._Controller, new { onchange = "@HandleTypeChange" })*@
+            @*}*@
+            @using(Html.BeginForm()) {
+            <select asp-for="_selectedController" asp-items="Model._Controller" onchange="this.form.submit()">
+                @*@foreach(SelectListItem aa in Model._Controller) {
+                    <option value=@aa.Value>@aa.Text</option>
+                }*@
+            </select>
+            }
         </div>
         <br />
         <table class="table table-striped">
             <thead style="background: blue; color: white">
                 <tr>
                     <th scope="col" style="width: 10px">#</th>
-                    <th scope="col" >Content</th>
+                    <th scope="col">Content</th>
                     <th scope="col" style="width: 200px">DateTime</th>
                 </tr>
 
             </thead>
             <tbody>
-                @for( int i = 1; i <= Model._listTag.Count; ++ i ){   //foreach((string, string) stag in Model._listTag) {
-                    (string, string) stag = Model._listTag[i-1];
+                @for(int i = 1; i <= Model._listTag.Count; ++i) {   //foreach((string, string) stag in Model._listTag) {
+                    (string, string) stag = Model._listTag[i - 1];
                     <tr>
                         <td>@i</td>
                         <td>@stag.Item1</td>
                         <td>@stag.Item2</td>
                     </tr>
-                 }
+                }
             </tbody>
         </table>
         @*<partial name="tagGrid" model="new tagGridModel()" />*@
     </div>
 </div>
+

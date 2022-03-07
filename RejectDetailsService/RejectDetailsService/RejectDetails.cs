@@ -972,7 +972,7 @@ namespace RejectDetailsService {
                     SaveToFile(ReadValue44.ToString());
                     SaveToFile(ReadValue45.ToString());
 
-                    SaveToFile(HMI_Reject_Message.ToString(), "40");
+                    SaveToFile(HMI_Reject_Message.ToString(), "40", tru);
 
                     //Done Bit
                     client.SetBitValue(HS_2, 0, Convert.ToBoolean(1), DataTimeout);
@@ -983,29 +983,21 @@ namespace RejectDetailsService {
         }
 
 
-        public void SaveToFile(string tag, string Station = "30") {
+        public void SaveToFile(string tag, string Station = "30", bool saveToFile = false) {
             //string lsFileName = getFileName();
-            using(StreamWriter sw = File.AppendText(SystemKeys.getFullFileName())) {
-                sw.WriteLine(tag);
+            if(saveToFile) {
+                using(StreamWriter sw = File.AppendText(SystemKeys.getFullFileName())) {
+                    sw.WriteLine(tag);
+                }
             }
             Database.SetContent(tag, SystemKeys.IP_ADDRESS_THIS);
         }
 
-        //private string getFilePath(string name) {
-        //    return @"c:\Users\MCS\tag-" + name;
-        //}
-
-        //private string getCopyPath(string name) {
-        //    return @"\\mytfs01\public\EOLT_DataSource\Honda_bulkhead\RejectDetails-tag-" + name;
-        //}
-        //private string getFileName() {
-        //    return DateTime.Now.ToString("yyyy-MM-dd") + ".csv";
-        //}
-
         public void CopyFile() {
-            //string lsTargetFile = getCopyPath(getFileName());
-            //File.Copy(getFilePath(getFileName()), lsTargetFile, true);
-            File.Copy(SystemKeys.getFullFileName(), SystemKeys.getCopyFileName(), true);
+            string lsSource = SystemKeys.getFullFileName();
+            if(File.Exists(lsSource)) {
+                File.Copy(lsSource, SystemKeys.getCopyFileName(), true);
+            }
         }
     }
 }

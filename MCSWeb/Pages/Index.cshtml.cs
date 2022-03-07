@@ -1,12 +1,9 @@
 ﻿using MCSWeb.Actions;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MCSWeb.Pages {
     public class IndexModel : PageModel {
@@ -20,6 +17,9 @@ namespace MCSWeb.Pages {
             _logger = logger;
         }
 
+        public void OnPost() {
+                this._listTag = Database.getTagContent(_selectedController);
+        }
         public void OnGet() {
 
             var controllers = Database.getControllerList();
@@ -28,10 +28,15 @@ namespace MCSWeb.Pages {
                 _Controller.Add(new SelectListItem(con.Item1, con.Item2));
             }
 
-            if ( controllers.Count > 0 )
+            if(controllers.Count > 0)
                 this._listTag = Database.getTagContent(controllers[0].Item2);
+
         }
 
+        protected void HandleTypeChange(ChangeEventArgs e) {
+            string sType = e.Value.ToString();
+            this._listTag = Database.getTagContent(sType);
+        }
         //public List<(string, string)> _Controller {
         //    get;
         //    set;

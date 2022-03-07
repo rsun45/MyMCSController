@@ -47,13 +47,17 @@ namespace RejectDetailsService {
         {
             addLog("Stop...");
         }
+
         public static void addLog(string slog)
         {
-            using (StreamWriter sw = File.AppendText(SystemKeys.LOG_FILE))
+            string logFile = SystemKeys.getLogName();
+
+            using (StreamWriter sw = File.AppendText(logFile))
             {
                 sw.WriteLine(SystemKeys.getCurrentDateTime() + " " + slog);
             }
         }
+
         public void OnTimer(object sender, ElapsedEventArgs args)
         {
             try {

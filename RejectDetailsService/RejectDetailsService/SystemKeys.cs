@@ -46,17 +46,17 @@ namespace RejectDetailsService {
             COPY_FILE_EXT = appSetings[COPY_FILE_EXT_KEY] ?? @"csv";
             VISIT_INTERVAL = int.Parse(appSetings[VISIT_INTERVAL_KEY] ?? @"500");
             COPY_INTERVAL = int.Parse(appSetings[COPY_INTERVAL_KEY] ?? @"31000");
-            LOG_FILE = appSetings[LOG_FILE_KEY] ?? @"c:\temp\log.txt";
+            LOG_FILE = appSetings[LOG_FILE_KEY] ?? @"c:\temp\log";
             DB_CONNECT = (appSetings[DB_CONNECT_STRING_KEY] ?? @"Server=.\SQLExpress;Database=MCS;User Id=mcs;Password=") + "mcs";
             IP_ADDRESS_THIS = appSetings[IP_ADDRESS_THIS_KEY] ?? @"192.168.0.100";
         }
 
 
-        private static string getFileNameBody() {
+        private static string getFileNameDateString() {
             return DateTime.Now.ToString(FILE_NAME);
         }
         private static string getFileName() {
-            return FILE_NAME_PREFIX + getFileNameBody() + (string.IsNullOrEmpty(FILE_NAME_EXT) ? "" : ("." + FILE_NAME_EXT));
+            return FILE_NAME_PREFIX + getFileNameDateString() + (string.IsNullOrEmpty(FILE_NAME_EXT) ? "" : ("." + FILE_NAME_EXT));
         }
 
         public static string getFullFileName() {
@@ -64,11 +64,19 @@ namespace RejectDetailsService {
         }
 
         public static string getCopyFileName() {
-            return Path.Combine(COPY_FOLDER, COPY_FILE_PREFIX + getFileNameBody() + "." + COPY_FILE_EXT);
+            return Path.Combine(COPY_FOLDER, COPY_FILE_PREFIX + getFileNameDateString() + "." + COPY_FILE_EXT);
         }
 
         public static string getCurrentDateTime() {
             return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        }
+
+        public static string getLogName() {
+            if(String.IsNullOrWhiteSpace(Path.GetExtension(LOG_FILE))) {
+                return LOG_FILE + getFileNameDateString() + ".txt";
+            } else {
+                return LOG_FILE.Substring(0, LOG_FILE.Length - 4 ) + getFileNameDateString() + LOG_FILE.Substring( LOG_FILE.Length - 4 );
+            }
         }
     }
 }
