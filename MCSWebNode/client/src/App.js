@@ -1,5 +1,7 @@
 import React from "react";
 import './App.css';
+import TopBar from './components/TopBar';
+
 
 function App() {
   const [data, setData] = React.useState(null);
@@ -13,6 +15,7 @@ function App() {
 
   return (
     <div className="App">
+    <TopBar />,
         <p>
           Hello world.
           {data}
