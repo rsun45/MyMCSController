@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import './SectionTabs.css';
+import Filter from './Filter';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -56,7 +57,7 @@ function TabPanel(props) {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          Item One
+          <Filter /> 
         </TabPanel>
         <TabPanel value={value} index={1}>
           Item Two
