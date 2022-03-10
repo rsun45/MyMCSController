@@ -1,6 +1,7 @@
 import React from "react";
 import './App.css';
 import TopBar from './components/TopBar';
+import SectionTabs from './components/SectionTabs';
 
 
 function App() {
@@ -15,11 +16,8 @@ function App() {
 
   return (
     <div className="App">
-    <TopBar />,
-        <p>
-          Hello world.
-          {data}
-        </p>
+      <TopBar />
+      <SectionTabs />
     </div>
   );
 }
