@@ -10,15 +10,9 @@ const app = express();
 //   console.log(`Server listening on ${PORT}`);
 // });
 
-
-
-
 app.get("/api", (req, res) => {
   res.json({ message: "Hello from server!" });
 });
-
-
-
 
 /**************  connect to sql *********/
 // var Connection = require('tedious').Connection;  
@@ -45,10 +39,6 @@ app.get("/api", (req, res) => {
 
 // connection.connect();
 
-
-
-
-
 const sql = require('mssql')
 
 async function myQuery(){
@@ -64,10 +54,7 @@ async function myQuery(){
 
 // myQuery();
 
-
-
-
-
+/*
 app.get("/api/data1", (req, res) => {
   res.json({msg: [
     { id: 1, content:"test 1", Data_Time:"3/10/2022 18:21:00"},
@@ -81,7 +68,7 @@ app.get("/api/data1", (req, res) => {
 
 ]});
 });
-
+*/
 
 // get 10.0.0.2
 app.get("/api/data02", async (req, res) => {
@@ -99,7 +86,6 @@ app.get("/api/data02", async (req, res) => {
 
 });
 
-
 app.get("/api/fakeData02", (req, res) => {
   res.json({
     msg:[{"id":8,"tag_cont":"test1","tag_add_dt":"2022-03-10T21:52:11.257Z","controller_ip":"10.0.0.2","category_id":null},
@@ -111,9 +97,6 @@ app.get("/api/fakeData02", (req, res) => {
   {"id":14,"tag_cont":"test7","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.2","category_id":null}]
 });
 });
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
