@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import './SectionTabs.css';
 import Filter from './Filter';
 import MyGrid from './MyGrid';
+import BarGraph from './BarGraph';
 
 
 function TabPanel(props) {
@@ -65,7 +66,7 @@ function TabPanel(props) {
           <MyGrid />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Item Three
+          <BarGraph />
         </TabPanel>
       </Box>
     );

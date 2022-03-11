@@ -53,8 +53,6 @@ export default function MyGrid() {
   
   const [data, setData] = React.useState(null);
 
-  const [pageSize, setPageSize] = React.useState(20);
-
   React.useEffect(() => {
     fetch("/api/fakeData02")
       .then((res) => res.json())
@@ -63,6 +61,8 @@ export default function MyGrid() {
   
   const rows = data;
 
+  const [pageSize, setPageSize] = React.useState(20);
+  
   return (
     <div style={{ height: 1000, width: '100%' }}>
       <DataGrid
