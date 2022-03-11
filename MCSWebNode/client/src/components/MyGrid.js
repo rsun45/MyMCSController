@@ -19,6 +19,15 @@ import { DataGrid } from '@mui/x-data-grid';
     },
   ];
 
+//   const rows1 = [
+//     { id: 1, content:'test 1', Data_Time:'3/10/2022 18:21:00'},
+//     { id: 2, content:'test 2', Data_Time:'3/10/2022 18:21:10'},
+//     { id: 3, content:'test 3', Data_Time:'3/10/2022 18:21:20'},
+//     { id: 4, content:'test 4', Data_Time:'3/10/2022 18:21:30'},
+//     { id: 5, content:'test 5', Data_Time:'3/10/2022 18:21:40'},
+//     { id: 6, content:'test 6', Data_Time:'3/10/2022 18:21:50'},
+
+// ];
 
 
 const columns = [
@@ -71,24 +80,22 @@ export default function MyGrid() {
   React.useEffect(() => {
     fetch("/api/data1")
       .then((res) => res.json())
-      .then((data) => setData(data));
+      .then((data) => setData(data.msg));
   }, []);
   
   const rows1 = data;
 
-  console.log("sonthing !!!!!!!!!!!!!!!!!!");
   
   return (
     <div style={{ height: 1000, width: '100%' }}>
-      {/* <DataGrid
+      <DataGrid
         rows={rows1}
         columns={columns1}
         pageSize={10}
         rowsPerPageOptions={[5]}
         checkboxSelection
         disableSelectionOnClick
-      /> */}
-      {rows1}
+      />
     </div>
   );
 }
