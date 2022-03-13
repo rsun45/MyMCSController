@@ -75,8 +75,16 @@ app.get("/api/data02", async (req, res) => {
 
   try {
     // make sure that any items are correctly URL encoded in the connection string
-    await sql.connect('Server=localhost,1433;Database=MCS;User Id=MCS;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
-    const result = await sql.query`SELECT * FROM tblTagContent WHERE  controller_ip='10.0.0.2'`
+    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+    // const result = await sql.query`SELECT * FROM tblTagContent WHERE  controller_ip='192.168.1.10'`
+
+    const result = await sql.query`
+    select tc.id, tc.tag_cont, tc.tag_add_dt, cl.description, tag.tagName
+    from tblTagContent tc
+    join tblController cl on tc.controller_ip = cl.ip_address 
+    join tblTags tag on tc.tag_id = tag.id
+    `
+
     // console.dir(result)
     console.log("request data02")
     res.json(result.recordsets[0]);
@@ -88,15 +96,33 @@ app.get("/api/data02", async (req, res) => {
 
 app.get("/api/fakeData02", (req, res) => {
   res.json({
-    msg:[{"id":1,"tag_cont":"test1","tag_add_dt":"2022-03-10T21:52:11.257Z","controller_ip":"10.0.0.2","category_id":null},
-  {"id":2,"tag_cont":"test2","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.1","category_id":null},
-  {"id":3,"tag_cont":"test3","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.1","category_id":null},
-  {"id":4,"tag_cont":"test4","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.2","category_id":null},
-  {"id":5,"tag_cont":"test5","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.2","category_id":null},
-  {"id":6,"tag_cont":"test6","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.2","category_id":null},
-  {"id":7,"tag_cont":"test6","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.3","category_id":null},
-  {"id":8,"tag_cont":"test6","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.3","category_id":null},
-  {"id":99,"tag_cont":"test7","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.3","category_id":null}]
+    msg:[{"id":94,"tag_cont":"-0.1188251","tag_add_dt":"2022-03-07T07:34:08.297Z","description":"HondaBulket","tagName":"Nut 1"},
+    {"id":95,"tag_cont":"-0.1808062","tag_add_dt":"2022-03-07T07:34:08.303Z","description":"HondaBulket","tagName":"Nut 2"},
+    {"id":96,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.303Z","description":"HondaBulket","tagName":"Nut 3"},
+    {"id":97,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.307Z","description":"HondaBulket","tagName":"Nut 4"},
+    {"id":98,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.307Z","description":"HondaBulket","tagName":"Nut 5"},
+    {"id":99,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.307Z","description":"HondaBulket","tagName":"Nut 6"},
+    {"id":100,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.307Z","description":"HondaBulket","tagName":"Nut 7"},
+    {"id":101,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.310Z","description":"HondaBulket","tagName":"Nut 8 "},
+    {"id":102,"tag_cont":"0.29","tag_add_dt":"2022-03-07T07:34:08.310Z","description":"HondaBulket","tagName":"Nut 9"},
+    {"id":103,"tag_cont":"0.02","tag_add_dt":"2022-03-07T07:34:08.310Z","description":"HondaBulket","tagName":"Nut 10"},
+    {"id":104,"tag_cont":"0.06000001","tag_add_dt":"2022-03-07T07:34:08.310Z","description":"HondaBulket","tagName":"Nut 11"},
+    {"id":105,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.310Z","description":"HondaBulket","tagName":"Nut 12"},
+    {"id":106,"tag_cont":"1.13","tag_add_dt":"2022-03-07T07:34:08.313Z","description":"HondaBulket","tagName":"Nut 15"},
+    {"id":107,"tag_cont":"6.65","tag_add_dt":"2022-03-07T07:34:08.313Z","description":"HondaBulket","tagName":"Nut 16"},
+    {"id":108,"tag_cont":"0.35","tag_add_dt":"2022-03-07T07:34:08.313Z","description":"HondaBulket","tagName":"Nut 17"},
+    {"id":109,"tag_cont":"0.45","tag_add_dt":"2022-03-07T07:34:08.313Z","description":"HondaBulket","tagName":"Nut 18"},
+    {"id":110,"tag_cont":"0.27","tag_add_dt":"2022-03-07T07:34:08.313Z","description":"HondaBulket","tagName":"Nut 19"},
+    {"id":111,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 20"},
+    {"id":112,"tag_cont":"0.08000001","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 21"},
+    {"id":113,"tag_cont":"0.06","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 22"},
+    {"id":114,"tag_cont":"1.3","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 61"},
+    {"id":115,"tag_cont":"1.25","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 62"},
+    {"id":116,"tag_cont":"1.25","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 63"},
+    {"id":117,"tag_cont":"1.43","tag_add_dt":"2022-03-07T07:34:08.320Z","description":"HondaBulket","tagName":"Nut 64"},
+    {"id":118,"tag_cont":"1.31","tag_add_dt":"2022-03-07T07:34:08.320Z","description":"HondaBulket","tagName":"Nut 65"},
+    {"id":119,"tag_cont":"1.4","tag_add_dt":"2022-03-07T07:34:08.320Z","description":"HondaBulket","tagName":"Nut 66"},
+    {"id":120,"tag_cont":"0.09000002","tag_add_dt":"2022-03-07T07:34:08.320Z","description":"HondaBulket","tagName":"Nut 81"}]
 });
 });
 

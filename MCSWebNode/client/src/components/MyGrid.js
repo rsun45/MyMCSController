@@ -37,14 +37,14 @@ const columns = [
     editable: false,
   },
   {
-    field: 'controller_ip',
-    headerName: 'Controller_IP',
+    field: 'description',
+    headerName: 'Description',
     width: 300,
     editable: false,
   },
   {
-    field: 'category_id',
-    headerName: 'Category_ID',
+    field: 'tagName',
+    headerName: 'Tag Name',
     width: 300,
     editable: false,
   },
