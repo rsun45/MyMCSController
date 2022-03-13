@@ -1,72 +1,160 @@
-import React from 'react';
-import { Column } from '@ant-design/plots';
+import React, { useState, useEffect } from 'react';
+import { Mix } from '@ant-design/plots';
 
-const DemoColumn = () => {
-    const data = [
-      {
-        type: '家具家电',
-        sales: 38,
-      },
-      {
-        type: '粮油副食',
-        sales: 52,
-      },
-      {
-        type: '生鲜水果',
-        sales: 61,
-      },
-      {
-        type: '美容洗护',
-        sales: 145,
-      },
-      {
-        type: '母婴用品',
-        sales: 48,
-      },
-      {
-        type: '进口食品',
-        sales: 38,
-      },
-      {
-        type: '食品饮料',
-        sales: 38,
-      },
-      {
-        type: '家庭清洁',
-        sales: 38,
-      },
-    ];
-    const config = {
-      data,
-      xField: 'type',
-      yField: 'sales',
-      label: {
-        // 可手动配置 label 数据标签位置
-        position: 'middle',
-        // 'top', 'bottom', 'middle',
-        // 配置样式
-        style: {
-          fill: '#FFFFFF',
-          opacity: 0.6,
-        },
-      },
-      xAxis: {
-        label: {
-          autoHide: true,
-          autoRotate: false,
-        },
-      },
-      meta: {
-        type: {
-          alias: '类别',
-        },
-        sales: {
-          alias: '销售额',
-        },
-      },
+const DemoMix = () => {
+    const [data, setData] = useState({});
+  
+    useEffect(() => {
+      asyncFetch();
+    }, []);
+  
+    const asyncFetch = () => {
+      fetch("/api/fakeData02")
+        .then((response) => response.json())
+        .then((json) => setData(json))
+        .catch((error) => {
+          console.log('fetch data failed', error);
+        });
     };
-    return <Column {...config} />;
-  };
-
-
-export default DemoColumn;
+    if (!Object.keys(data).length) {
+      return null;
+    }
+    
+    const config = {
+      // 关闭 chart 上的 tooltip，子 view 开启 tooltip
+      tooltip: false,
+      plots: [
+        /*
+        {
+          type: 'bar',
+          region: {
+            start: {
+              x: 0,
+              y: 0,
+            },
+            end: {
+              x: 0.45,
+              y: 0.45,
+            },
+          },
+          options: {
+            data: data.bar,
+            xField: 'count',
+            yField: 'area',
+            seriesField: 'cat',
+            isStack: true,
+            tooltip: {
+              shared: true,
+              showCrosshairs: false,
+              showMarkers: false,
+            },
+            label: {},
+            interactions: [
+              {
+                type: 'active-region',
+              },
+            ],
+          },
+        },
+        */
+        {
+          type: 'pie',
+          options: {
+            appendPadding: 10,
+            data: data.msg,
+            angleField: 'id',
+            colorField: 'tag_cont',
+            tooltip: {
+                showMarkers: false,
+              },
+            radius: 0.9,
+            label: {
+              type: 'inner',
+              formatter: '{name}',
+              offset: '-30%',
+              content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+              style: {
+                fontSize: 14,
+                textAlign: 'center',
+              },
+            },
+            interactions: [
+              {
+                type: 'element-active',
+              },
+              // 后续开放
+              // {
+              //   type: 'association-tooltip',
+              //   cfg: {
+              //     start: [
+              //       {
+              //         trigger: 'element:mousemove',
+              //         action: 'association:showTooltip',
+              //         arg: {
+              //           dim: 'x',
+              //           linkField: 'area',
+              //         },
+              //       },
+              //     ],
+              //   },
+              // },
+              // {
+              //   type: 'association-highlight',
+              //   cfg: {
+              //     start: [
+              //       {
+              //         trigger: 'element:mousemove',
+              //         action: 'association:highlight',
+              //         arg: {
+              //           linkField: 'area',
+              //         },
+              //       },
+              //     ],
+              //   },
+              // },
+            ],
+          },
+        },
+        /*
+        {
+          type: 'area',
+          region: {
+            start: {
+              x: 0,
+              y: 0.5,
+            },
+            end: {
+              x: 1,
+              y: 0.95,
+            },
+          },
+          options: {
+            data: data.line,
+            xField: 'time',
+            yField: 'value',
+            seriesField: 'area',
+            line: {},
+            point: {
+              style: {
+                r: 2.5,
+              },
+            },
+            meta: {
+              time: {
+                range: [0, 1],
+              },
+            },
+            smooth: true,
+            tooltip: {
+              showCrosshairs: true,
+              shared: true,
+            },
+          },
+        },
+        */
+      ],
+    };
+  
+    return <Mix {...config} />;
+  }
+  export default DemoMix;

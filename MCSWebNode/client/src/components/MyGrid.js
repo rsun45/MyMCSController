@@ -6,6 +6,7 @@ import { DataGrid,
          GridToolbarFilterButton,
        } from '@mui/x-data-grid';
 
+
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
@@ -16,6 +17,7 @@ function CustomToolbar() {
   );
 }
 
+//表头
 const columns = [
   { field: 'id', 
     headerName: 'ID', 
@@ -27,7 +29,6 @@ const columns = [
     headerName: 'Tag',
     width: 150,
     editable: false,
-    sortable: false,
   },
   {
     field: 'tag_add_dt',
@@ -59,14 +60,12 @@ export default function MyGrid() {
       .then((data) => setData(data.msg));//information from server
   }, []);
   
-  const rows = data;
-
   const [pageSize, setPageSize] = React.useState(20);
-  
+
   return (
     <div style={{ height: 1000, width: '100%' }}>
       <DataGrid
-        rows={rows}
+        rows = {data}
         columns={columns}
         //Tool Bar
         components={{
@@ -84,4 +83,6 @@ export default function MyGrid() {
       />
     </div>
   );
+  
 }
+

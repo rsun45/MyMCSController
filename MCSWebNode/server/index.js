@@ -88,15 +88,15 @@ app.get("/api/data02", async (req, res) => {
 
 app.get("/api/fakeData02", (req, res) => {
   res.json({
-    msg:[{"id":8,"tag_cont":"test1","tag_add_dt":"2022-03-10T21:52:11.257Z","controller_ip":"10.0.0.2","category_id":null},
-  {"id":9,"tag_cont":"test2","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.1","category_id":null},
-  {"id":10,"tag_cont":"test3","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.1","category_id":null},
-  {"id":11,"tag_cont":"test4","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.2","category_id":null},
-  {"id":12,"tag_cont":"test5","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.2","category_id":null},
-  {"id":13,"tag_cont":"test6","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.2","category_id":null},
-  {"id":1,"tag_cont":"test6","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.3","category_id":null},
-  {"id":22,"tag_cont":"test6","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.3","category_id":null},
-  {"id":14,"tag_cont":"test7","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.3","category_id":null}]
+    msg:[{"id":1,"tag_cont":"test1","tag_add_dt":"2022-03-10T21:52:11.257Z","controller_ip":"10.0.0.2","category_id":null},
+  {"id":2,"tag_cont":"test2","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.1","category_id":null},
+  {"id":3,"tag_cont":"test3","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.1","category_id":null},
+  {"id":4,"tag_cont":"test4","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.2","category_id":null},
+  {"id":5,"tag_cont":"test5","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.2","category_id":null},
+  {"id":6,"tag_cont":"test6","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.2","category_id":null},
+  {"id":7,"tag_cont":"test6","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.3","category_id":null},
+  {"id":8,"tag_cont":"test6","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.3","category_id":null},
+  {"id":99,"tag_cont":"test7","tag_add_dt":"2022-03-10T21:56:35.740Z","controller_ip":"10.0.0.3","category_id":null}]
 });
 });
 
