@@ -62,12 +62,12 @@ const DemoMix = () => {
           options: {
             appendPadding: 10,
             data: data.msg,
-            angleField: 'id',
-            colorField: 'tag_cont',
+            angleField: 'id',                       //根据这个数据表示扇形大小
+            colorField: 'tag_cont',                 //扇形区域的名字
             tooltip: {
                 showMarkers: false,
               },
-            radius: 0.9,
+            radius: 0.9,                            //扇形图半径
             label: {
               type: 'inner',
               formatter: '{name}',

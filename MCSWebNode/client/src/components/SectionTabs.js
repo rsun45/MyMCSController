@@ -5,9 +5,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import './SectionTabs.css';
-import Filter from './Filter';
 import MyGrid from './MyGrid';
-import BarGraph from './BarGraph';
+import Graph from './Graph';
 
 
 function TabPanel(props) {
@@ -60,13 +59,13 @@ function TabPanel(props) {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <Filter /> 
+          Item 1
         </TabPanel>
         <TabPanel value={value} index={1}>
           <MyGrid />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <BarGraph />
+          <Graph />
         </TabPanel>
       </Box>
     );
