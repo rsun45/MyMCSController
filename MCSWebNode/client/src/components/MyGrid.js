@@ -35,6 +35,12 @@ const columns = [
     headerName: 'Add Date',
     width: 300,
     editable: false,
+    type: 'dateTime',
+    valueGetter: ({ value }) => {
+      var newDate = new Date(value);
+      newDate.setHours(newDate.getHours() + 5);
+      // console.log(newDate.setHours(newDate.getHours() + 5));
+      return newDate},
   },
   {
     field: 'description',

@@ -119,10 +119,10 @@ app.get("/api/fakeData02", (req, res) => {
     {"id":114,"tag_cont":"1.3","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 61"},
     {"id":115,"tag_cont":"1.25","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 62"},
     {"id":116,"tag_cont":"1.25","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 63"},
-    {"id":117,"tag_cont":"1.43","tag_add_dt":"2022-03-07T07:34:08.320Z","description":"HondaBulket","tagName":"Nut 64"},
-    {"id":118,"tag_cont":"1.31","tag_add_dt":"2022-03-07T07:34:08.320Z","description":"HondaBulket","tagName":"Nut 65"},
-    {"id":119,"tag_cont":"1.4","tag_add_dt":"2022-03-07T07:34:08.320Z","description":"HondaBulket","tagName":"Nut 66"},
-    {"id":120,"tag_cont":"0.09000002","tag_add_dt":"2022-03-07T07:34:08.320Z","description":"HondaBulket","tagName":"Nut 81"}]
+    {"id":117,"tag_cont":"1.43","tag_add_dt":"2022-03-07T08:34:08.320Z","description":"HondaBulket","tagName":"Nut 64"},
+    {"id":118,"tag_cont":"1.31","tag_add_dt":"2022-03-07T08:34:08.320Z","description":"HondaBulket","tagName":"Nut 65"},
+    {"id":119,"tag_cont":"1.4","tag_add_dt":"2022-03-08T08:34:08.320Z","description":"HondaBulket","tagName":"Nut 66"},
+    {"id":120,"tag_cont":"0.09000002","tag_add_dt":"2022-03-08T20:34:08.320Z","description":"HondaBulket","tagName":"Nut 81"}]
 });
 });
 
