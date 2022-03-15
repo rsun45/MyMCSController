@@ -6,6 +6,8 @@
     border: 2px dashed rgb(8, 38, 102);
 }
 
-.TopBar p{
+.TopBar h1{
     color: white;
+    margin: 0;
+    margin-left: 10px;
 }

@@ -26,15 +26,21 @@ function CustomToolbar() {
 
 //表头
 const columns = [
-  { field: 'id', 
-    headerName: 'ID', 
-    width: 90,
+  // { field: 'id', 
+  //   headerName: 'ID', 
+  //   width: 90,
+  //   editable: false,
+  // },
+  {
+    field: 'tagName',
+    headerName: 'Tag Name',
+    width: 150,
     editable: false,
   },
   {
     field: 'tag_cont',
     headerName: 'Tag',
-    width: 150,
+    width: 400,
     editable: false,
   },
   {
@@ -42,7 +48,7 @@ const columns = [
     headerName: 'Add Date',
     width: 300,
     editable: false,
-    type: 'dateTime',
+    type: 'date',
     valueGetter: ({ value }) => {
       var newDate = new Date(value);
       newDate.setHours(newDate.getHours() + 5);
@@ -52,12 +58,6 @@ const columns = [
   {
     field: 'description',
     headerName: 'Description',
-    width: 300,
-    editable: false,
-  },
-  {
-    field: 'tagName',
-    headerName: 'Tag Name',
     width: 300,
     editable: false,
   },

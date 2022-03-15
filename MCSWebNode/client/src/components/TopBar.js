@@ -5,7 +5,7 @@ function TopBar() {
 
   return (
     <div className="TopBar">
-        <p>COMPANY NAME</p>
+        <h1>MCS</h1>
     </div>
   );
 }
