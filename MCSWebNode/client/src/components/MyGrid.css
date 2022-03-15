@@ -1,0 +1,11 @@
+.gridButton Button{
+    width: 150px;
+    height: 30px;
+    position: fixed;
+    right: -40px;
+    top: 200px;
+
+  transform:rotate(90deg);
+  -webkit-transform:rotate(90deg);
+}
+

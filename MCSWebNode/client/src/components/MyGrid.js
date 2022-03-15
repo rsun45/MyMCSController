@@ -1,10 +1,16 @@
 import * as React from 'react';
+import './MyGrid.css';
 import { DataGrid, 
+         GridToolbarDensitySelector,
          GridToolbarContainer, 
          GridToolbarExport,
          GridToolbarColumnsButton,
          GridToolbarFilterButton,
        } from '@mui/x-data-grid';
+
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import Graph from './Graph';
 
 
 function CustomToolbar() {
@@ -12,6 +18,7 @@ function CustomToolbar() {
     <GridToolbarContainer>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
   );
@@ -65,11 +72,26 @@ export default function MyGrid() {
       .then((res) => res.json())
       .then((data) => setData(data.msg));//information from server
   }, []);
+
+
+
+// drawer for graph
+  const [drawer, setDrawer] = React.useState(false);
+
+  const toggleDrawer = () => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+
+    setDrawer(!drawer);
+  };
+
+
   
   const [pageSize, setPageSize] = React.useState(20);
 
   return (
-    <div style={{ height: 1000, width: '100%' }}>
+    <div style={{ height: 1000,  width: '100%'}}>
       <DataGrid
         rows = {data}
         columns={columns}
@@ -83,10 +105,21 @@ export default function MyGrid() {
         rowsPerPageOptions={[20, 50]}
         pagination
 
-        checkboxSelection
+        // checkboxSelection
         disableSelectionOnClick
 
+
       />
+    <div class="gridButton">
+      <Button onClick={toggleDrawer()} variant="contained" color='info'>Open Graph</Button>
+    </div>
+    <Drawer
+        anchor='right'
+        open={drawer}
+        onClose={toggleDrawer()}
+      >
+        <Graph />
+      </Drawer>
     </div>
   );
   
