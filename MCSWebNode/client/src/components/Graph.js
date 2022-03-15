@@ -19,6 +19,22 @@ const DemoMix = () => {
     if (!Object.keys(data).length) {
       return null;
     }
+
+    //计每一个tag_cont有几个数
+    let mp = new Map()
+    for (let i = 0; i < data.msg.length; i++){
+      if (mp.has(data.msg[i].tag_cont))
+        mp.set(data.msg[i].tag_cont, mp.get(data.msg[i].tag_cont) + 1)
+      else{
+        mp.set(data.msg[i].tag_cont, 1)
+      }
+    }
+    const iterator1 = mp[Symbol.iterator]();
+    let arr = []
+    
+    for (const item of iterator1) {
+      arr.push({count: item[1], tag_cont: item[0]})
+    }
     
     const config = {
       // 关闭 chart 上的 tooltip，子 view 开启 tooltip
@@ -61,8 +77,8 @@ const DemoMix = () => {
           type: 'pie',
           options: {
             appendPadding: 10,
-            data: data.msg,
-            angleField: 'id',                       //根据这个数据表示扇形大小
+            data: arr,
+            angleField: 'count',                       //根据这个数据表示扇形大小
             colorField: 'tag_cont',                 //扇形区域的名字
             tooltip: {
                 showMarkers: false,
