@@ -10,10 +10,6 @@ const app = express();
 //   console.log(`Server listening on ${PORT}`);
 // });
 
-app.get("/api", (req, res) => {
-  res.json({ message: "Hello from server!" });
-});
-
 /**************  connect to sql *********/
 // var Connection = require('tedious').Connection;  
 // var config = {  
@@ -94,36 +90,10 @@ app.get("/api/data02", async (req, res) => {
 
 });
 
+//read data from results.json (某一天的全部数据)
 app.get("/api/fakeData02", (req, res) => {
-  res.json({
-    msg:[{"id":94,"tag_cont":"-0.1188251","tag_add_dt":"2022-03-07T07:34:08.297Z","description":"HondaBulket","tagName":"Nut 1"},
-    {"id":95,"tag_cont":"-0.1808062","tag_add_dt":"2022-03-07T07:34:08.303Z","description":"HondaBulket","tagName":"Nut 2"},
-    {"id":96,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.303Z","description":"HondaBulket","tagName":"Nut 3"},
-    {"id":97,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.307Z","description":"HondaBulket","tagName":"Nut 4"},
-    {"id":98,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.307Z","description":"HondaBulket","tagName":"Nut 5"},
-    {"id":99,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.307Z","description":"HondaBulket","tagName":"Nut 6"},
-    {"id":100,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.307Z","description":"HondaBulket","tagName":"Nut 7"},
-    {"id":101,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.310Z","description":"HondaBulket","tagName":"Nut 8 "},
-    {"id":102,"tag_cont":"0.29","tag_add_dt":"2022-03-07T07:34:08.310Z","description":"HondaBulket","tagName":"Nut 9"},
-    {"id":103,"tag_cont":"0.02","tag_add_dt":"2022-03-07T07:34:08.310Z","description":"HondaBulket","tagName":"Nut 10"},
-    {"id":104,"tag_cont":"0.06000001","tag_add_dt":"2022-03-07T07:34:08.310Z","description":"HondaBulket","tagName":"Nut 11"},
-    {"id":105,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.310Z","description":"HondaBulket","tagName":"Nut 12"},
-    {"id":106,"tag_cont":"1.13","tag_add_dt":"2022-03-07T07:34:08.313Z","description":"HondaBulket","tagName":"Nut 15"},
-    {"id":107,"tag_cont":"6.65","tag_add_dt":"2022-03-07T07:34:08.313Z","description":"HondaBulket","tagName":"Nut 16"},
-    {"id":108,"tag_cont":"0.35","tag_add_dt":"2022-03-07T07:34:08.313Z","description":"HondaBulket","tagName":"Nut 17"},
-    {"id":109,"tag_cont":"0.45","tag_add_dt":"2022-03-07T07:34:08.313Z","description":"HondaBulket","tagName":"Nut 18"},
-    {"id":110,"tag_cont":"0.27","tag_add_dt":"2022-03-07T07:34:08.313Z","description":"HondaBulket","tagName":"Nut 19"},
-    {"id":111,"tag_cont":"0","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 20"},
-    {"id":112,"tag_cont":"0.08000001","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 21"},
-    {"id":113,"tag_cont":"0.06","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 22"},
-    {"id":114,"tag_cont":"1.3","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 61"},
-    {"id":115,"tag_cont":"1.25","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 62"},
-    {"id":116,"tag_cont":"1.25","tag_add_dt":"2022-03-07T07:34:08.317Z","description":"HondaBulket","tagName":"Nut 63"},
-    {"id":117,"tag_cont":"1.43","tag_add_dt":"2022-03-07T08:34:08.320Z","description":"HondaBulket","tagName":"Nut 64"},
-    {"id":118,"tag_cont":"1.31","tag_add_dt":"2022-03-07T08:34:08.320Z","description":"HondaBulket","tagName":"Nut 65"},
-    {"id":119,"tag_cont":"1.4","tag_add_dt":"2022-03-08T08:34:08.320Z","description":"HondaBulket","tagName":"Nut 66"},
-    {"id":120,"tag_cont":"0.09000002","tag_add_dt":"2022-03-08T20:34:08.320Z","description":"HondaBulket","tagName":"Nut 81"}]
-});
+  const jsondata = require('./results.json')
+  res.json(jsondata);
 });
 
 app.listen(PORT, () => {

@@ -26,11 +26,6 @@ function CustomToolbar() {
 
 //表头
 const columns = [
-  // { field: 'id', 
-  //   headerName: 'ID', 
-  //   width: 90,
-  //   editable: false,
-  // },
   {
     field: 'tagName',
     headerName: 'Tag Name',
@@ -46,9 +41,10 @@ const columns = [
   {
     field: 'tag_add_dt',
     headerName: 'Add Date',
-    width: 300,
+    width: 500,
     editable: false,
-    type: 'date',
+    //这里type暂时选择用dateTime,这样可以显示出秒。之前是date
+    type: 'dateTime',   
     valueGetter: ({ value }) => {
       var newDate = new Date(value);
       newDate.setHours(newDate.getHours() + 5);
@@ -70,10 +66,8 @@ export default function MyGrid() {
   React.useEffect(() => {
     fetch("/api/fakeData02")
       .then((res) => res.json())
-      .then((data) => setData(data.msg));//information from server
+      .then((data) => setData(data));//注意：之前这里是data.msg（之前JSON里有msg: []）
   }, []);
-
-
 
 // drawer for graph
   const [drawer, setDrawer] = React.useState(false);
@@ -86,8 +80,6 @@ export default function MyGrid() {
     setDrawer(!drawer);
   };
 
-
-  
   const [pageSize, setPageSize] = React.useState(20);
 
   return (
