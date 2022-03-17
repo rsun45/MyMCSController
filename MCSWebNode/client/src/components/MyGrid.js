@@ -11,6 +11,7 @@ import { DataGrid,
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Graph from './Graph';
+import Box from "@mui/material/Box";
 
 
 function CustomToolbar() {
@@ -44,7 +45,7 @@ const columns = [
     width: 500,
     editable: false,
     //这里type暂时选择用dateTime,这样可以显示出秒。之前是date
-    type: 'dateTime',   
+    type: 'dateTime',
     valueGetter: ({ value }) => {
       var newDate = new Date(value);
       newDate.setHours(newDate.getHours() + 5);
@@ -66,10 +67,10 @@ export default function MyGrid() {
   React.useEffect(() => {
     fetch("/api/fakeData02")
       .then((res) => res.json())
-      .then((data) => setData(data));//注意：之前这里是data.msg（之前JSON里有msg: []）
+      .then((data) => setData(data));
   }, []);
 
-// drawer for graph
+  // drawer for graph
   const [drawer, setDrawer] = React.useState(false);
 
   const toggleDrawer = () => (event) => {
@@ -109,9 +110,14 @@ export default function MyGrid() {
         anchor='right'
         open={drawer}
         onClose={toggleDrawer()}
-      >
-        <Graph />
-      </Drawer>
+    >
+        <Box
+          /* 可以再调整 */
+          sx={{p: 20, width: 1000}}
+        >
+          <Graph />
+        </Box>
+    </Drawer>
     </div>
   );
   
