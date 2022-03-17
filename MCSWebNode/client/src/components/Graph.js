@@ -123,9 +123,9 @@ ${str2}`
     seriesField: 'tagName',
     yAxis: {
         //可以再调整
-        min: -1,
-        max: 25, 
-        tickCount: 10,
+        //min: -1,
+        //max: 25, 
+        tickCount: 5,
     },
     xAxis: {
       //可以再调整
