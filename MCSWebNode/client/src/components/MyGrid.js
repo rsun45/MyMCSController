@@ -25,6 +25,10 @@ function CustomToolbar() {
   );
 }
 
+function getFullTime(params) {
+  return `${params.row.tag_add_dt.substr(0, params.row.tag_add_dt.indexOf('T')) || ''} ${params.row.tag_add_dt.substr(params.row.tag_add_dt.indexOf('T') + 1, params.row.tag_add_dt.length) || ''}`
+}
+
 //表头
 const columns = [
   {
@@ -45,12 +49,13 @@ const columns = [
     width: 500,
     editable: false,
     //这里type暂时选择用dateTime,这样可以显示出秒。之前是date
-    type: 'dateTime',
-    valueGetter: ({ value }) => {
+    //type: 'dateTime',
+    valueGetter: getFullTime,
+    /* valueGetter: ({ value }) => {
       var newDate = new Date(value);
       newDate.setHours(newDate.getHours() + 5);
       // console.log(newDate.setHours(newDate.getHours() + 5));
-      return newDate},
+      return newDate}, */
   },
   {
     field: 'description',
@@ -69,6 +74,8 @@ export default function MyGrid() {
       .then((res) => res.json())
       .then((data) => setData(data));
   }, []);
+
+  //console.log(typeof(data[0].tag_add_dt))
 
   // drawer for graph
   const [drawer, setDrawer] = React.useState(false);
