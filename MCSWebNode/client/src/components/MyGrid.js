@@ -65,9 +65,9 @@ export default function MyGrid() {
   const [data, setData] = React.useState(null);
 
   React.useEffect(() => {
-    fetch("/api/fakeData02")
+    fetch("/api/data02")
       .then((res) => res.json())
-      .then((data) => setData(data));
+      .then((data) => setData(data));//information from server
   }, []);
 
   // drawer for graph

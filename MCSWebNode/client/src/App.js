@@ -5,7 +5,7 @@ import SectionTabs from './components/SectionTabs';
 
 
 function App() {
-  
+
   return (
     <div className="App">
       <TopBar />
