@@ -11,6 +11,7 @@ import { DataGrid,
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Graph from './Graph';
+import TimeSelector from './TimeSelector';
 import Box from "@mui/material/Box";
 
 
@@ -64,11 +65,11 @@ const columns = [
     //这里type暂时选择用dateTime,这样可以显示出秒。之前是date
     type: 'dateTime',
     // valueGetter: getFullTime,
-      valueGetter: ({ value }) => {
-      var newDate = new Date(value);
-      newDate.setHours(newDate.getHours()+4);
-      // console.log(newDate.setHours(newDate.getHours() + 5));
-      return newDate}, 
+      // valueGetter: ({ value }) => {
+      // var newDate = new Date(value);
+      // newDate.setHours(newDate.getHours()+4);
+      // // console.log(newDate.setHours(newDate.getHours() + 5));
+      // return newDate}, 
   },{
     field: 'EndTime',
     headerName: 'End Time',
@@ -77,11 +78,11 @@ const columns = [
     //这里type暂时选择用dateTime,这样可以显示出秒。之前是date
     type: 'dateTime',
     // valueGetter: getFullTime,
-      valueGetter: ({ value }) => {
-      var newDate = new Date(value);
-      newDate.setHours(newDate.getHours()+4);
-      // console.log(newDate.setHours(newDate.getHours() + 5));
-      return newDate}, 
+      // valueGetter: ({ value }) => {
+      // var newDate = new Date(value);
+      // newDate.setHours(newDate.getHours()+4);
+      // // console.log(newDate.setHours(newDate.getHours() + 5));
+      // return newDate}, 
   },
   
 ];
@@ -98,7 +99,7 @@ export default function MyGrid() {
     }, []);
 
     
-  console.log(data);
+  //console.log(data);
 
   //console.log(typeof(data[0].tag_add_dt))
 
@@ -117,6 +118,7 @@ export default function MyGrid() {
 
   return (
     <div style={{ height: 1000,  width: '100%'}}>
+      <TimeSelector data={data} setData={setData} />
       <DataGrid
         rows = {data}
         columns={columns}
