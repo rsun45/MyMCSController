@@ -114,7 +114,7 @@ ${str2}`
     else
       return false;
   }
-  const arr = data.filter(filterByTag);
+  const arr = data.filter(filterByTag)
 
   const config = {
     data: arr,

@@ -1,7 +1,7 @@
 import React from "react";
 import './TopBar.css';
 
-function TopBar() {
+export default function TopBar() {
 
   return (
     <div className="TopBar">
@@ -9,5 +9,3 @@ function TopBar() {
     </div>
   );
 }
-
-export default TopBar;
