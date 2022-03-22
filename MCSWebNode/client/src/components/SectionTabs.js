@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import './SectionTabs.css';
 import MyGrid from './MyGrid';
-import Graph from './Graph';
+// import Graph from './Graph';
 
 
 function TabPanel(props) {
@@ -53,9 +53,9 @@ function TabPanel(props) {
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="Honda Bulket" {...a11yProps(0)} />
-            <Tab label="Section Two" {...a11yProps(1)} />
-            <Tab label="Section Three" {...a11yProps(2)} />
+            <Tab label="summary" {...a11yProps(0)} />
+            <Tab label="data" {...a11yProps(1)} />
+            {/* <Tab label="Section Three" {...a11yProps(2)} /> */}
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -64,9 +64,9 @@ function TabPanel(props) {
         <TabPanel value={value} index={1}>
           <MyGrid />
         </TabPanel>
-        <TabPanel value={value} index={2}>
+        {/* <TabPanel value={value} index={2}>
           <Graph />
-        </TabPanel>
+        </TabPanel> */}
       </Box>
     );
   }

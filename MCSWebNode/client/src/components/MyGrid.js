@@ -25,44 +25,65 @@ function CustomToolbar() {
   );
 }
 
-function getFullTime(params) {
-  return `${params.row.tag_add_dt.substr(0, params.row.tag_add_dt.indexOf('T')) || ''} ${params.row.tag_add_dt.substr(params.row.tag_add_dt.indexOf('T') + 1, params.row.tag_add_dt.length) || ''}`
-}
+// function getFullTime(params) {
+//   return `${params.row.tag_add_dt.substr(0, params.row.tag_add_dt.indexOf('T')) || ''} ${params.row.tag_add_dt.substr(params.row.tag_add_dt.indexOf('T') + 1, params.row.tag_add_dt.length) || ''}`
+// }
 
 //表头
 const columns = [
   {
-    field: 'tagName',
-    headerName: 'Tag Name',
+    field: 'SerialNumber',
+    headerName: 'Serial Number',
     width: 150,
     editable: false,
-  },
-  {
-    field: 'tag_cont',
-    headerName: 'Tag',
-    width: 400,
+  },{
+    field: 'SourceStationId',
+    headerName: 'SourceS tationId',
+    width: 150,
     editable: false,
-  },
-  {
-    field: 'tag_add_dt',
-    headerName: 'Add Date',
-    width: 500,
+  },{
+    field: 'TargetStationId',
+    headerName: 'Target StationId',
+    width: 150,
     editable: false,
-    //这里type暂时选择用dateTime,这样可以显示出秒。之前是date
-    //type: 'dateTime',
-    valueGetter: getFullTime,
-    /* valueGetter: ({ value }) => {
-      var newDate = new Date(value);
-      newDate.setHours(newDate.getHours() + 5);
-      // console.log(newDate.setHours(newDate.getHours() + 5));
-      return newDate}, */
-  },
-  {
-    field: 'description',
-    headerName: 'Description',
+  },{
+    field: 'Type',
+    headerName: 'Type',
+    width: 150,
+    editable: false,
+  },{
+    field: 'WpcNumber',
+    headerName: 'Wpc Number',
+    width: 150,
+    editable: false,
+  },{
+    field: 'StartTime',
+    headerName: 'Start Time',
     width: 300,
     editable: false,
+    //这里type暂时选择用dateTime,这样可以显示出秒。之前是date
+    type: 'dateTime',
+    // valueGetter: getFullTime,
+      valueGetter: ({ value }) => {
+      var newDate = new Date(value);
+      newDate.setHours(newDate.getHours()+4);
+      // console.log(newDate.setHours(newDate.getHours() + 5));
+      return newDate}, 
+  },{
+    field: 'EndTime',
+    headerName: 'End Time',
+    width: 300,
+    editable: false,
+    //这里type暂时选择用dateTime,这样可以显示出秒。之前是date
+    type: 'dateTime',
+    // valueGetter: getFullTime,
+      valueGetter: ({ value }) => {
+      var newDate = new Date(value);
+      newDate.setHours(newDate.getHours()+4);
+      // console.log(newDate.setHours(newDate.getHours() + 5));
+      return newDate}, 
   },
+  
 ];
 
 export default function MyGrid() {
@@ -70,10 +91,14 @@ export default function MyGrid() {
   const [data, setData] = React.useState(null);
 
   React.useEffect(() => {
-    fetch("/api/data02")
+    fetch("/api/data01")
       .then((res) => res.json())
       .then((data) => setData(data));//information from server
-  }, []);
+  
+    }, []);
+
+    
+  console.log(data);
 
   //console.log(typeof(data[0].tag_add_dt))
 

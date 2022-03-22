@@ -90,6 +90,32 @@ app.get("/api/data02", async (req, res) => {
 
 });
 
+
+// API for get first page's data
+app.get("/api/data01", async (req, res) => {
+
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+    // const result = await sql.query`SELECT * FROM tblTagContent WHERE  controller_ip='192.168.1.10'`
+
+    const result = await sql.query`
+    select *
+    from tblParts
+    `
+
+    // console.dir(result)
+    console.log("request data01")
+    res.json(result.recordsets[0]);
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+
+
 //read data from results.json (某一天的全部数据)
 app.get("/api/fakeData02", (req, res) => {
   const jsondata = require('./results.json')
