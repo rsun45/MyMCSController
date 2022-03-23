@@ -145,7 +145,7 @@ ${str2}`
 export default DemoLine;
 */
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Mix } from '@ant-design/plots';
 
 //import { DataView } from '@antv/data-set';
@@ -209,12 +209,12 @@ const DemoMix = () => {
         data: lastMin,
         region: {
           start: {
-            x: 0,
-            y: 0,
+            x: -0.3,
+            y: 0.5,
           },
           end: {
             x: 0.5,
-            y: 0.4,
+            y: 1,
           },
         },
         coordinate: {
@@ -265,17 +265,19 @@ const DemoMix = () => {
           },
         ],
       },
+
+
       //2nd
       {
         data: lastHour,
         region: {
           start: {
             x: 0.5,
-            y: 0,
+            y: 0.5,
           },
           end: {
-            x: 1,
-            y: 0.45,
+            x: 0.8,
+            y: 1,
           },
         },
         coordinate: {
@@ -322,11 +324,11 @@ const DemoMix = () => {
         data: lastDay,
         region: {
           start: {
-            x: 0,
-            y: 0.52,
+            x: 0.2,
+            y: 0.5,
           },
           end: {
-            x: 0.48,
+            x: 0.5,
             y: 1,
           },
         },
@@ -374,8 +376,8 @@ const DemoMix = () => {
         data: lastMonth,
         region: {
           start: {
-            x: 0.52,
-            y: 0.52,
+            x: 0.8,
+            y: 0.5,
           },
           end: {
             x: 1,
@@ -386,7 +388,7 @@ const DemoMix = () => {
         coordinate: {
           type: 'theta',
           cfg: {
-            radius: 0.85,
+            radius: 0.8,
             innerRadius: 0.6,
           },
         },
