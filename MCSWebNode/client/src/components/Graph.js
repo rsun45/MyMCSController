@@ -148,8 +148,6 @@ export default DemoLine;
 import React from 'react';
 import { Mix } from '@ant-design/plots';
 
-//import { DataView } from '@antv/data-set';
-
 const DemoMix = () => {
 
   const lastMin = [
@@ -197,7 +195,7 @@ const DemoMix = () => {
   ];
 
   const config = {
-    height: 500,
+    height: 700,
     padding: 'auto',
     tooltip: {
       showMarkers: false,
@@ -236,7 +234,7 @@ const DemoMix = () => {
         axes: {
           value: {
             title: {
-              text: 'LastMin',
+              text: 'Current Day',
             },
             grid: null,
             tickLine: null,
@@ -276,7 +274,7 @@ const DemoMix = () => {
             y: 0.5,
           },
           end: {
-            x: 0.8,
+            x: 0.75,
             y: 1,
           },
         },
@@ -290,7 +288,7 @@ const DemoMix = () => {
         axes: {
           value: {
             title: {
-              text: 'LastHour',
+              text: 'Current Hour',
             },
             grid: null,
             tickLine: null,
@@ -342,7 +340,7 @@ const DemoMix = () => {
         axes: {
           value: {
             title: {
-              text: 'LastDay',
+              text: 'Last Day',
             },
             grid: null,
             tickLine: null,
@@ -376,7 +374,7 @@ const DemoMix = () => {
         data: lastMonth,
         region: {
           start: {
-            x: 0.8,
+            x: 0.78,
             y: 0.5,
           },
           end: {
@@ -395,7 +393,7 @@ const DemoMix = () => {
         axes: {
           value: {
             title: {
-              text: 'LastMonth',
+              text: 'Last Hour',
             },
             grid: null,
             tickLine: null,
