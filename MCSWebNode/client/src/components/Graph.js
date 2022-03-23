@@ -69,6 +69,7 @@ const DemoPie = () => {
 
  */
 
+/*
 import React, { useState, useEffect } from 'react';
 import { Line } from '@ant-design/plots';
 
@@ -142,4 +143,289 @@ ${str2}`
 };
 
 export default DemoLine;
+*/
+
+import React, { useState, useEffect } from 'react';
+import { Mix } from '@ant-design/plots';
+
+//import { DataView } from '@antv/data-set';
+
+const DemoMix = () => {
+
+  const lastMin = [
+    {
+      type: 'Success',
+      value: 90,
+    },
+    {
+      type: 'Fail',
+      value: 7,
+    },
+  ];
+
+  const lastHour = [
+    {
+      type: 'Success',
+      value: 90,
+    },
+    {
+      type: 'Fail',
+      value: 8,
+    },
+  ];
+
+  const lastDay = [
+    {
+      type: 'Success',
+      value: 90,
+    },
+    {
+      type: 'Fail',
+      value: 4,
+    },
+  ];
+
+  const lastMonth = [
+    {
+      type: 'Success',
+      value: 90,
+    },
+    {
+      type: 'Fail',
+      value: 3,
+    },
+  ];
+
+  const config = {
+    height: 500,
+    padding: 'auto',
+    tooltip: {
+      showMarkers: false,
+    },
+
+    views: [
+      //1st
+      {
+        data: lastMin,
+        region: {
+          start: {
+            x: 0,
+            y: 0,
+          },
+          end: {
+            x: 0.5,
+            y: 0.4,
+          },
+        },
+        coordinate: {
+          type: 'theta',
+          cfg: {
+            radius: 0.85,
+            innerRadius: 0.6,
+            label: {
+              type: 'inner',
+              offset: '-50%',
+              content: '1',
+              style: {
+                textAlign: 'center',
+                fontSize: 14,
+                },
+            },
+          },
+        },
+        axes: {
+          value: {
+            title: {
+              text: 'LastMin',
+            },
+            grid: null,
+            tickLine: null,
+            line: false,
+            ticks: false,
+          },
+        },
+        geometries: [
+          {
+            type: 'interval',
+            xField: '1',
+            yField: 'value',
+            colorField: 'type',
+            mapping: {},
+            adjust: {
+              type: 'stack',
+            },
+          },
+        ],
+        interactions: [
+          {
+            type: 'element-active',
+          },
+          {
+            type: 'association-highlight',
+          },
+        ],
+      },
+      //2nd
+      {
+        data: lastHour,
+        region: {
+          start: {
+            x: 0.5,
+            y: 0,
+          },
+          end: {
+            x: 1,
+            y: 0.45,
+          },
+        },
+        coordinate: {
+          type: 'theta',
+          cfg: {
+            radius: 0.85,
+            innerRadius: 0.6,
+          },
+        },
+        axes: {
+          value: {
+            title: {
+              text: 'LastHour',
+            },
+            grid: null,
+            tickLine: null,
+            line: false,
+            ticks: false,
+          },
+        },
+        geometries: [
+          {
+            type: 'interval',
+            xField: '1',
+            yField: 'value',
+            colorField: 'type',
+            mapping: {},
+            adjust: {
+              type: 'stack',
+            },
+          },
+        ],
+        interactions: [
+          {
+            type: 'element-active',
+          },
+          {
+            type: 'association-highlight',
+          },
+        ],
+      },
+      //3rd
+      {
+        data: lastDay,
+        region: {
+          start: {
+            x: 0,
+            y: 0.52,
+          },
+          end: {
+            x: 0.48,
+            y: 1,
+          },
+        },
+        coordinate: {
+          type: 'theta',
+          cfg: {
+            radius: 0.85,
+            innerRadius: 0.6,
+          },
+        },
+        axes: {
+          value: {
+            title: {
+              text: 'LastDay',
+            },
+            grid: null,
+            tickLine: null,
+            line: false,
+            ticks: false,
+          },
+        },
+        geometries: [
+          {
+            type: 'interval',
+            xField: '1',
+            yField: 'value',
+            colorField: 'type',
+            mapping: {},
+            adjust: {
+              type: 'stack',
+            },
+          },
+        ],
+        interactions: [
+          {
+            type: 'element-active',
+          },
+          {
+            type: 'association-highlight',
+          },
+        ],
+      },
+      //4th
+      {
+        data: lastMonth,
+        region: {
+          start: {
+            x: 0.52,
+            y: 0.52,
+          },
+          end: {
+            x: 1,
+            y: 1,
+          },
+        },
+
+        coordinate: {
+          type: 'theta',
+          cfg: {
+            radius: 0.85,
+            innerRadius: 0.6,
+          },
+        },
+        axes: {
+          value: {
+            title: {
+              text: 'LastMonth',
+            },
+            grid: null,
+            tickLine: null,
+            line: false,
+            ticks: false,
+          },
+        },
+        geometries: [
+          {
+            type: 'interval',
+            xField: '1',
+            yField: 'value',
+            colorField: 'type',
+            mapping: {},
+            adjust: {
+              type: 'stack',
+            },
+          },
+        ],
+        interactions: [
+          {
+            type: 'element-active',
+          },
+          {
+            type: 'association-highlight',
+          },
+        ],
+      },
+    ],
+  };
+  return <Mix {...config} />;
+};
+
+export default DemoMix;
 
