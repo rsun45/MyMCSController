@@ -2,16 +2,32 @@ import React from "react";
 import './App.css';
 import TopBar from './components/TopBar';
 import SectionTabs from './components/SectionTabs';
+import SerialPage from './components/SerialPage';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route
+} from "react-router-dom";
 
 
 function App() {
 
-  return (
-    <div className="App">
-      <TopBar />
-      <SectionTabs />
-    </div>
-  );
+return(
+  <Router>
+    <TopBar /> 
+    <Routes>
+      <Route  path="/" element={<SectionTabs />} />
+      <Route  path="/serical" element={<SerialPage />} />
+
+    </Routes>
+  </Router>
+
+);
+
+
+
 }
+
+
 
 export default App;

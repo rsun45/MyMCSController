@@ -4,10 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import './SectionTabs.css';
-import MyGrid from './MyGrid';
 
-// import Graph from './Graph';
 
 
 function TabPanel(props) {
@@ -43,7 +40,7 @@ function TabPanel(props) {
     };
   }
   
-  export default function SectionTabs() {
+  export default function StationSectionBar() {
     const [value, setValue] = React.useState(0);
   
     const handleChange = (event, newValue) => {
@@ -54,20 +51,24 @@ function TabPanel(props) {
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="summary" {...a11yProps(0)} />
-            <Tab label="data" {...a11yProps(1)} />
-            {/* <Tab label="Section Three" {...a11yProps(2)} /> */}
+            <Tab label="Section 10" {...a11yProps(0)} />
+            <Tab label="Section 20" {...a11yProps(1)} />
+            <Tab label="Section 30" {...a11yProps(2)} />
+            <Tab label="Section 40" {...a11yProps(3)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          Item 1
+          
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <MyGrid />
+          
         </TabPanel>
-        {/* <TabPanel value={value} index={2}>
-          <Graph />
-        </TabPanel> */}
+        <TabPanel value={value} index={2}>
+          
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          
+        </TabPanel>
       </Box>
     );
   }

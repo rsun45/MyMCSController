@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 import Graph from './Graph';
 import TimeSelector from './TimeSelector';
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom"
 
 
 function CustomToolbar() {
@@ -116,6 +117,9 @@ export default function MyGrid() {
 
   const [pageSize, setPageSize] = React.useState(20);
 
+  // change page
+  const navigate = useNavigate();
+
   return (
     <div style={{ height: 1000,  width: '100%'}}>
       <TimeSelector data={data} setData={setData} />
@@ -134,6 +138,14 @@ export default function MyGrid() {
 
         // checkboxSelection
         disableSelectionOnClick
+
+        // double click event
+        onCellDoubleClick={
+          (params) => {
+            // console.log(params.id);
+            navigate('serical', { state: {id:params.id} });
+          }
+      }
 
 
       />
