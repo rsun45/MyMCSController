@@ -102,8 +102,6 @@ export default function MyGrid() {
     
   //console.log(data);
 
-  //console.log(typeof(data[0].tag_add_dt))
-
   // drawer for graph
   const [drawer, setDrawer] = React.useState(false);
 
@@ -121,6 +119,8 @@ export default function MyGrid() {
   const navigate = useNavigate();
 
   return (
+
+    /* 数据表格部分 */
     <div style={{ height: 1000,  width: '100%'}}>
       <TimeSelector data={data} setData={setData} />
       <DataGrid
@@ -142,13 +142,15 @@ export default function MyGrid() {
         // double click event
         onCellDoubleClick={
           (params) => {
-            // console.log(params.id);
-            navigate('serical', { state: {id:params.id} });
+            //console.log(params);
+            navigate('serical', { state: {id:params.id} });// ???
           }
-      }
+        }
 
 
       />
+
+    {/* open graph button */}
     <div class="gridButton">
       <Button onClick={toggleDrawer()} variant="contained" color='info'>Open Graph</Button>
     </div>
@@ -165,6 +167,7 @@ export default function MyGrid() {
         </Box>
     </Drawer>
     </div>
+
   );
   
 }

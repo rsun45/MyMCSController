@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import './SectionTabs.css';
 import MyGrid from './MyGrid';
+import Summary from './Summary'
 
 import Graph from './Graph';
 
@@ -60,7 +61,7 @@ function TabPanel(props) {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          Item 1
+          <Summary />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <MyGrid />
