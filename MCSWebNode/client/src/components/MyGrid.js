@@ -40,7 +40,7 @@ const columns = [
     editable: false,
   },{
     field: 'SourceStationId',
-    headerName: 'SourceS tationId',
+    headerName: 'Source StationId',
     width: 150,
     editable: false,
   },{

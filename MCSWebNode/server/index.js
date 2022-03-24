@@ -82,7 +82,7 @@ app.get("/api/data02", async (req, res) => {
     `
 
     // console.dir(result)
-    console.log("request data02")
+    console.log("request data02");
     res.json(result.recordsets[0]);
   } catch (err) {
     console.log(err);
@@ -91,7 +91,7 @@ app.get("/api/data02", async (req, res) => {
 });
 
 
-// API for get first page's data
+// API to get first page's data
 app.get("/api/data01", async (req, res) => {
 
   try {
@@ -105,7 +105,83 @@ app.get("/api/data01", async (req, res) => {
     `
 
     // console.dir(result)
-    console.log("request data01")
+    console.log("request data01");
+    res.json(result.recordsets[0]);
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+// API to get station10 data
+app.get("/api/station10/:id", async (req, res) => {
+  let {id} = req.params;
+
+
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+
+    const result = await sql.query('select pd.id, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 10 and pa.id = ' + id + ' order by PartId, StationId, TagId');
+
+    console.log("request station10 " + id);
+    res.json(result.recordsets[0]);
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+// API to get station20 data
+app.get("/api/station20/:id", async (req, res) => {
+  let {id} = req.params;
+
+
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+
+    const result = await sql.query('select pd.id, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 20 and pa.id = ' + id + ' order by PartId, StationId, TagId');
+
+    console.log("request station20 " + id);
+    res.json(result.recordsets[0]);
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+// API to get station30 data
+app.get("/api/station30/:id", async (req, res) => {
+  let {id} = req.params;
+
+
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+
+    const result = await sql.query('select pd.id, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 30 and pa.id = ' + id + ' order by PartId, StationId, TagId');
+
+    console.log("request station30 " + id);
+    res.json(result.recordsets[0]);
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+// API to get station40 data
+app.get("/api/station40/:id", async (req, res) => {
+  let {id} = req.params;
+
+
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+
+    const result = await sql.query('select pd.id, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 40 and pa.id = ' + id + ' order by PartId, StationId, TagId');
+
+    console.log("request station40 " + id);
     res.json(result.recordsets[0]);
   } catch (err) {
     console.log(err);
