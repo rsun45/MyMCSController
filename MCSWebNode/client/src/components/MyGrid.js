@@ -66,11 +66,11 @@ const columns = [
     //这里type暂时选择用dateTime,这样可以显示出秒。之前是date
     type: 'dateTime',
     // valueGetter: getFullTime,
-      // valueGetter: ({ value }) => {
-      // var newDate = new Date(value);
-      // newDate.setHours(newDate.getHours()+4);
-      // // console.log(newDate.setHours(newDate.getHours() + 5));
-      // return newDate}, 
+      valueGetter: ({ value }) => {
+      var newDate = new Date(value);
+      newDate.setHours(newDate.getHours()+4);
+      // console.log(newDate.setHours(newDate.getHours() + 5));
+      return newDate}, 
   },{
     field: 'EndTime',
     headerName: 'End Time',
@@ -79,11 +79,11 @@ const columns = [
     //这里type暂时选择用dateTime,这样可以显示出秒。之前是date
     type: 'dateTime',
     // valueGetter: getFullTime,
-      // valueGetter: ({ value }) => {
-      // var newDate = new Date(value);
-      // newDate.setHours(newDate.getHours()+4);
-      // // console.log(newDate.setHours(newDate.getHours() + 5));
-      // return newDate}, 
+      valueGetter: ({ value }) => {
+      var newDate = new Date(value);
+      newDate.setHours(newDate.getHours()+4);
+      // console.log(newDate.setHours(newDate.getHours() + 5));
+      return newDate}, 
   },
   
 ];
