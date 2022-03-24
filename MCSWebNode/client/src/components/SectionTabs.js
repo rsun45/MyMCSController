@@ -8,7 +8,7 @@ import './SectionTabs.css';
 import MyGrid from './MyGrid';
 import Summary from './Summary'
 
-import Graph from './Graph';
+import LineChart from './LineChart';
 
 
 function TabPanel(props) {
@@ -67,7 +67,7 @@ function TabPanel(props) {
           <MyGrid />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <Graph />
+          <LineChart />
         </TabPanel>
       </Box>
     );
