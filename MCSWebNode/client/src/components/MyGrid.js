@@ -143,7 +143,7 @@ export default function MyGrid() {
         onCellDoubleClick={
           (params) => {
             //console.log(params);
-            navigate('serical', { state: {id:params.id} });// ???
+            navigate('serical', { state: {id:params.id} });
           }
         }
 

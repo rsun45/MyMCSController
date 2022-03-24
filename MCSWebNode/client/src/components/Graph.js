@@ -207,18 +207,18 @@ const DemoMix = () => {
         data: lastMin,
         region: {
           start: {
-            x: -0.3,
+            x: 0,
             y: 0.5,
           },
           end: {
-            x: 0.5,
+            x: 0.25,
             y: 1,
           },
         },
         coordinate: {
           type: 'theta',
           cfg: {
-            radius: 0.85,
+            radius: 0.55,
             innerRadius: 0.6,
             label: {
               type: 'inner',
@@ -270,18 +270,18 @@ const DemoMix = () => {
         data: lastHour,
         region: {
           start: {
-            x: 0.5,
+            x: 0.25,
             y: 0.5,
           },
           end: {
-            x: 0.75,
+            x: 0.5,
             y: 1,
           },
         },
         coordinate: {
           type: 'theta',
           cfg: {
-            radius: 0.85,
+            radius: 0.55,
             innerRadius: 0.6,
           },
         },
@@ -322,18 +322,18 @@ const DemoMix = () => {
         data: lastDay,
         region: {
           start: {
-            x: 0.2,
+            x: 0.5,
             y: 0.5,
           },
           end: {
-            x: 0.5,
+            x: 0.75,
             y: 1,
           },
         },
         coordinate: {
           type: 'theta',
           cfg: {
-            radius: 0.85,
+            radius: 0.55,
             innerRadius: 0.6,
           },
         },
@@ -374,11 +374,11 @@ const DemoMix = () => {
         data: lastMonth,
         region: {
           start: {
-            x: 0.76,
+            x: 0.75,
             y: 0.5,
           },
           end: {
-            x: 1.01,
+            x: 1,
             y: 1,
           },
         },
@@ -386,7 +386,7 @@ const DemoMix = () => {
         coordinate: {
           type: 'theta',
           cfg: {
-            radius: 0.85,
+            radius: 0.55,
             innerRadius: 0.6,
           },
         },
