@@ -374,11 +374,11 @@ const DemoMix = () => {
         data: lastMonth,
         region: {
           start: {
-            x: 0.78,
+            x: 0.76,
             y: 0.5,
           },
           end: {
-            x: 1,
+            x: 1.01,
             y: 1,
           },
         },
@@ -386,7 +386,7 @@ const DemoMix = () => {
         coordinate: {
           type: 'theta',
           cfg: {
-            radius: 0.8,
+            radius: 0.85,
             innerRadius: 0.6,
           },
         },
