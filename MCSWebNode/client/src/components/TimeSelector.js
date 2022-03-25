@@ -79,8 +79,8 @@ const TimeSelector = ({data, setData}) => {
       />
     </LocalizationProvider>
 
-    <Button onClick={toggleButton} variant="contained" color='info'>UPDATE</Button>
-    <Button onClick={toggleButtonClear} variant="contained" color='info'>CLEAR</Button>
+    <Button sx={{ margin: '10px' }} onClick={toggleButton} variant="contained" color='info'>UPDATE</Button>
+    <Button sx={{ margin: '10px' }} onClick={toggleButtonClear} variant="contained" color='info'>CLEAR</Button>
 
 
     </div>
