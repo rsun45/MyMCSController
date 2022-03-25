@@ -34,6 +34,11 @@ function CustomToolbar() {
 //表头
 const columns = [
   {
+    field: 'PartState',
+    headerName: 'Part State',
+    width: 150,
+    editable: false,
+  },{
     field: 'SerialNumber',
     headerName: 'Serial Number',
     width: 150,
@@ -51,12 +56,12 @@ const columns = [
   },{
     field: 'Type',
     headerName: 'Type',
-    width: 150,
+    width: 100,
     editable: false,
   },{
     field: 'WpcNumber',
     headerName: 'Wpc Number',
-    width: 150,
+    width: 100,
     editable: false,
   },{
     field: 'StartTime',
