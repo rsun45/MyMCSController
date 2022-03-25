@@ -12,12 +12,10 @@ const SerialPage = () => {
 
   const navigate = useNavigate();
 
-
   return (
     <div >
         <Button onClick={() => navigate(-1)} variant="contained" color='primary'>GO BACK</Button>
-        <StationSectionBar sendID={id.toString()}/>
-
+        <StationSectionBar sendID={id.toString()}/>                                              
     </div>
   );
 }
