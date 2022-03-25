@@ -1,8 +1,13 @@
 import Box from '@mui/material/Box';
 import * as React from 'react';
-import Graph from './Graph';
+// import Graph from './Graph';
 import Clock from 'react-live-clock';
 import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import PieChartCurrentDay from './PieChartCurrentDay';
+import PieChartCurrentShift from './PieChartCurrentShift';
+import PieChartLastShift from './PieChartLastShift';
+import PieChartYesterday from './PieChartYesterday';
 
 export default function Summary(){
     return (
@@ -27,13 +32,28 @@ export default function Summary(){
                 '& > :not(style)': {
                   m: 3,
                   width: 1600,
-                  height: 400,
+                  height: 300,
                 },
             }}>
                 <Paper variant="outlined">optiontal function 1</Paper>
                 <Paper variant="outlined">optiontal function 2</Paper>
             </Box>
-            <Graph />
+            
+            
+            <Grid container spacing={0} columns={4}>
+                <Grid item xs={1}>
+                    <PieChartCurrentShift/>
+                </Grid>
+                <Grid item xs={1}>
+                    <PieChartLastShift/>
+                </Grid>
+                <Grid item xs={1}>
+                    <PieChartCurrentDay/>
+                </Grid>
+                <Grid item xs={1}>
+                    <PieChartYesterday/>
+                </Grid>
+            </Grid>
         </Box>
     );
 }

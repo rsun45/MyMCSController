@@ -8,11 +8,11 @@ import { DataGrid,
          GridToolbarFilterButton,
        } from '@mui/x-data-grid';
 
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import Graph from './Graph';
+// import Drawer from '@mui/material/Drawer';
+// import Button from '@mui/material/Button';
+// import Graph from './Graph';
+// import Box from "@mui/material/Box";
 import TimeSelector from './TimeSelector';
-import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom"
 
 
@@ -103,15 +103,15 @@ export default function MyGrid() {
   //console.log(data);
 
   // drawer for graph
-  const [drawer, setDrawer] = React.useState(false);
+  // const [drawer, setDrawer] = React.useState(false);
 
-  const toggleDrawer = () => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
+  // const toggleDrawer = () => (event) => {
+  //   if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+  //     return;
+  //   }
 
-    setDrawer(!drawer);
-  };
+  //   setDrawer(!drawer);
+  // };
 
   const [pageSize, setPageSize] = React.useState(20);
 
@@ -151,7 +151,7 @@ export default function MyGrid() {
       />
 
     {/* open graph button */}
-    <div class="gridButton">
+    {/* <div class="gridButton">
       <Button onClick={toggleDrawer()} variant="contained" color='info'>Open Graph</Button>
     </div>
     <Drawer
@@ -160,12 +160,12 @@ export default function MyGrid() {
         onClose={toggleDrawer()}
     >
         <Box
-          /* 可以再调整 */
+          
           sx={{p: 20, width: 1000}}
         >
           <Graph />
         </Box>
-    </Drawer>
+    </Drawer> */}
     </div>
 
   );

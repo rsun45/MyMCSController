@@ -234,7 +234,7 @@ const DemoMix = () => {
         axes: {
           value: {
             title: {
-              text: 'Current Day',
+              text: 'Current Shift',
             },
             grid: null,
             tickLine: null,
