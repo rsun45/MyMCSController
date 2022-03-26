@@ -34,23 +34,23 @@ function CustomToolbar() {
 //表头
 const columns = [
   {
-    field: 'PartState',
-    headerName: 'Part State',
-    width: 150,
-    editable: false,
-  },{
     field: 'SerialNumber',
     headerName: 'Serial Number',
     width: 150,
     editable: false,
   },{
+    field: 'PartState',
+    headerName: 'Part State',
+    width: 150,
+    editable: false,
+  },{
     field: 'SourceStationId',
-    headerName: 'Source StationId',
+    headerName: 'Source Station',
     width: 150,
     editable: false,
   },{
     field: 'TargetStationId',
-    headerName: 'Target StationId',
+    headerName: 'Target Station',
     width: 150,
     editable: false,
   },{
