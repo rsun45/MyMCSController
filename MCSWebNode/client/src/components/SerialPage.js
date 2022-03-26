@@ -12,7 +12,6 @@ const SerialPage = () => {
 
   const navigate = useNavigate();
 
-
   return (
     <div >
         <Button sx={{ margin: '10px' }} onClick={() => navigate(-1)} variant="contained" color='primary'>GO BACK</Button>

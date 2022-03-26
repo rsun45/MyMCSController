@@ -97,14 +97,14 @@ export default function MyGrid() {
   
   const [data, setData] = React.useState(null);
 
-  React.useEffect(() => {
-    fetch("/api/data01")
-      .then((res) => res.json())
-      .then((data) => setData(data));//information from server
-  
+  React.useEffect(() => {                           //useEffect(() => {}, []这里空的，表示只渲染一次)      
+    fetch("/api/data01")                            //  fetch(地址)
+        .then((res) => res.json())                  //    .then(response => response.json())
+        .then((data) => setData(data));             //    .then(data => console.log(data));  
+                                                    //最简单的用法是只提供一个参数用来指明想 fetch() 到的资源路径，然后返回一个包含响应结果的 promise（一个 Response 对象）。
+                                                    //当然它只是一个 HTTP 响应，而不是真的 JSON。为了获取JSON的内容，我们需要使用 json() 方法（该方法返回一个被解析为JSON格式的promise对象，这可以是任何可以由JSON表示的东西 - 一个object，一个array，一个string，一个number...
     }, []);
 
-    
   //console.log(data);
 
   // drawer for graph

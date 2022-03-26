@@ -8,8 +8,6 @@ import { DataGrid,
          GridToolbarFilterButton,
        } from '@mui/x-data-grid';
 
-
-
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
@@ -20,7 +18,6 @@ function CustomToolbar() {
     </GridToolbarContainer>
   );
 }
-
 
 //表头
 const columns = [
@@ -43,18 +40,15 @@ const columns = [
   
 ];
 
-export default function Station10Grid({stationData10}) {
+export default function Station10Grid(/* {stationData10} */ props) {                    // props这里可以代表所有传过来的信息，然后用props.去调取。注意名字要和传过来的时候一致
   
-
-
-
   const [pageSize, setPageSize] = React.useState(20);
-
+  console.log(props)
 
   return (
     <div style={{ height: 1000,  width: '100%'}}>
       <DataGrid
-        rows = {stationData10}
+        rows = {props.stationData10}
         columns={columns}
         //Tool Bar
         components={{

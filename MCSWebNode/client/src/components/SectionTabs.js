@@ -43,6 +43,9 @@ function TabPanel(props) {
       'aria-controls': `simple-tabpanel-${index}`,
     };
   }
+
+
+
   
   export default function SectionTabs() {
     const [value, setValue] = React.useState(0);

@@ -9,10 +9,8 @@ import Station20Grid from './Station20Grid';
 import Station30Grid from './Station30Grid';
 import Station40Grid from './Station40Grid';
 
-
-
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const { children, value, index, ...other } = props;                             // ...other什么意思     { } = props什么意思
   
     return (
       <div
@@ -43,38 +41,29 @@ function TabPanel(props) {
       'aria-controls': `simple-tabpanel-${index}`,
     };
   }
-  
 
 
-
-
-
-
-
-  export default function StationSectionBar({sendID}) {
+  export default function StationSectionBar({sendID}) {                         
     const [value, setValue] = React.useState(0);
   
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
 
-
-
-
     const [stationData10, setStationData10] = React.useState(null);
     const [stationData20, setStationData20] = React.useState(null);
     const [stationData30, setStationData30] = React.useState(null);
     const [stationData40, setStationData40] = React.useState(null);
 
-    React.useEffect(() => {
+    React.useEffect(() => {                          
 
         let apiStr = "/api/station10/" + sendID;
 
         fetch(apiStr)
           .then((res) => res.json())
-          .then((data) => setStationData10(data));
+          .then((data) => setStationData10(data));                
       
-    }, [sendID]);
+    }, [sendID]);                                                  
 
     React.useEffect(() => {
         let apiStr = "/api/station20/" + sendID;
@@ -100,10 +89,6 @@ function TabPanel(props) {
           .then((data) => setStationData40(data));
       
     }, [sendID]);
-
-
-
-
   
     return (
       <Box sx={{ width: '100%' }}>
@@ -116,7 +101,7 @@ function TabPanel(props) {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <Station10Grid stationData10={stationData10}/>
+          <Station10Grid stationData10={stationData10}/>       
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Station20Grid stationData20={stationData20}/>
