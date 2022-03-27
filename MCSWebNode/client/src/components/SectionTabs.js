@@ -6,9 +6,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import './SectionTabs.css';
 import MyGrid from './MyGrid';
-import Summary from './Summary'
+import Summary from './Summary';
+import AnalysisPage from './AnalysisPage';
 
-import LineChart from './LineChart';
 
 
 function TabPanel(props) {
@@ -70,7 +70,7 @@ function TabPanel(props) {
           <MyGrid />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <LineChart />
+          <AnalysisPage />
         </TabPanel>
       </Box>
     );

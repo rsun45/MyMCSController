@@ -17,7 +17,7 @@ export default function Summary(){
                 fontWeight: 'bold',
                 textAlign: 'center',
             }}>
-                121006 Project Name
+                Project Name
             </Box>
             <Box sx={{
                 fontSize: 18,

@@ -6,8 +6,8 @@
     border: 2px dashed rgb(8, 38, 102);
 }
 
-.TopBar h1{
+.TopBar img{
     color: white;
-    margin: 0;
+    margin-top: 8px;
     margin-left: 10px;
 }

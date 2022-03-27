@@ -22,8 +22,8 @@ function CustomToolbar() {
 //表头
 const columns = [
   {
-    field: 'PartId',
-    headerName: 'Part Id',
+    field: 'SerialNumber',
+    headerName: 'Serial Number',
     width: 250,
     editable: false,
   },{

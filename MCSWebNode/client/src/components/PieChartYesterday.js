@@ -4,7 +4,7 @@ import { Pie } from '@ant-design/plots';
 const PieChartYesterday = () => {
   const data = [
     {
-      type: 'Success',
+      type: 'Pass',
       value: 96,
     },
     {
@@ -36,6 +36,8 @@ const PieChartYesterday = () => {
         type: 'element-active',
       },
     ],
+    colorField: 'type', // 部分图表使用 seriesField
+    color: [ '#2ca02c', '#d62728'],
     statistic: {
       title: false,
       content: {

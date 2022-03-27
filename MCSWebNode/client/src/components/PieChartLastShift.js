@@ -4,7 +4,7 @@ import { Pie } from '@ant-design/plots';
 const PieChartLastShift = () => {
   const data = [
     {
-      type: 'Success',
+      type: 'Pass',
       value: 50,
     },
     {
@@ -28,6 +28,8 @@ const PieChartLastShift = () => {
         fontSize: 14,
       },
     },
+    colorField: 'type', // 部分图表使用 seriesField
+    color: [ '#2ca02c', '#d62728'],
     interactions: [
       {
         type: 'element-selected',
