@@ -2,6 +2,8 @@ import React from 'react';
 import { Pie } from '@ant-design/plots';
 
 const StationPieChart = ({dataToPaint}) => {
+
+  
   
   const config = {
     appendPadding: 10,
@@ -48,6 +50,7 @@ const StationPieChart = ({dataToPaint}) => {
         offsetY: 0,
       },
     ],
+    
 
   };
   return <Pie {...config} />;
