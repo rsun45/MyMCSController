@@ -18,7 +18,7 @@ const PieChartCurrentDay = () => {
     angleField: 'value',
     colorField: 'type',
     radius: 1,
-    innerRadius: 0.6,
+    innerRadius: 0.6, //环状
     label: {
       type: 'inner',
       offset: '-50%',
@@ -28,8 +28,8 @@ const PieChartCurrentDay = () => {
         fontSize: 14,
       },
     },
-    colorField: 'type', // 部分图表使用 seriesField
-    color: [ '#2ca02c', '#d62728'],
+    //colorField: 'type', // 部分图表使用 seriesField
+    color: [ '#2ca02c', '#d62728'], //调整环状图颜色
     interactions: [
       {
         type: 'element-selected',
@@ -47,7 +47,7 @@ const PieChartCurrentDay = () => {
           textOverflow: 'ellipsis',
           fontSize: 25,
         },
-        content: 'Current Day',
+        content: 'Current Day', //环状图中间的显示
       },
     },
   };

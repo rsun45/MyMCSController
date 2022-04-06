@@ -50,6 +50,7 @@ export default function Station30Grid({stationData30}) {
 
   const [pageSize, setPageSize] = React.useState(20);
 
+  console.log(stationData30)
 
   return (
     <div style={{ height: 1000,  width: '100%'}}>

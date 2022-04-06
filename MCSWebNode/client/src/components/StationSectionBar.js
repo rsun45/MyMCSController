@@ -4,13 +4,13 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Station10Grid from './Station10Grid';
-import Station20Grid from './Station20Grid';
+//station 10/20/30..合并
+import StationGrid from './StationGrid';
 import Station30Grid from './Station30Grid';
 import Station40Grid from './Station40Grid';
 
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;                             // ...other什么意思     { } = props什么意思
+    const { children, value, index, ...other } = props;                                   // ...other什么意思     { } = props什么意思
   
     return (
       <div
@@ -73,6 +73,7 @@ function TabPanel(props) {
           .then((data) => setStationData20(data));
       
     }, [sendID]);
+
     React.useEffect(() => {
         let apiStr = "/api/station30/" + sendID;
 
@@ -89,29 +90,72 @@ function TabPanel(props) {
           .then((data) => setStationData40(data));
       
     }, [sendID]);
-  
+
+    //console.log(stationData10)
+
+    //station 10,20...数据格式一样
+    const nums = [10, 20, 30, 40]
+    const data = [stationData10, stationData20, stationData30, stationData40]
+    //console.log(data[0])
+    const listTabs = nums.map((num) => <Tab label={"Station " + num} {...a11yProps(num / 10 - 1)} />)
+    //index 对应a11yProps()里的值
+    const listTabPanels = nums.map((num) => <TabPanel value={value} index={num / 10 - 1}>
+                                                  <StationGrid stationData={data[num / 10 - 1]}/>       
+                                            </TabPanel>)
+
+
+
+    //station 30 数据格式
+    /* const nums2 = [30]
+    const data2 = [stationData30]
+    const listTabs2 = nums2.map((num) => <Tab label={"Station " + num} {...a11yProps(num / 10 - 1)} />)
+    const listTabPanels2 = nums2.map((num) => <TabPanel value={value} index={num / 10 - 1}>
+                                                  <Station30Grid stationData30={data2[0]}/>       
+                                              </TabPanel>) */
+
+
+
+    //station 40数据格式
+    /* const nums3 = [40]
+    const data3 = [stationData40]
+    const listTabs3 = nums3.map((num) => <Tab label={"Station " + num} {...a11yProps(num / 10 - 1)} />)
+    const listTabPanels3 = nums3.map((num) => <TabPanel value={value} index={num / 10 - 1}>
+                                                  <Station40Grid stationData40={data3[0]}/>       
+                                              </TabPanel>) */
+
+
+
+
+
+
     return (
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="Station 10" {...a11yProps(0)} />
+            {/* <Tab label="Station 10" {...a11yProps(0)} />
             <Tab label="Station 20" {...a11yProps(1)} />
             <Tab label="Station 30" {...a11yProps(2)} />
-            <Tab label="Station 40" {...a11yProps(3)} />
+            <Tab label="Station 40" {...a11yProps(3)} /> */}
+            {listTabs}
           </Tabs>
         </Box>
-        <TabPanel value={value} index={0}>
+
+        {/* <TabPanel value={value} index={0}>
           <Station10Grid stationData10={stationData10}/>       
         </TabPanel>
+
         <TabPanel value={value} index={1}>
           <Station20Grid stationData20={stationData20}/>
         </TabPanel>
+
         <TabPanel value={value} index={2}>
           <Station30Grid stationData30={stationData30}/>
         </TabPanel>
+
         <TabPanel value={value} index={3}>
           <Station40Grid stationData40={stationData40}/>
-        </TabPanel>
+        </TabPanel> */}
+        {listTabPanels}
       </Box>
     );
   }

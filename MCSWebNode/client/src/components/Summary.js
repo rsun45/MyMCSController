@@ -40,7 +40,7 @@ export default function Summary(){
             </Box>
             
             
-            <Grid container spacing={0} columns={4}>
+            <Grid container spacing={0} columns={4}>                {/* 空间安排4列 */}
                 <Grid item xs={1}>
                     <PieChartCurrentShift/>
                 </Grid>

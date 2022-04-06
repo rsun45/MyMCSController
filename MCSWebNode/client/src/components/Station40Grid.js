@@ -50,7 +50,7 @@ const columns = [
 
 export default function Station40Grid({stationData40}) {
   
-
+  console.log(stationData40)
 
 
   const [pageSize, setPageSize] = React.useState(20);
