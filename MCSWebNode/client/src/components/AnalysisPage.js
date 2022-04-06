@@ -104,7 +104,7 @@ function TabPanel(props) {
         fetchData40().catch(console.error);
       
       
-    }, []);                                                  
+    }, []);                                                
 
     // React.useEffect(() => {
     //     let apiStr = "/api/station20-allData";
@@ -134,9 +134,14 @@ function TabPanel(props) {
 
 
 
+    // stations array
+    let stationArr = ["Station 10", "Station 20", "Station 30", "Station 40"];
 
+    let tabItems = [];
 
-
+    for (const [index, value] of stationArr.entries()) {
+      tabItems.push(<Tab label={value} {...a11yProps(index)} />)
+    }
 
 
   
@@ -144,10 +149,7 @@ function TabPanel(props) {
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" textColor="secondary" indicatorColor="secondary">
-            <Tab label="Station 10" {...a11yProps(0)} />
-            <Tab label="Station 20" {...a11yProps(1)} />
-            <Tab label="Station 30" {...a11yProps(2)} />
-            <Tab label="Station 40" {...a11yProps(2)} />
+            {tabItems}
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>

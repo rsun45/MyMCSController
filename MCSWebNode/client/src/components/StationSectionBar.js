@@ -89,6 +89,7 @@ function TabPanel(props) {
           .then((data) => setStationData40(data));
       
     }, [sendID]);
+
   
     return (
       <Box sx={{ width: '100%' }}>
