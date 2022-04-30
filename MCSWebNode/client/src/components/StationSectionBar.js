@@ -82,13 +82,13 @@ function TabPanel(props) {
       //console.log(Object.keys(dataX))
       //console.log()  
     
-    let dataX = []
-    let urls = stationName.map((str) =>  "/api/" + str + "/" + sendID)
+    let dataX = [];
+    let urls = stationName.map((str) =>  "/api/" + str + "/" + sendID);
     const getStationData = async (url) => {
       try {
         let data = await fetch(url);
         let res = await data.json();
-        return res
+        return res;
       } catch (error) {
         console.log(error);
       }
@@ -96,14 +96,14 @@ function TabPanel(props) {
     //console.log(getStationData(urls[0]))
     const Test = async () => {
       for (let i = 0; i < stationName.length; i++){
-        let x = await getStationData(urls[i])
-        dataX.push(x)
+        let x = await getStationData(urls[i]);
+        // dataX.push(x);
+        dataX[i] = x;
       }
-      console.log(dataX)
     }
-    Test()
-    //console.log(dataX[0])
-    console.log(dataX)
+    Test();
+    console.log(typeof dataX)
+    console.log(dataX[0]);   //!!!!!!!!!!!!!!!!!!!可能await加循环需要在Promise.all()中书写。 建议换一种写法，参考analysis页面
     
 
     //dataX.push(Test())
@@ -190,6 +190,7 @@ function TabPanel(props) {
     //console.log(data[0])
     const listTabs = nums.map((num) => <Tab label={"Station " + num} {...a11yProps(num / 10 - 1)} />)
     //index 对应a11yProps()里的值
+    console.log(typeof nums);
     const listTabPanels = nums.map((num) => <TabPanel value={value} index={num / 10 - 1}>
                                                    <StationGrid stationData={dataX}/>
                                             </TabPanel>)

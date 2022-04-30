@@ -4,10 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Station10Analysis from './Station10Analysis';
-import Station20Analysis from './Station20Analysis';
-import Station30Analysis from './Station30Analysis';
-import Station40Analysis from './Station40Analysis';
+import StationAnalysisCombine from './StationAnalysisCombine';
 
 
 
@@ -153,16 +150,16 @@ function TabPanel(props) {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <Station10Analysis stationData10AllData={stationData10AllData}/>
+          <StationAnalysisCombine stationAllData={stationData10AllData}/>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <Station20Analysis stationData20AllData={stationData20AllData}/>
+          <StationAnalysisCombine stationAllData={stationData20AllData}/>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <Station30Analysis stationData30AllData={stationData30AllData}/>
+          <StationAnalysisCombine stationAllData={stationData30AllData}/>
         </TabPanel>
         <TabPanel value={value} index={3}>
-          <Station40Analysis stationData40AllData={stationData40AllData}/>
+          <StationAnalysisCombine stationAllData={stationData40AllData}/>
         </TabPanel>
       </Box>
     );

@@ -45,6 +45,8 @@ function CustomToolbar() {
 export default function StationGrid(/* {stationData10} */ {stationData}) {                    // props这里可以代表所有传过来的信息，然后用props.去调取。注意名字要和传过来的时候一致
   console.log(typeof stationData)
   const [pageSize, setPageSize] = React.useState(20);
+
+  console.log(stationData);
   
   let columns = [];
   if (stationData !== null && (stationData[0].tagName === "Reject Code" || stationData[0].tagName === "Barcode Scanner" )){

@@ -1,89 +1,133 @@
 import React from 'react';
 import StationPieChart from './StationPieChart';
 import Grid from '@mui/material/Grid';
+import { Line } from '@ant-design/plots';
+import Station40Analysis from './Station40Analysis';
+
+
+const convertTime = (dt) => {
+    if (dt.charAt(dt.length - 1) === 'Z'){
+        let r = dt.replace('T', ' ').slice(0, -5);
+        return r;
+    }
+    else {
+        return dt;
+    }
+}
 
 const StationAnalysisCombine = ({stationAllData}) => {
 
-    let data = [
-        {tag:'Nut1', status:'OK', value:0,},
-        {tag:'Nut1', status:'NOK', value:0,},
-        {tag:'Nut2', status:'OK', value:0,},
-        {tag:'Nut2', status:'NOK', value:0,},
-        {tag:'Nut3', status:'OK', value:0,},
-        {tag:'Nut3', status:'NOK', value:0,},
-        {tag:'Nut4', status:'OK', value:0,},
-        {tag:'Nut4', status:'NOK', value:0,},
-        {tag:'Nut5', status:'OK', value:0,},
-        {tag:'Nut5', status:'NOK', value:0,},
-    ];
-
-    let temp = [0,0,0,0,0,0,0,0,0,0];
-    if (stationData10AllData != null){
-    for(let i = 0; i < stationData10AllData.length; i++) {
-        if (stationData10AllData[i].tagName ==="Nut1" && stationData10AllData[i].TagStatus === "OK"){
-            temp[0]++;
-        }
-        else if (stationData10AllData[i].tagName ==="Nut1" && stationData10AllData[i].TagStatus === "NOK"){
-            temp[1]++;
-        }
-        else if (stationData10AllData[i].tagName ==="Nut2" && stationData10AllData[i].TagStatus === "OK"){
-            temp[2]++;
-        }
-        else if (stationData10AllData[i].tagName ==="Nut2" && stationData10AllData[i].TagStatus === "NOK"){
-            temp[3]++;
-        }
-        else if (stationData10AllData[i].tagName ==="Nut3" && stationData10AllData[i].TagStatus === "OK"){
-            temp[4]++;
-        }
-        else if (stationData10AllData[i].tagName ==="Nut3" && stationData10AllData[i].TagStatus === "NOK"){
-            temp[5]++;
-        }
-        else if (stationData10AllData[i].tagName ==="Nut4 " && stationData10AllData[i].TagStatus === "OK"){
-            temp[6]++;
-        }
-        else if (stationData10AllData[i].tagName ==="Nut4 " && stationData10AllData[i].TagStatus === "NOK"){
-            temp[7]++;
-        }
-        else if (stationData10AllData[i].tagName ==="Nut5" && stationData10AllData[i].TagStatus === "OK"){
-            temp[8]++;
-        }
-        else if (stationData10AllData[i].tagName ==="Nut5" && stationData10AllData[i].TagStatus === "NOK"){
-            temp[9]++;
-        }
     
-    }
-    }
-
-    for(let i = 0; i < data.length; i++) {
-        data[i].value = temp[i];
-    }
 
 
-      return (
-          <div>
+      if (stationAllData !== null && (stationAllData[0].tagName === "Reject Code" || stationAllData[0].tagName === "Barcode Scanner" )){
+        //station 40的情况
+        return <Station40Analysis stationData40AllData={stationAllData}/>;
+    
+      }
+      else if (stationAllData !== null && stationAllData[0].TagStatus === null && (stationAllData[0].tagName !== "Reject Code" || stationAllData[0].tagName !== "Barcode Scanner" )){
+        //station 30的情况
+        let dataToPrintStation30 = stationAllData;
+        let minNum = 1000;
+        if (dataToPrintStation30 != null){
+            for(let i = 0; i < dataToPrintStation30.length; i++) {
+                if (dataToPrintStation30[i].tagValue < minNum){
+                    minNum = dataToPrintStation30[i].tagValue;
+                }
+
+                dataToPrintStation30[i].StartTime = convertTime(dataToPrintStation30[i].StartTime);
+                dataToPrintStation30[i].EndTime = convertTime(dataToPrintStation30[i].EndTime);
+
+            }
+        }
+
+        let makeAllHide = {};
+        for(let i = 0; i < dataToPrintStation30.length; i++) {
+            makeAllHide[dataToPrintStation30[i].tagName] = false;
+        }
+
+        const config = {
+            data: dataToPrintStation30,
+            xField: 'EndTime',
+            yField: 'tagValue',
+            seriesField: 'tagName',
+            xAxis: {
+                // type: 'time',
+                tickCount: 10,
+                label:{
+                    rotate:0.2,
+                },
+            },
+            yAxis: {
+                min: minNum,
+            },
+            slider: {
+              start: 0,
+              end: 1,
+            },
+            legend: {
+              layout: 'vertical',
+              position: 'left',
+              selected: makeAllHide,
               
-            <Grid container spacing={0} columns={3}>
-                <Grid item xs={1}>
-                    <StationPieChart dataToPaint={data.slice(0,2)}/>
+            },
+          };
+
+          return <Line {...config} />;
+          
+      }
+      else if (stationAllData !== null && (stationAllData[0].TagStatus === "OK" || stationAllData[0].TagStatus === "NOK")){
+        //station 10 and 20的情况
+        // data 结构为 = [
+        //     [ {tag:'Nut1', status:'OK', value:0,}, {tag:'Nut1', status:'NOK', value:0,} ],
+        //     [ {tag:'Nut2', status:'OK', value:0,}, {tag:'Nut2', status:'NOK', value:0,} ],
+        //     ...
+        // ];
+        let data = [];
+    
+        for(let i = 0; i < stationAllData.length; i++) {
+            let isFind = false;
+            for(let j = 0; j < data.length; j++) {
+                if (stationAllData[i].tagName === data[j][0].tag){
+                    if (stationAllData[i].TagStatus === data[j][0].status){
+                        data[j][0].value ++;
+                    }
+                    else {
+                        data[j][1].value ++;
+                    }
+                    isFind = true;
+                }
+            }
+        
+            if (!isFind){
+                data.push([{tag:stationAllData[i].tagName, status:"OK", value:0}, {tag:stationAllData[i].tagName, status:"NOK", value:0}]);
+                i--;
+            }
+        
+        }
+
+          return (
+              <div>
+                  
+                <Grid container spacing={0} columns={3}>
+                    {data.map(function(object, i){
+                        return  (<Grid item xs={1}>
+                                    <StationPieChart dataToPaint={object}/>
+                                </Grid>);
+                    })}
                 </Grid>
-                <Grid item xs={1}>
-                    <StationPieChart dataToPaint={data.slice(2,4)}/>
-                </Grid>
-                <Grid item xs={1}>
-                    <StationPieChart dataToPaint={data.slice(4,6)}/>
-                </Grid>
-            </Grid>
-            <Grid container spacing={0} columns={3}>
-                <Grid item xs={1}>
-                    <StationPieChart dataToPaint={data.slice(6,8)}/>
-                </Grid>
-                <Grid item xs={1}>
-                    <StationPieChart dataToPaint={data.slice(8,10)}/>
-                </Grid>
-            </Grid>
-          </div>
-      );
+              </div>
+          );
+      }
+      else {
+          return(<div></div>);
+      }
+
+
+
+
+
 };
 
-export default Station10Analysis;
+export default StationAnalysisCombine;
 
