@@ -12,6 +12,7 @@ import { resolveAllPadding } from '@antv/g2plot/lib/utils';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;                                             // ...other什么意思     { } = props什么意思
+
   
     return (
       <div
@@ -50,6 +51,9 @@ function TabPanel(props) {
     const handleChange = (event, newValue) => {
       setValue(newValue);
     }
+    
+    const [dataArr, updateDataArr] = React.useState([]);
+    const [data1, setData1] = React.useState(null);
 
     //let stationName = ["station10","station20","station30","station40"]
     //let dataX = []
@@ -83,27 +87,43 @@ function TabPanel(props) {
       //console.log()  
     
     let dataX = [];
+    let tempArr = [];
     let urls = stationName.map((str) =>  "/api/" + str + "/" + sendID);
-    const getStationData = async (url) => {
-      try {
-        let data = await fetch(url);
-        let res = await data.json();
-        return res;
-      } catch (error) {
-        console.log(error);
+
+    React.useEffect(() => {
+
+      const getStationData = async () => {
+        for (let i = 0; i < stationName.length; i++){
+          await fetch(urls[i])
+            .then((res) => res.json())
+            .then((data) => updateDataArr(dataArr => [...dataArr, data]));
+        }
+
+        console.log('123');
+
+        // await fetch(urls[0])
+        //     .then((res) => res.json())
+        //     .then((data) => {updateDataArr(dataArr => [...dataArr, data])});
+
+
       }
-    }
+
+      getStationData().catch(console.error);
+
+    
+    }, []);
     //console.log(getStationData(urls[0]))
-    const Test = async () => {
-      for (let i = 0; i < stationName.length; i++){
-        let x = await getStationData(urls[i]);
-        // dataX.push(x);
-        dataX[i] = x;
-      }
-    }
-    Test();
-    console.log(typeof dataX)
-    console.log(dataX[0]);   //!!!!!!!!!!!!!!!!!!!可能await加循环需要在Promise.all()中书写。 建议换一种写法，参考analysis页面
+    // const Test = async () => {
+    //   for (let i = 0; i < stationName.length; i++){
+    //     let x = await getStationData(urls[i]);
+    //     dataX.push(x);
+    //     // dataX[i] = x;
+    //   }
+    // }
+
+
+    // console.log(typeof dataX);
+    console.log(dataArr);   //!!!!!!!!!!!!!!!!!!!可能await加循环需要在Promise.all()中书写。 建议换一种写法，参考analysis页面
     
 
     //dataX.push(Test())
@@ -190,9 +210,10 @@ function TabPanel(props) {
     //console.log(data[0])
     const listTabs = nums.map((num) => <Tab label={"Station " + num} {...a11yProps(num / 10 - 1)} />)
     //index 对应a11yProps()里的值
-    console.log(typeof nums);
+    // console.log(typeof nums);
+    // console.log(dataArr);
     const listTabPanels = nums.map((num) => <TabPanel value={value} index={num / 10 - 1}>
-                                                   <StationGrid stationData={dataX}/>
+                                                   <StationGrid stationData={dataArr[num / 10 - 1]} />
                                             </TabPanel>)
 
     //station 40数据格式

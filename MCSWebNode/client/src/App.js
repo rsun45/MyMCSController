@@ -17,7 +17,7 @@ return(
     <TopBar /> 
     <Routes>
       <Route  path="/" element={<SectionTabs />} />
-      <Route  path="/serical" element={<SerialPage />} />
+      <Route  path="/serial" element={<SerialPage />} />
 
     </Routes>
   </Router>

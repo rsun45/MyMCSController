@@ -34,37 +34,37 @@ function CustomToolbar() {
 //表头
 const columns = [
   {
-    field: 'SerialNumber',
+    field: 'serialNumber',
     headerName: 'Serial Number',
     width: 150,
     editable: false,
   },{
-    field: 'PartState',
+    field: 'PartStatus',
     headerName: 'Part State',
     width: 150,
     editable: false,
   },{
-    field: 'SourceStationId',
+    field: 'SourceStation',
     headerName: 'Source Station',
     width: 150,
     editable: false,
   },{
-    field: 'TargetStationId',
+    field: 'TargetStation',
     headerName: 'Target Station',
     width: 150,
     editable: false,
   },{
-    field: 'Type',
+    field: 'PartType',
     headerName: 'Type',
     width: 100,
     editable: false,
   },{
-    field: 'WpcNumber',
+    field: 'wpcNumber',
     headerName: 'Wpc Number',
     width: 100,
     editable: false,
   },{
-    field: 'StartTime',
+    field: 'starttime',
     headerName: 'Start Time',
     width: 300,
     editable: false,
@@ -77,7 +77,7 @@ const columns = [
       // console.log(newDate.setHours(newDate.getHours() + 5));
       return newDate}, 
   },{
-    field: 'EndTime',
+    field: 'endtime',
     headerName: 'End Time',
     width: 300,
     editable: false,
@@ -148,7 +148,7 @@ export default function MyGrid() {
         onCellDoubleClick={
           (params) => {
             console.log(params);
-            navigate('serical', { state: {id:params.id} });
+            navigate('serial', { state: {id:params.id} });
           }
         }
 

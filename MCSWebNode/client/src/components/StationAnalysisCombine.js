@@ -20,12 +20,12 @@ const StationAnalysisCombine = ({stationAllData}) => {
     
 
 
-      if (stationAllData !== null && (stationAllData[0].tagName === "Reject Code" || stationAllData[0].tagName === "Barcode Scanner" )){
+      if (stationAllData !== null && (stationAllData[0].tagName === "RejectCode" || stationAllData[0].tagName === "ScannerCode" )){
         //station 40的情况
         return <Station40Analysis stationData40AllData={stationAllData}/>;
     
       }
-      else if (stationAllData !== null && stationAllData[0].TagStatus === null && (stationAllData[0].tagName !== "Reject Code" || stationAllData[0].tagName !== "Barcode Scanner" )){
+      else if (stationAllData !== null && stationAllData[0].TagStatus === null && (stationAllData[0].tagName !== "RejectCode" || stationAllData[0].tagName !== "ScannerCode" )){
         //station 30的情况
         let dataToPrintStation30 = stationAllData;
         let minNum = 1000;
@@ -76,7 +76,7 @@ const StationAnalysisCombine = ({stationAllData}) => {
           return <Line {...config} />;
           
       }
-      else if (stationAllData !== null && (stationAllData[0].TagStatus === "OK" || stationAllData[0].TagStatus === "NOK")){
+      else if (stationAllData !== null && (stationAllData[0].TagStatus.toUpperCase() === "OK" || stationAllData[0].TagStatus.toUpperCase() === "NOK")){
         //station 10 and 20的情况
         // data 结构为 = [
         //     [ {tag:'Nut1', status:'OK', value:0,}, {tag:'Nut1', status:'NOK', value:0,} ],
@@ -89,7 +89,7 @@ const StationAnalysisCombine = ({stationAllData}) => {
             let isFind = false;
             for(let j = 0; j < data.length; j++) {
                 if (stationAllData[i].tagName === data[j][0].tag){
-                    if (stationAllData[i].TagStatus === data[j][0].status){
+                    if (stationAllData[i].TagStatus.toUpperCase() === data[j][0].status){
                         data[j][0].value ++;
                     }
                     else {

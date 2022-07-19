@@ -20,7 +20,7 @@ const StationPieChart = ({dataToPaint}) => {
         fontSize: 14,
       },
     },
-    color: [ '#2ca02c', '#d62728'],
+    color: ['#2ca02c', '#d62728'],
     interactions: [
       {
         type: 'element-selected',

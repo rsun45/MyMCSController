@@ -43,13 +43,13 @@ function CustomToolbar() {
 //const columns;
 
 export default function StationGrid(/* {stationData10} */ {stationData}) {                    // props这里可以代表所有传过来的信息，然后用props.去调取。注意名字要和传过来的时候一致
-  console.log(typeof stationData)
+  // console.log(indexNum);
   const [pageSize, setPageSize] = React.useState(20);
 
   console.log(stationData);
   
   let columns = [];
-  if (stationData !== null && (stationData[0].tagName === "Reject Code" || stationData[0].tagName === "Barcode Scanner" )){
+  if (stationData!== undefined && stationData !== null && (stationData[0].tagName === "RejectCode" || stationData[0].tagName === "ScannerCode" )){
     //station 40的情况
     columns = [
       {
@@ -77,7 +77,7 @@ export default function StationGrid(/* {stationData10} */ {stationData}) {      
     ];
 
   }
-  else if (stationData !== null && stationData[0].TagStatus === null && (stationData[0].tagName !== "Reject Code" || stationData[0].tagName !== "Barcode Scanner" )){
+  else if (stationData!== undefined && stationData !== null && stationData[0].TagStatus === "" && (stationData[0].tagName !== "RejectCode" && stationData[0].tagName !== "ScannerCode" )){
     //station 30的情况
       columns = [
         {
@@ -99,7 +99,7 @@ export default function StationGrid(/* {stationData10} */ {stationData}) {      
         
       ];
   }
-  else if (stationData !== null && (stationData[0].TagStatus === "OK" || stationData[0].TagStatus === "NOK")){
+  else if (stationData!== undefined && stationData !== null && (stationData[0].TagStatus.toUpperCase() === "OK" || stationData[0].TagStatus.toUpperCase() === "NOK")){
     //station 10的情况
       columns = [
       {

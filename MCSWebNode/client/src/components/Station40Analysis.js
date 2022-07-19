@@ -25,7 +25,7 @@ function CustomToolbar() {
 //表头
 const columns = [
   {
-    field: 'SerialNumber',
+    field: 'id',
     headerName: 'Serial Number',
     width: 250,
     editable: false,
@@ -90,7 +90,7 @@ export default function Station40Analysis({stationData40AllData}) {
   if (stationData40AllData != null){
       for(let i = 0; i < stationData40AllData.length; i++) {
 
-          if (stationData40AllData[i].tagName === "Reject Code"){
+          if (stationData40AllData[i].tagName === "RejectCode"){
               if (lastTime != null){
                 cycleTime = calculateCT(lastTime, stationData40AllData[i].EndTime);
               }
@@ -100,7 +100,7 @@ export default function Station40Analysis({stationData40AllData}) {
               
               lastTime = stationData40AllData[i].EndTime;
 
-            let temp = {id:stationData40AllData[i].id, SerialNumber:stationData40AllData[i].SerialNumber, TagStatus:stationData40AllData[i].TagStatus, CycleTime:cycleTime};
+            let temp = {id:stationData40AllData[i].id, SerialNumber:stationData40AllData[i].SerialNumber, TagStatus:stationData40AllData[i].tagValue, CycleTime:cycleTime};
             data.push(temp);
           }
 
