@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pie } from '@ant-design/plots';
 
-const PieChartLastShift = () => {
+const PieChartLastShift = ({pieToggleDrawer, setShiftData}) => {
   const data = [
     {
       type: 'Pass',
@@ -16,7 +16,7 @@ const PieChartLastShift = () => {
     appendPadding: 10,
     data,
     angleField: 'value',
-    colorField: 'type',
+    // colorField: 'type',
     radius: 1,
     innerRadius: 0.6,
     label: {
@@ -51,7 +51,22 @@ const PieChartLastShift = () => {
       },
     },
   };
-  return <Pie {...config} />;
+  return <Pie 
+  {...config} 
+  onReady={(plot) => {
+    plot.on('plot:click', (evt) => {
+      const { x, y } = evt;
+      // const { xField } = plot.options;
+      const tooltipData = plot.chart.getTooltipItems({ x, y });
+      // console.log(tooltipData);
+      // console.log("in toggle");
+      if (tooltipData[0].name == 'Fail') {
+        setShiftData(null);
+        pieToggleDrawer();
+      }
+    });
+  }}
+  />;
 };
 
 export default PieChartLastShift;

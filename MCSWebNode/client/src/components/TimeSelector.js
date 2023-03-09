@@ -39,7 +39,7 @@ const TimeSelector = ({data, setData}) => {
         let index = 0;
         while (i--) {
             
-            if (compareDateTime(startTime,arr[index].EndTime)===1 || compareDateTime(endTime,arr[index].StartTime)===-1) { 
+            if (compareDateTime(startTime,arr[index].endtime)===1 || compareDateTime(endTime,arr[index].starttime)===-1) { 
                 arr.splice(index, 1);
                 index--;
             } 
@@ -80,7 +80,7 @@ const TimeSelector = ({data, setData}) => {
     </LocalizationProvider>
 
     <Button sx={{ margin: '10px' }} onClick={toggleButton} variant="contained" color='info'>UPDATE</Button>
-    <Button sx={{ margin: '10px' }} onClick={toggleButtonClear} variant="contained" color='info'>CLEAR</Button>
+    <Button sx={{ margin: '10px' }} onClick={toggleButtonClear} variant="contained" color='info'>RESET</Button>
 
 
     </div>

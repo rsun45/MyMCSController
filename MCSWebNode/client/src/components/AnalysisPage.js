@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import StationAnalysisCombine from './StationAnalysisCombine';
+import TimeSelector from './TimeSelector';
 
 
 
@@ -61,6 +62,7 @@ function TabPanel(props) {
     const [stationData40AllData, setStationData40AllData] = React.useState(null);
 
     
+    const [data, setData] = React.useState(null);
         
 
     React.useEffect(() => {                          
@@ -143,6 +145,7 @@ function TabPanel(props) {
   
     return (
       <Box sx={{ width: '100%' }}>
+        <TimeSelector data={data} setData={setData} />
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" textColor="secondary" indicatorColor="secondary">
             {tabItems}

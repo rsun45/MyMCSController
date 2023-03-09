@@ -71,7 +71,7 @@ app.get("/api/data02", async (req, res) => {
 
   try {
     // make sure that any items are correctly URL encoded in the connection string
-    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+    await sql.connect('Server=localhost\\SQLExpress;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
     // const result = await sql.query`SELECT * FROM tblTagContent WHERE  controller_ip='192.168.1.10'`
 
     const result = await sql.query`
@@ -264,6 +264,52 @@ app.get("/api/station40-allData", async (req, res) => {
 
     console.log("request station40 all data");
     res.json(result.recordsets[0]);
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+// API to get average cycle time by station
+app.get("/api/station-average-cycle-time", async (req, res) => {
+
+
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+
+    // const result = await sql.query('select pd.id, SerialNumber, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue, StartTime, EndTime from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 40  order by PartId, StationId, TagId');
+    const result = await sql.query( 'exec dbo.spGetTopAverageTime');
+
+    console.log("request all stations average cycle time");
+    res.json(result.recordsets[0]);
+
+    // res.json(null);
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+// API top 5 reject nuts
+app.get("/api/top-5-reject-nuts", async (req, res) => {
+
+
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+
+    // const result = await sql.query('select pd.id, SerialNumber, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue, StartTime, EndTime from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 40  order by PartId, StationId, TagId');
+    const result = await sql.query( 'exec dbo.spGetTopReject');
+
+    console.log("request top 5 reject nuts");
+    res.json(result.recordsets[0]);
+
+    // res.json(null);
+
   } catch (err) {
     console.log(err);
   }

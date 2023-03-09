@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pie } from '@ant-design/plots';
 
-const PieChartCurrentDay = () => {
+const PieChartCurrentDay = ({pieToggleDrawer, setShiftData}) => {
   const data = [
     {
       type: 'Pass',
@@ -51,7 +51,22 @@ const PieChartCurrentDay = () => {
       },
     },
   };
-  return <Pie {...config} />;
+  return <Pie 
+  {...config}
+  onReady={(plot) => {
+    plot.on('plot:click', (evt) => {
+      const { x, y } = evt;
+      // const { xField } = plot.options;
+      const tooltipData = plot.chart.getTooltipItems({ x, y });
+      // console.log(tooltipData);
+      // console.log("in toggle");
+      if (tooltipData[0].name == 'Fail') {
+        setShiftData([{"id": "1", "tagName": "nut2", "rejectCount": 1}, {"id": "2", "tagName": "nut3", "rejectCount": 2}]);
+        pieToggleDrawer();
+      }
+    });
+  }} 
+  />;
 };
 
 export default PieChartCurrentDay;

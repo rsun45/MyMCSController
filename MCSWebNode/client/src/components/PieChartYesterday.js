@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pie } from '@ant-design/plots';
 
-const PieChartYesterday = () => {
+const PieChartYesterday = ({pieToggleDrawer, setShiftData}) => {
   const data = [
     {
       type: 'Pass',
@@ -16,7 +16,7 @@ const PieChartYesterday = () => {
     appendPadding: 10,
     data,
     angleField: 'value',
-    colorField: 'type',
+    // colorField: 'type',
     radius: 1,
     innerRadius: 0.6,
     label: {
@@ -51,7 +51,22 @@ const PieChartYesterday = () => {
       },
     },
   };
-  return <Pie {...config} />;
+  return <Pie 
+  {...config} 
+  onReady={(plot) => {
+    plot.on('plot:click', (evt) => {
+      const { x, y } = evt;
+      // const { xField } = plot.options;
+      const tooltipData = plot.chart.getTooltipItems({ x, y });
+      // console.log(tooltipData);
+      // console.log("in toggle");
+      if (tooltipData[0].name == 'Fail') {
+        setShiftData([{"id": "1", "tagName": "nut2", "rejectCount": 1}, {"id": "2", "tagName": "nut3", "rejectCount": 2}, {"id": "3", "tagName": "nut4", "rejectCount": 1}]);
+        pieToggleDrawer();
+      }
+    });
+  }}
+  />;
 };
 
 export default PieChartYesterday;

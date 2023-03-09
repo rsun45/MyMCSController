@@ -1,7 +1,10 @@
 import React from 'react';
 import { Pie } from '@ant-design/plots';
 
-const PieChartCurrentShift = () => {
+const PieChartCurrentShift = ({pieToggleDrawer, setShiftData}) => {
+
+
+
   const data = [
     {
       type: 'Pass',
@@ -16,7 +19,7 @@ const PieChartCurrentShift = () => {
     appendPadding: 10,
     data,
     angleField: 'value',
-    colorField: 'type',
+    // colorField: 'type',
     radius: 1,
     innerRadius: 0.6,
     label: {
@@ -51,7 +54,22 @@ const PieChartCurrentShift = () => {
       },
     },
   };
-  return <Pie {...config} />;
+  return <Pie 
+  {...config}  
+  onReady={(plot) => {
+    plot.on('element:click', (evt) => {
+      const { x, y } = evt;
+      // const { xField } = plot.options;
+      const tooltipData = plot.chart.getTooltipItems({ x, y });
+      // console.log(tooltipData);
+      // console.log("in toggle");
+      if (tooltipData[0].name == 'Fail') {
+        setShiftData([{"id": "1", "tagName": "nut3", "rejectCount": 1}]);
+        pieToggleDrawer();
+      }
+    });
+  }}
+  />;
 };
 
 export default PieChartCurrentShift;

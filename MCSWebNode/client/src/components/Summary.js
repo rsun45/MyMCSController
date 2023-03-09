@@ -4,14 +4,43 @@ import * as React from 'react';
 import Clock from 'react-live-clock';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import Drawer from '@mui/material/Drawer';
+import CancelIcon from '@mui/icons-material/Cancel';
 import PieChartCurrentDay from './PieChartCurrentDay';
 import PieChartCurrentShift from './PieChartCurrentShift';
 import PieChartLastShift from './PieChartLastShift';
 import PieChartYesterday from './PieChartYesterday';
+import OptionalFunction1 from './OptionalFunction1';
+import OptionalFunction2 from './OptionalFunction2';
+import SummaryFailGrid from './SummaryFailGrid';
 
 export default function Summary(){
+
+    // drawer for graph
+    const [drawer, setDrawer] = React.useState(false);
+
+    
+    const [shiftData, setShiftData] = React.useState([{"id": "1", "tagName": "nut3", "rejectCount": 1}]);
+
+    const toggleDrawer = () => (event) => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+
+
+        setDrawer(!drawer);
+    };
+
+    const pieToggleDrawer = ()  => {
+
+
+        setDrawer(!drawer);
+
+    };
+
+
     return (
-        <Box>
+        <div>
             <Box sx={{
                 fontSize: 23,
                 fontWeight: 'bold',
@@ -31,29 +60,51 @@ export default function Summary(){
                 display: 'flex',
                 '& > :not(style)': {
                   m: 3,
-                  width: 1600,
-                  height: 300,
+                  width: '100%',
+                  height: '350px',
                 },
             }}>
-                <Paper variant="outlined">optiontal function 1</Paper>
-                <Paper variant="outlined">optiontal function 2</Paper>
+                <Paper variant="outlined">
+                    <h3>Top 5 reject nuts</h3>
+                    <OptionalFunction1/>
+                </Paper>
+                <Paper variant="outlined">
+                    <h3>Station average cycle time</h3>
+                    <OptionalFunction2/>
+                </Paper>
             </Box>
             
             
-            <Grid container spacing={0} columns={4}>                {/* 空间安排4列 */}
+            <Grid 
+            container spacing={0} columns={4}>                {/* 空间安排4列 */}
                 <Grid item xs={1}>
-                    <PieChartCurrentShift/>
+                    <PieChartCurrentShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData}/>
                 </Grid>
                 <Grid item xs={1}>
-                    <PieChartLastShift/>
+                    <PieChartLastShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData}/>
                 </Grid>
                 <Grid item xs={1}>
-                    <PieChartCurrentDay/>
+                    <PieChartCurrentDay pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData}/>
                 </Grid>
                 <Grid item xs={1}>
-                    <PieChartYesterday/>
+                    <PieChartYesterday pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData}/>
                 </Grid>
             </Grid>
-        </Box>
+
+            <Drawer
+                anchor='bottom'
+                open={drawer}
+                onClose={toggleDrawer()}
+                PaperProps={{
+                    sx: { height: "50%" },
+                  }}
+            >
+                <CancelIcon onClick={toggleDrawer()}/>
+                
+                    <SummaryFailGrid shiftData={shiftData}/>
+            </Drawer> 
+
+
+        </div>
     );
 }
