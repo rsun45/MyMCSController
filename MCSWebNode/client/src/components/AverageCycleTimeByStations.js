@@ -18,16 +18,15 @@ function CustomToolbar() {
   );
 }
 
-// top 5 reject nuts
 //表头
 const columns = [
   {
-    field: 'stationName',
+    field: 'tag_name',
     headerName: 'Station Name',
     width: 250,
     editable: false,
   },{
-    field: 'avgsec',
+    field: 'avgCycleTime',
     headerName: 'Average Cycle Time',
     width: 250,
     editable: false,
@@ -35,19 +34,15 @@ const columns = [
   
 ];
 
-export default function OptionalFunction2(/* {stationData10} */ props) {                    // props这里可以代表所有传过来的信息，然后用props.去调取。注意名字要和传过来的时候一致
-  
-  // const [pageSize, setPageSize] = React.useState(20);
-  // console.log(props)
-
+export default function AverageCycleTimeByStations( {refresh} ) {                    // props这里可以代表所有传过来的信息，然后用props.去调取。注意名字要和传过来的时候一致
   
   const [data, setData] = React.useState(null);
 
   React.useEffect(() => {                               
-    fetch("/api/station-average-cycle-time")                           
+    fetch("/api/AverageCycleTimeByStations")                           
         .then((res) => res.json())                 
         .then((data) => setData(data));             
-    }, []);
+    }, [refresh]);
 
   return (
     <div style={{ height: '81%',  width: '100%'}}>

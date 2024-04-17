@@ -18,24 +18,23 @@ function CustomToolbar() {
   );
 }
 
-// top 5 reject nuts
 //表头
 const columns = [
   {
-    field: 'tagName',
-    headerName: 'Tag Name',
+    field: 'tag_name',
+    headerName: 'Station Name',
     width: 250,
     editable: false,
   },{
-    field: 'rejectCount',
-    headerName: 'Reject Count',
+    field: 'SumFaultTime',
+    headerName: 'Sum Fault Time',
     width: 250,
     editable: false,
   },
   
 ];
 
-export default function OptionalFunction1(/* {stationData10} */ props) {                    // props这里可以代表所有传过来的信息，然后用props.去调取。注意名字要和传过来的时候一致
+export default function SumFaultTimeByStations( {refresh} ) {                    // props这里可以代表所有传过来的信息，然后用props.去调取。注意名字要和传过来的时候一致
   
   // const [pageSize, setPageSize] = React.useState(20);
   // console.log(props)
@@ -44,10 +43,10 @@ export default function OptionalFunction1(/* {stationData10} */ props) {        
   const [data, setData] = React.useState(null);
 
   React.useEffect(() => {                               
-    fetch("/api/top-5-reject-nuts")                           
+    fetch("/api/SumFaultTimeByStations")                           
         .then((res) => res.json())                 
-        .then((data) => setData(data));             
-    }, []);
+        .then((data) => {setData(data);});             
+    }, [refresh]);
 
 
 

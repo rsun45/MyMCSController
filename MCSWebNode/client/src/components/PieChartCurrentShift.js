@@ -1,20 +1,43 @@
 import React from 'react';
 import { Pie } from '@ant-design/plots';
 
-const PieChartCurrentShift = ({pieToggleDrawer, setShiftData}) => {
+const PieChartCurrentShift = ({pieToggleDrawer, setShiftData, refresh}) => {
+
+  const [data, setData] = React.useState([]);
+  const [shiftName, setShiftName] = React.useState("");
+
+  React.useEffect(() => {                               
+    fetch("/api/CurrentShiftPassFailCounts")                           
+        .then((res) => res.json())                 
+        .then((data) => {
+          let tempData = [
+            {
+              type: 'Pass',
+              value: data[0].pass_cnt,
+            },
+            {
+              type: 'Fail',
+              value: data[0].reject_cnt,
+            },
+          ]
+          setData(tempData);
+          setShiftName(data[0].shift);
+        });             
+    }, [refresh]);
 
 
+  // data formate
+  // const data = [
+  //   {
+  //     type: 'Pass',
+  //     value: 49,
+  //   },
+  //   {
+  //     type: 'Fail',
+  //     value: 1,
+  //   },
+  // ];
 
-  const data = [
-    {
-      type: 'Pass',
-      value: 49,
-    },
-    {
-      type: 'Fail',
-      value: 1,
-    },
-  ];
   const config = {
     appendPadding: 10,
     data,
@@ -50,7 +73,7 @@ const PieChartCurrentShift = ({pieToggleDrawer, setShiftData}) => {
           textOverflow: 'ellipsis',
           fontSize: 25,
         },
-        content: 'Current Shift',
+        content: 'Current: ' + shiftName,
       },
     },
   };

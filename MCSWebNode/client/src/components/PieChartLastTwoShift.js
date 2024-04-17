@@ -1,17 +1,40 @@
 import React from 'react';
 import { Pie } from '@ant-design/plots';
 
-const PieChartCurrentDay = ({pieToggleDrawer, setShiftData}) => {
-  const data = [
-    {
-      type: 'Pass',
-      value: 70,
-    },
-    {
-      type: 'Fail',
-      value: 3,
-    },
-  ];
+const PieChartLastTwoShift = ({pieToggleDrawer, setShiftData, refresh}) => {
+
+  const [data, setData] = React.useState([]);
+  const [shiftName, setShiftName] = React.useState("");
+
+  React.useEffect(() => {                               
+    fetch("/api/LastTwoShiftPassFailCounts")                           
+        .then((res) => res.json())                 
+        .then((data) => {
+          let tempData = [
+            {
+              type: 'Pass',
+              value: data[0].pass_cnt,
+            },
+            {
+              type: 'Fail',
+              value: data[0].reject_cnt,
+            },
+          ]
+          setData(tempData);
+          setShiftName(data[0].shift);
+        });             
+    }, [refresh]);
+
+  // const data = [
+  //   {
+  //     type: 'Pass',
+  //     value: 70,
+  //   },
+  //   {
+  //     type: 'Fail',
+  //     value: 3,
+  //   },
+  // ];
   const config = {
     appendPadding: 10,
     data,
@@ -47,7 +70,7 @@ const PieChartCurrentDay = ({pieToggleDrawer, setShiftData}) => {
           textOverflow: 'ellipsis',
           fontSize: 25,
         },
-        content: 'Current Day', //环状图中间的显示
+        content: 'Last Two: ' + shiftName, //环状图中间的显示
       },
     },
   };
@@ -69,5 +92,5 @@ const PieChartCurrentDay = ({pieToggleDrawer, setShiftData}) => {
   />;
 };
 
-export default PieChartCurrentDay;
+export default PieChartLastTwoShift;
 

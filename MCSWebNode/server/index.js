@@ -1,4 +1,7 @@
 // server/index.js
+// import { getCurrentShiftTimeStr, getLastShiftTimeStr, getLastTwoShiftTimeStr } from './ShiftCalculator';
+const shiftCalculator = require("./ShiftCalculator");
+var configData = require('../config.json')
 
 const express = require("express");
 
@@ -40,15 +43,16 @@ const sql = require('mssql')
 async function myQuery(){
     try {
         // make sure that any items are correctly URL encoded in the connection string
-        await sql.connect('Server=localhost,1433;Database=MCS;User Id=MCS;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
-        const result = await sql.query`select * from tblTagContent`
-        console.dir(result)
+        let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+        console.dir("Database is Connected.")
+        await con.close();
     } catch (err) {
       console.log(err);
     }
 }
 
-// myQuery();
+myQuery();
+
 
 /*
 app.get("/api/data1", (req, res) => {
@@ -271,21 +275,38 @@ app.get("/api/station40-allData", async (req, res) => {
 });
 
 
-// API to get average cycle time by station
-app.get("/api/station-average-cycle-time", async (req, res) => {
 
 
+//****************** summary page APIs *****************/
+
+// API All stations average sum time
+app.get("/api/AverageCycleTimeByStations", async (req, res) => {
+
+
+  console.log("request /api/AverageCycleTimeByStations");
   try {
     // make sure that any items are correctly URL encoded in the connection string
-    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+    let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 19:04:50"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    console.log(shiftArr);
 
     // const result = await sql.query('select pd.id, SerialNumber, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue, StartTime, EndTime from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 40  order by PartId, StationId, TagId');
-    const result = await sql.query( 'exec dbo.spGetTopAverageTime');
+    const result = await sql.query(
+      "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] + 
+      "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] + 
+      "') exec [dbo].[spGetAverageCycleTimeByStations] @start, @end"
+      );
 
-    console.log("request all stations average cycle time");
+
+    for (let i=0; i<result.recordsets[0].length; i++){
+      result.recordsets[0][i].id = i;
+    }
+
     res.json(result.recordsets[0]);
 
-    // res.json(null);
+    await con.close();
 
   } catch (err) {
     console.log(err);
@@ -294,27 +315,168 @@ app.get("/api/station-average-cycle-time", async (req, res) => {
 });
 
 
-// API top 5 reject nuts
-app.get("/api/top-5-reject-nuts", async (req, res) => {
+// API All stations sum fault time
+app.get("/api/SumFaultTimeByStations", async (req, res) => {
 
 
+  console.log("request /api/SumFaultTimeByStations");
   try {
     // make sure that any items are correctly URL encoded in the connection string
-    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+    let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    // const result = await sql.query('select pd.id, SerialNumber, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue, StartTime, EndTime from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 40  order by PartId, StationId, TagId');
-    const result = await sql.query( 'exec dbo.spGetTopReject');
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 19:04:50"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    console.log(shiftArr);
 
-    console.log("request top 5 reject nuts");
+    const result = await sql.query(
+    "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] + 
+    "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] + 
+    "') exec [dbo].[spGetSumFaultTimeByStations] @start, @end"
+    );
+
+    for (let i=0; i<result.recordsets[0].length; i++){
+      result.recordsets[0][i].id = i;
+    }
+
     res.json(result.recordsets[0]);
 
-    // res.json(null);
+    await con.close();
 
   } catch (err) {
     console.log(err);
   }
 
 });
+
+
+// API current shift pass fail counts
+app.get("/api/CurrentShiftPassFailCounts", async (req, res) => {
+
+
+  console.log("request /api/CurrentShiftPassFailCounts");
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 19:04:50"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    console.log(shiftArr);
+
+    const result = await sql.query(
+    "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] + 
+    "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] + 
+    "') exec [dbo].[spGetShiftCount] '" + configData.allLines[configData.currentLineIndex].name + "', @start, @end"
+    );
+
+
+    result.recordsets[0][0].shift = shiftArr[2];
+    res.json(result.recordsets[0]);
+
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+// API last shift pass fail counts
+app.get("/api/LastShiftPassFailCounts", async (req, res) => {
+
+
+  console.log("request /api/LastShiftPassFailCounts");
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 10:04:50"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    console.log(shiftArr);
+
+    const result = await sql.query(
+    "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] + 
+    "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] + 
+    "') exec [dbo].[spGetShiftCount] '" + configData.allLines[configData.currentLineIndex].name + "', @start, @end"
+    );
+
+
+    result.recordsets[0][0].shift = shiftArr[2];
+    res.json(result.recordsets[0]);
+
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+// API last two shift pass fail counts
+app.get("/api/LastTwoShiftPassFailCounts", async (req, res) => {
+
+
+  console.log("request /api/LastTwoShiftPassFailCounts");
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 03:04:50"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    console.log(shiftArr);
+
+    const result = await sql.query(
+    "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] + 
+    "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] + 
+    "') exec [dbo].[spGetShiftCount] '" + configData.allLines[configData.currentLineIndex].name + "', @start, @end"
+    );
+
+    result.recordsets[0][0].shift = shiftArr[2];
+    res.json(result.recordsets[0]);
+
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+// API get all line names
+app.get("/api/GetAllLinesNames", async (req, res) => {
+
+
+  console.log("request /api/GetAllLinesNames");
+  
+  let result = [];
+  for (let i=0; i<configData.allLines.length; i++){
+    result.push({"label": configData.allLines[i].name});
+  }
+  res.json({"result": result, "currentLineIndex": configData.currentLineIndex});
+
+});
+
+// API change current project line
+app.get("/api/ChangeProjectLine/:lineName", async (req, res) => {
+
+  console.log("requir /api/ChangeProjectLine/" + req.params.lineName);
+  
+  for (let i=0; i<configData.allLines.length; i++){
+    if (configData.allLines[i].name === req.params.lineName){
+      configData.currentLineIndex = i;
+    }
+  }
+
+  
+
+  let configDataStr = JSON.stringify(configData, null, 4);
+  var fs = require('fs');
+  fs.writeFile('./config.json', configDataStr, 'utf8', ()=>{});
+
+  res.json({"message": "Success", "IndexAfterChange": configData.currentLineIndex});
+
+});
+
+
 
 
 

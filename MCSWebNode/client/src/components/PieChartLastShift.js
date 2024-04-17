@@ -1,17 +1,40 @@
 import React from 'react';
 import { Pie } from '@ant-design/plots';
 
-const PieChartLastShift = ({pieToggleDrawer, setShiftData}) => {
-  const data = [
-    {
-      type: 'Pass',
-      value: 50,
-    },
-    {
-      type: 'Fail',
-      value: 0,
-    },
-  ];
+const PieChartLastShift = ({pieToggleDrawer, setShiftData, refresh}) => {
+
+  const [data, setData] = React.useState([]);
+  const [shiftName, setShiftName] = React.useState("");
+
+  React.useEffect(() => {                               
+    fetch("/api/LastShiftPassFailCounts")                           
+        .then((res) => res.json())                 
+        .then((data) => {
+          let tempData = [
+            {
+              type: 'Pass',
+              value: data[0].pass_cnt,
+            },
+            {
+              type: 'Fail',
+              value: data[0].reject_cnt,
+            },
+          ]
+          setData(tempData);
+          setShiftName(data[0].shift);
+        });             
+    }, [refresh]);
+
+  // const data = [
+  //   {
+  //     type: 'Pass',
+  //     value: 50,
+  //   },
+  //   {
+  //     type: 'Fail',
+  //     value: 0,
+  //   },
+  // ];
   const config = {
     appendPadding: 10,
     data,
@@ -47,7 +70,7 @@ const PieChartLastShift = ({pieToggleDrawer, setShiftData}) => {
           textOverflow: 'ellipsis',
           fontSize: 25,
         },
-        content: 'Last Shift',
+        content: 'Last: ' + shiftName,
       },
     },
   };
