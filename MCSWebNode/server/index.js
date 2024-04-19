@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
+app.use(express.json({ limit: "100mb" }));
+
 // app.listen(PORT, () => {
 //   console.log(`Server listening on ${PORT}`);
 // });
@@ -100,7 +102,7 @@ app.get("/api/data01", async (req, res) => {
 
   try {
     // make sure that any items are correctly URL encoded in the connection string
-    await sql.connect('Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;')
+    let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
     // const result = await sql.query`SELECT * FROM tblTagContent WHERE  controller_ip='192.168.1.10'`
 
     const result = await sql.query`
@@ -109,6 +111,7 @@ app.get("/api/data01", async (req, res) => {
 
     // console.dir(result)
     console.log("request data01");
+    await con.close();
     res.json(result.recordsets[0]);
   } catch (err) {
     console.log(err);
@@ -277,7 +280,7 @@ app.get("/api/station40-allData", async (req, res) => {
 
 
 
-//****************** summary page APIs *****************/
+//***************************** summary page APIs *********************************/
 
 // API All stations average sum time
 app.get("/api/AverageCycleTimeByStations", async (req, res) => {
@@ -476,6 +479,86 @@ app.get("/api/ChangeProjectLine/:lineName", async (req, res) => {
 
 });
 
+
+
+
+//***************************** query page APIs *********************************/
+// API get query page data
+var config = {
+  user: "mcs",
+  password: "mcs",
+  database: "MCS",
+  server: 'localhost', 
+  requestTimeout: 300000,
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 30000
+  },
+  options: {
+    encrypt: true, // for azure
+    trustServerCertificate: true, // change to true for local dev / self-signed certs
+    trustedConnection: true
+  }
+};
+app.get("/api/QueryPage/getQuery", async (req, res) => {
+
+  
+
+  console.log("requir /api/QueryPage/getQuery");
+  
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    // let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    let con = await sql.connect(config);
+
+
+    const result = await sql.query(`
+      declare @startTime datetime = getdate() - 6
+      declare @endTime datetime = getdate() 
+      exec [dbo].[spGetTagQuery] @startTime, @endTime
+    `);
+
+    for (let i=0; i<result.recordsets[0].length; i++){
+      result.recordsets[0][i].id = i;
+    }
+    
+    res.json(result.recordsets[0]);
+
+    console.log("Finish /api/QueryPage/getQuery");
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+
+app.get("/api/QueryPage/stationAndTagTitleMapping", async (req, res) => {
+
+  
+
+  console.log("requir /api/QueryPage/stationAndTagTitleMapping");
+  
+  try {
+    let con = await sql.connect(config);
+
+    const result = await sql.query(`
+      SELECT tagName, ISNULL(tagTitle, tagName) AS tagTitle FROM tblFullTag WITH(NOLOCK)
+    `);
+    
+    console.log(result.recordsets[0]);
+    res.json(result.recordsets[0]);
+
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
 
 
 

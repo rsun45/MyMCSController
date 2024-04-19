@@ -7,7 +7,7 @@ export default function TopBar() {
   return (
     <div className="TopBar">
       <a href="/">
-        <img src={logo}  alt="MACHIN CONTROL SOLUTION"  height="70%" />
+        <img src={logo}  alt="MACHINE CONTROL SOLUTION"  height="70%" />
       </a>
     </div>
   );

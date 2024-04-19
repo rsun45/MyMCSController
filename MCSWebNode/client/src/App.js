@@ -8,6 +8,9 @@ import {
   Routes,
   Route
 } from "react-router-dom";
+import QueryPage from './components/QueryPage';
+import Summary from './components/Summary';
+import AnalysisPage from './components/AnalysisPage';
 
 
 function App() {
@@ -15,8 +18,11 @@ function App() {
 return(
   <Router>
     <TopBar /> 
+    <SectionTabs />
     <Routes>
-      <Route  path="/" element={<SectionTabs />} />
+      <Route  path="/" element={<Summary />} />
+      <Route  path="/query" element={<QueryPage />} />
+      <Route  path="/analysis" element={<AnalysisPage />} />
       <Route  path="/serial" element={<SerialPage />} />
 
     </Routes>
