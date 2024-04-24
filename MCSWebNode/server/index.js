@@ -9,7 +9,11 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
-app.use(express.json({ limit: "100mb" }));
+// app.use(express.json({ limit: "100mb" }));
+
+// create application/json parser
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 
 // app.listen(PORT, () => {
 //   console.log(`Server listening on ${PORT}`);
@@ -45,7 +49,7 @@ const sql = require('mssql')
 async function myQuery(){
     try {
         // make sure that any items are correctly URL encoded in the connection string
-        let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+        var con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
         console.dir("Database is Connected.")
         await con.close();
     } catch (err) {
@@ -492,7 +496,7 @@ var config = {
   requestTimeout: 300000,
   pool: {
     max: 10,
-    min: 0,
+    min: 5,
     idleTimeoutMillis: 30000
   },
   options: {
@@ -501,23 +505,32 @@ var config = {
     trustedConnection: true
   }
 };
-app.get("/api/QueryPage/getQuery", async (req, res) => {
-
-  
-
-  console.log("requir /api/QueryPage/getQuery");
-  
+app.post("/api/QueryPage/getQueryByDateRange", jsonParser, async (req, res) => {
+  console.log("requir /api/QueryPage/getQueryByDateRange");
+  console.log(req.body);
   try {
     // make sure that any items are correctly URL encoded in the connection string
-    // let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    
     let con = await sql.connect(config);
+    
+    const time1 = new Date();
+
+    // const request = new sql.Request();
+    // request.input('pStartTime', sql.DateTime, req.body.start);
+    // request.input('pEndTime', sql.DateTime, req.body.end);
+    // const result = await request.execute("dbo.spGetTagQuery");
 
 
-    const result = await sql.query(`
-      declare @startTime datetime = getdate() - 6
-      declare @endTime datetime = getdate() 
-      exec [dbo].[spGetTagQuery] @startTime, @endTime
-    `);
+    // const result = await sql.query(
+    //   "declare @start datetime = CONVERT(DATETIME,'" + req.body.start + 
+    //   "') declare @end datetime = CONVERT(DATETIME,'" + req.body.end + 
+    //   "') exec [dbo].[spGetTagQuery] @start, @end "
+    // );
+    const result = await sql.query(
+      "exec [dbo].[spGetTagQuery] @pStartTime = '" + req.body.start + "', @pEndTime = '" + req.body.end + "';"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
 
     for (let i=0; i<result.recordsets[0].length; i++){
       result.recordsets[0][i].id = i;
@@ -525,7 +538,7 @@ app.get("/api/QueryPage/getQuery", async (req, res) => {
     
     res.json(result.recordsets[0]);
 
-    console.log("Finish /api/QueryPage/getQuery");
+    console.log("Finish /api/QueryPage/getQueryByDateRange");
     await con.close();
 
   } catch (err) {
@@ -533,7 +546,6 @@ app.get("/api/QueryPage/getQuery", async (req, res) => {
   }
 
 });
-
 
 
 app.get("/api/QueryPage/stationAndTagTitleMapping", async (req, res) => {
@@ -549,9 +561,44 @@ app.get("/api/QueryPage/stationAndTagTitleMapping", async (req, res) => {
       SELECT tagName, ISNULL(tagTitle, tagName) AS tagTitle FROM tblFullTag WITH(NOLOCK)
     `);
     
-    console.log(result.recordsets[0]);
+    // console.log(result.recordsets[0]);
     res.json(result.recordsets[0]);
 
+    await con.close();
+    
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+
+
+
+
+
+//***************************** analysis page APIs *********************************/
+app.get("/api/AnalysisPage/getAllTagNames", async (req, res) => {
+  console.log("requir /api/AnalysisPage/getAllTagNames");
+  
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    
+    let con = await sql.connect(config);
+    
+    const time1 = new Date();
+
+    const result = await sql.query(
+      "EXEC spGetAllFullTagNames;"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
+    
+    res.json(result.recordsets[0]);
+
+    console.log("Finish /api/AnalysisPage/getAllTagNames");
     await con.close();
 
   } catch (err) {
@@ -559,6 +606,50 @@ app.get("/api/QueryPage/stationAndTagTitleMapping", async (req, res) => {
   }
 
 });
+
+app.post("/api/AnalysisPage/getDataAndTimeByTagName", jsonParser, async (req, res) => {
+  console.log("requir /api/AnalysisPage/getDataAndTimeByTagName");
+  console.log(req.body);
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    
+    let con = await sql.connect(config);
+    
+    const time1 = new Date();
+
+    const result = await sql.query(
+      "exec [dbo].[spGetTagContentByTagName] @tagName = '" + req.body.tagName + "', @startTime = '" + req.body.start + "', @endTime = '" + req.body.end + "';"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
+
+    // for (let i=0; i<result.recordsets[0].length; i++){
+    //   result.recordsets[0][i].id = i;
+    // }
+    
+    res.json(result.recordsets[0]);
+
+    console.log("Finish /api/AnalysisPage/getDataAndTimeByTagName");
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

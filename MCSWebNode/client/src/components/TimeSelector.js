@@ -4,83 +4,111 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import Stack from '@mui/material/Stack';
+
+// return local datetime string in 'YYYY-MM-DD HH:MM:SS' formate
+function toLocalIsoString(date) {
+  var tzo = -date.getTimezoneOffset(),
+      dif = tzo >= 0 ? '+' : '-',
+      pad = function(num) {
+          return (num < 10 ? '0' : '') + num;
+      };
+
+  return date.getFullYear() +
+      '-' + pad(date.getMonth() + 1) +
+      '-' + pad(date.getDate()) +
+      ' ' + pad(date.getHours()) +
+      ':' + pad(date.getMinutes()) +
+      ':' + pad(date.getSeconds());
+}
 
 
-const TimeSelector = ({data, setData}) => {
+const TimeSelector = ({ data, setData, setLoadingProcess }) => {
 
-    const [startTime, setStartTime] = React.useState(new Date());
-    const [endTime, setEndTime] = React.useState(new Date());
+  const [startTime, setStartTime] = React.useState(new Date());
+  const [endTime, setEndTime] = React.useState(new Date());
 
-    const compareDateTime = ( t1, t2) => {
-        let time1 = new Date(t1);
-        let time2 = new Date(t2);
-        time2.setHours(time2.getHours()+4)
-        // console.log(time1);
-        // console.log(time2);
 
-        if (time1.getTime() < time2.getTime())
-            return -1;
-        else if (time1.getTime() > time2.getTime())
-            return 1;
-        else
-            return 0;
-
+  // alart when missing fields
+  const [alertOpen, setAlertOpen] = React.useState(false);
+  const handleAlertClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
     }
 
-    const toggleButton = async () => {
+    setAlertOpen(false);
+  };
 
-        let arr = await fetch("/api/data01").then(res => res.json());
+  const [alertType, setAlertType] = React.useState("warning");
+  const [alertMsg, setAlertMsg] = React.useState("");
 
-        // fetch("/api/data01")
-        //     .then((res) => res.json())
-        //     .then((getData) => arr = getData);
+  const toggleButton = () => {
+    setLoadingProcess(true);
+    // console.log(toLocalIsoString(startTime));
+    // console.log(toLocalIsoString(endTime));
 
-        let i = arr.length
-        let index = 0;
-        while (i--) {
-            
-            if (compareDateTime(startTime,arr[index].endtime)===1 || compareDateTime(endTime,arr[index].starttime)===-1) { 
-                arr.splice(index, 1);
-                index--;
-            } 
-            index++;
-        }
-        
-        setData(arr);
-        // console.log(data);
-        // compareDateTime(startTime,arr[0].StartTime);
+    fetch("/api/QueryPage/getQueryByDateRange", {
+      method: "POST",
+      headers: { "Content-Type": "application/JSON" },
+      body: JSON.stringify({ "start": toLocalIsoString(startTime), "end": toLocalIsoString(endTime) })
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data)
+        setData(data);
+        setAlertMsg("Successful query.");
+        setAlertType("success");
+        setAlertOpen(true);
+        setLoadingProcess(false);
+      })
+      .catch((error) => {
+        console.log('Error: Failed query.');
+        console.log(error);
+        setAlertMsg("Failed query.");
+        setAlertType("error");
+        setAlertOpen(true);
+        setLoadingProcess(false);
+      });
 
-    }
 
-    const toggleButtonClear = async () => {
-        let arr = await fetch("/api/data01").then(res => res.json());
-        setData(arr);
-    }
+
+  }
+
 
 
   return (
     <div >
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DateTimePicker
-        renderInput={(props) => <TextField {...props} />}
-        label="Start"
-        value={startTime}
-        onChange={(newValue) => {
-            setStartTime(newValue);
-        }}
-      />
-      <DateTimePicker
-        renderInput={(props) => <TextField {...props} />}
-        label="End"
-        value={endTime}
-        onChange={(newValue) => {
-            setEndTime(newValue);
-        }}
-      />
-    </LocalizationProvider>
 
-    <Button sx={{ margin: '10px' }} onClick={toggleButton} variant="contained" color='info'>UPDATE</Button>
-    <Button sx={{ margin: '10px' }} onClick={toggleButtonClear} variant="contained" color='info'>RESET</Button>
+      <Snackbar open={alertOpen} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} >
+        <Alert onClose={handleAlertClose} severity={alertType}>
+          {alertMsg}
+        </Alert>
+      </Snackbar>
+
+      <Stack direction="row" spacing={2}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} />}
+            label="Start"
+            value={startTime}
+            onChange={(newValue) => {
+              setStartTime(newValue);
+            }}
+          />
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} />}
+            label="End"
+            value={endTime}
+            onChange={(newValue) => {
+              setEndTime(newValue);
+            }}
+          />
+        </LocalizationProvider>
+
+        <Button onClick={toggleButton} variant="contained" color='info'>Query</Button>
+      </Stack>
 
 
     </div>
