@@ -7,6 +7,8 @@ import { DataGrid,
          GridToolbarFilterButton,
        } from '@mui/x-data-grid';
 
+import BarChartComp from './BarChartComp';
+
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
@@ -36,36 +38,33 @@ const columns = [
 
 export default function AverageCycleTimeByStations( {refresh} ) {                    // props这里可以代表所有传过来的信息，然后用props.去调取。注意名字要和传过来的时候一致
   
-  const [data, setData] = React.useState(null);
+  const [data, setData] = React.useState([]);
 
   React.useEffect(() => {                               
     fetch("/api/AverageCycleTimeByStations")                           
         .then((res) => res.json())                 
-        .then((data) => setData(data));             
+        .then((data) => {setData(data); });             
     }, [refresh]);
 
   return (
-    <div style={{ height: '81%',  width: '100%'}}>
-      <DataGrid
+    <div style={{ height: '90%',  width: '100%'}}>
+      {/* <DataGrid
         rows = {data}
         columns={columns}
         //Tool Bar
         components={{
           Toolbar: CustomToolbar,
         }}
-        //分页
-        // pageSize={pageSize}
-        // onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        // rowsPerPageOptions={[20, 50]}
-        // pagination
-
         // checkboxSelection
         disableSelectionOnClick
 
-        
+      /> */}
 
 
-      />
+      <BarChartComp barChartData={data} xTitle={"tag_name"} yTitle={"avgCycleTime"}/>
+
+
+
     </div>
   );
   

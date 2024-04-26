@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import * as React from 'react';
 // import Graph from './Graph';
-import Clock from 'react-live-clock';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Drawer from '@mui/material/Drawer';
@@ -28,20 +27,54 @@ export default function Summary(){
     // force to refresh
     const [refresh, setRefresh] = React.useState(true);
 
+    
+    // refresh timer
+    const [refreshTimer, setRefreshTimer] = React.useState(0);
+
     // get all project names
-    React.useEffect(() => {    
+    React.useEffect(() => {
         
+        // get all lines names and refresh time
         const getAllProjectNames = async () => { fetch("/api/GetAllLinesNames")                            
         .then((res) => res.json())                  
         .then((data) => {
+            // console.log(data);
             setProject(data.result);
-            console.log(data);
             setCurrentProject(data.result[data.currentLineIndex].label);
+            setRefreshTimer(Number(data.refreshTimer));
         });    
         }
         getAllProjectNames();
 
+
     }, []);
+
+
+
+    
+    // when got refresh timer
+    React.useEffect(() => {
+
+        if (refreshTimer>0) {
+            const reloadData = () =>{
+                console.log("reload in " + refreshTimer);
+                setRefresh(refresh => {
+                    return !refresh;
+                });
+                
+            };
+
+            const intervalId = setInterval(() => {
+                reloadData();
+            }, refreshTimer);
+
+            return () => clearInterval(intervalId);
+        }
+
+
+    }, [refreshTimer]);
+
+
 
     // when change project
     const changeProject = (lineName) => {
@@ -55,14 +88,14 @@ export default function Summary(){
     
     const [shiftData, setShiftData] = React.useState([{"id": "1", "tagName": "nut3", "rejectCount": 1}]);
 
-    const toggleDrawer = () => (event) => {
-        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-            return;
-        }
+    // const toggleDrawer = () => (event) => {
+    //     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+    //         return;
+    //     }
 
 
-        setDrawer(!drawer);
-    };
+    //     setDrawer(!drawer);
+    // };
 
     const pieToggleDrawer = ()  => {
 
@@ -102,14 +135,6 @@ export default function Summary(){
                 />
             </Box>
             <Box sx={{
-                fontSize: 18,
-                textAlign: 'right',
-            }}>
-                <Clock
-                    format={'dddd, MMMM Do YYYY, h:mm:ss a'}
-                    ticking={true} />
-            </Box>
-            <Box sx={{
                 display: 'flex',
                 '& > :not(style)': {
                   m: 3,
@@ -118,11 +143,11 @@ export default function Summary(){
                 },
             }}>
                 <Paper variant="outlined">
-                    <h3>All stations sum fault time</h3>
+                    <h3>All Stations Sum Fault Time</h3>
                     <OptionalFunction1 refresh={refresh}/>
                 </Paper>
                 <Paper variant="outlined">
-                    <h3>All stations average sum time</h3>
+                    <h3>All Stations Average Cycle Time</h3>
                     <OptionalFunction2 refresh={refresh}/>
                 </Paper>
             </Box>

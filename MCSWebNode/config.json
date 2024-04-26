@@ -1,4 +1,5 @@
 {
+    "refreshTimer": 60000,
     "currentLineIndex": 0,
     "allLines": [
         {
@@ -6,7 +7,7 @@
             "databaseConnection": "Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;"
         },
         {
-            "name": "line name 2",
+            "name": "line name 3",
             "databaseConnection": "Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;"
         }
     ]

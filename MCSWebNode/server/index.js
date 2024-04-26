@@ -1,7 +1,7 @@
 // server/index.js
 // import { getCurrentShiftTimeStr, getLastShiftTimeStr, getLastTwoShiftTimeStr } from './ShiftCalculator';
 const shiftCalculator = require("./ShiftCalculator");
-var configData = require('../config.json')
+var configData = require('../config.json');
 
 const express = require("express");
 
@@ -99,6 +99,20 @@ app.get("/api/data02", async (req, res) => {
   }
 
 });
+
+
+// refresh config
+
+// app.get("/api/refreshConfig", (req, res) => {
+
+//   configData = require('../config.json');
+
+//   res.json({ message: "Refreshed config." });
+
+//   console.log("Refreshed config.");
+
+
+// });
 
 
 // API to get first page's data
@@ -451,14 +465,13 @@ app.get("/api/LastTwoShiftPassFailCounts", async (req, res) => {
 // API get all line names
 app.get("/api/GetAllLinesNames", async (req, res) => {
 
-
   console.log("request /api/GetAllLinesNames");
   
   let result = [];
   for (let i=0; i<configData.allLines.length; i++){
     result.push({"label": configData.allLines[i].name});
   }
-  res.json({"result": result, "currentLineIndex": configData.currentLineIndex});
+  res.json({"result": result, "currentLineIndex": configData.currentLineIndex, "refreshTimer": configData.refreshTimer});
 
 });
 
@@ -472,8 +485,6 @@ app.get("/api/ChangeProjectLine/:lineName", async (req, res) => {
       configData.currentLineIndex = i;
     }
   }
-
-  
 
   let configDataStr = JSON.stringify(configData, null, 4);
   var fs = require('fs');

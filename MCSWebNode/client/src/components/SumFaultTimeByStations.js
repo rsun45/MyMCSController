@@ -5,7 +5,9 @@ import { DataGrid,
          GridToolbarExport,
          GridToolbarColumnsButton,
          GridToolbarFilterButton,
-       } from '@mui/x-data-grid';
+} from '@mui/x-data-grid';
+
+import BarChartComp from './BarChartComp';
 
 function CustomToolbar() {
   return (
@@ -40,7 +42,7 @@ export default function SumFaultTimeByStations( {refresh} ) {                   
   // console.log(props)
 
 
-  const [data, setData] = React.useState(null);
+  const [data, setData] = React.useState([]);
 
   React.useEffect(() => {                               
     fetch("/api/SumFaultTimeByStations")                           
@@ -51,27 +53,23 @@ export default function SumFaultTimeByStations( {refresh} ) {                   
 
 
   return (
-    <div style={{ height: '81%',  width: '100%'}}>
-      <DataGrid
+    <div style={{ height: '90%',  width: '100%'}}>
+      {/* <DataGrid
         rows = {data}
         columns={columns}
         //Tool Bar
         components={{
           Toolbar: CustomToolbar,
         }}
-        //分页
-        // pageSize={pageSize}
-        // onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        // rowsPerPageOptions={[20, 50]}
-        // pagination
 
         // checkboxSelection
         disableSelectionOnClick
 
-        
+      /> */}
+
+      <BarChartComp barChartData={data} xTitle={"tag_name"} yTitle={"SumFaultTime"}/>
 
 
-      />
     </div>
   );
   

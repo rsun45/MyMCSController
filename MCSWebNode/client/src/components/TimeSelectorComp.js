@@ -1,11 +1,6 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker';
 import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -55,66 +50,12 @@ function getShiftTimeStrByDate( dateTime ) {
 }
 
 
-const TimeSelector = ({ data, setData, setLoadingProcess }) => {
+// startTime: js dateTime, setStartTime: setState function, endTime: js dateTime, setEndTime: setState function, disableQueryButton: boolean
+const TimeSelectorComp = ({ startTime, setStartTime, endTime, setEndTime }) => {
 
-  const [startTime, setStartTime] = React.useState(new Date());
-  const [endTime, setEndTime] = React.useState(new Date());
-
-  const [queryButtonDisabled, setQueryButtonDisabled] = React.useState(false);
+  // const [startTime, setStartTime] = React.useState(new Date());
+  // const [endTime, setEndTime] = React.useState(new Date());
   
-
-
-  // alart when missing fields
-  const [alertOpen, setAlertOpen] = React.useState(false);
-  const handleAlertClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setAlertOpen(false);
-  };
-
-  const [alertType, setAlertType] = React.useState("warning");
-  const [alertMsg, setAlertMsg] = React.useState("");
-
-  const toggleButton = () => {
-    setLoadingProcess(true);
-    setQueryButtonDisabled(true);
-    // console.log(toLocalIsoString(startTime));
-    // console.log(toLocalIsoString(endTime));
-
-    fetch("/api/QueryPage/getQueryByDateRange", {
-      method: "POST",
-      headers: { "Content-Type": "application/JSON" },
-      body: JSON.stringify({ "start": toLocalIsoString(startTime), "end": toLocalIsoString(endTime) })
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // console.log(data)
-        setData(data);
-        setAlertMsg("Successful query.");
-        setAlertType("success");
-        setAlertOpen(true);
-        setLoadingProcess(false);
-        setQueryButtonDisabled(false);
-      })
-      .catch((error) => {
-        console.log('Error: Failed query.');
-        console.log(error);
-        setAlertMsg("Failed query.");
-        setAlertType("error");
-        setAlertOpen(true);
-        setLoadingProcess(false);
-        setQueryButtonDisabled(false);
-      });
-
-
-
-  }
-
-
-
-
 
   // quick time range menu open state
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -176,31 +117,7 @@ const TimeSelector = ({ data, setData, setLoadingProcess }) => {
   return (
     <div >
 
-      <Snackbar open={alertOpen} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} >
-        <Alert onClose={handleAlertClose} severity={alertType}>
-          {alertMsg}
-        </Alert>
-      </Snackbar>
-
       <Stack direction="row" spacing={2}>
-        {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DesktopDateTimePicker
-            renderInput={(props) => <TextField {...props} />}
-            label="Start"
-            value={startTime}
-            onChange={(newValue) => {
-              setStartTime(newValue);
-            }}
-          />
-          <DesktopDateTimePicker
-            renderInput={(props) => <TextField {...props} />}
-            label="End"
-            value={endTime}
-            onChange={(newValue) => {
-              setEndTime(newValue);
-            }}
-          />
-        </LocalizationProvider> */}
 
         <TextField
           id="datetime-local-start"
@@ -243,7 +160,6 @@ const TimeSelector = ({ data, setData, setLoadingProcess }) => {
           Quick
         </Button>
 
-        <Button onClick={toggleButton} variant="contained" color='info' disabled={queryButtonDisabled}>Query</Button>
       </Stack>
 
 
@@ -272,4 +188,4 @@ const TimeSelector = ({ data, setData, setLoadingProcess }) => {
   );
 }
 
-export default TimeSelector;
+export default TimeSelectorComp;
