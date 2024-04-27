@@ -1,5 +1,5 @@
 import React from "react";
-import './App.css';
+// import './App.css';
 import TopBar from './components/TopBar';
 import SectionTabs from './components/SectionTabs';
 import SerialPage from './components/SerialPage';

@@ -106,7 +106,10 @@ export default function Summary(){
 
 
     return (
-        <div style={{backgroundColor:"#ededed", width:"100%", height:"90vh", marginTop:-15, paddingTop: 15}}>
+        <div 
+        // style={{backgroundColor:"#ededed", width:"100%", height:"90vh", marginTop:-15, paddingTop: 15}}
+        >
+
             <Box
                 display="flex"
                 alignItems="center"
@@ -134,7 +137,7 @@ export default function Summary(){
 
                 />
             </Box>
-            <Box sx={{
+            {/* <Box sx={{
                 display: 'flex',
                 '& > :not(style)': {
                   m: 3,
@@ -150,11 +153,26 @@ export default function Summary(){
                     <h3>All Stations Average Cycle Time</h3>
                     <OptionalFunction2 refresh={refresh}/>
                 </Paper>
+            </Box> */}
+
+
+            <Box sx={{ height: "40vh", mb:4}}>
+                <Grid
+                    container spacing={4} columns={2} sx={{ p: 2 }} justifyContent="center" alignItems="center">
+                    <Grid item xs={1} style={{ textAlign: "center" }}sx={{ height: "40vh",}}>
+                        <h3>All Stations Sum Fault Time</h3>
+                        <OptionalFunction1 refresh={refresh} />
+                    </Grid>
+                    <Grid item xs={1} style={{ textAlign: "center" }}sx={{ height: "40vh",}}>
+                        <h3>All Stations Average Cycle Time</h3>
+                        <OptionalFunction2 refresh={refresh} />
+                    </Grid>
+                </Grid>
             </Box>
             
             
             <Grid 
-            container spacing={0} columns={3}>               
+            container spacing={0} columns={3} >               
                 <Grid item xs={1}>
                     <PieChartCurrentShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/>
                 </Grid>

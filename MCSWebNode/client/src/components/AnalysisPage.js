@@ -58,7 +58,8 @@ function TabPanel(props) {
         
 
     // stations array
-    let stationArr = ["Line Chart", "Other"];
+    // let stationArr = ["Line Chart", "Other"];
+    let stationArr = ["Line Chart"];
 
     let tabItems = [];
 
@@ -78,9 +79,9 @@ function TabPanel(props) {
         <TabPanel value={value} index={0}>
           <AnalysisAllStationLineChart />
         </TabPanel>
-        <TabPanel value={value} index={1}>
+        {/* <TabPanel value={value} index={1}>
           <h1>Other</h1>
-        </TabPanel>
+        </TabPanel> */}
       </Box>
     );
   }
