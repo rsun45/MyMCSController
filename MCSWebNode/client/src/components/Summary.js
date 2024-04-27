@@ -106,7 +106,7 @@ export default function Summary(){
 
 
     return (
-        <div>
+        <div style={{backgroundColor:"#ededed", width:"100%", height:"90vh", marginTop:-15, paddingTop: 15}}>
             <Box
                 display="flex"
                 alignItems="center"

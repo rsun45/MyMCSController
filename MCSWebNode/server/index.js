@@ -309,7 +309,7 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 19:04:50"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
@@ -345,7 +345,7 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 19:04:50"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
@@ -379,7 +379,7 @@ app.get("/api/CurrentShiftPassFailCounts", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 19:04:50"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
@@ -410,7 +410,7 @@ app.get("/api/LastShiftPassFailCounts", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 10:04:50"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
@@ -441,7 +441,7 @@ app.get("/api/LastTwoShiftPassFailCounts", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 03:04:50"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 

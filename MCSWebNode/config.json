@@ -5,10 +5,6 @@
         {
             "name": "boxstep",
             "databaseConnection": "Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;"
-        },
-        {
-            "name": "line name 3",
-            "databaseConnection": "Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;"
         }
     ]
 }
