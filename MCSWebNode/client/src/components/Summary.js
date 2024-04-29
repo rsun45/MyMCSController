@@ -160,11 +160,11 @@ export default function Summary(){
                 <Grid
                     container spacing={4} columns={2} sx={{ p: 2 }} justifyContent="center" alignItems="center">
                     <Grid item xs={1} style={{ textAlign: "center" }}sx={{ height: "40vh",}}>
-                        <h3>All Stations Sum Fault Time</h3>
+                        <h3>All Stations Sum Fault Time (Second)</h3>
                         <OptionalFunction1 refresh={refresh} />
                     </Grid>
                     <Grid item xs={1} style={{ textAlign: "center" }}sx={{ height: "40vh",}}>
-                        <h3>All Stations Average Cycle Time</h3>
+                        <h3>All Stations Average Cycle Time (Second)</h3>
                         <OptionalFunction2 refresh={refresh} />
                     </Grid>
                 </Grid>

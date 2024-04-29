@@ -188,6 +188,10 @@ export default function AnalysisAllStationLineChart() {
       // yAxis: {
       //   type: 'linear',
       // },
+      point: {
+        size: 5,
+        shape: 'circle',
+      },
       slider: {
         start: 0,
         end: 1,

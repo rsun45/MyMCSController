@@ -51,8 +51,9 @@ const PieChartCurrentShift = ({pieToggleDrawer, setShiftData, refresh}) => {
       content: '{value}',
       style: {
         textAlign: 'center',
-        fontSize: 14,
+        fontSize: 24,
       },
+      autoRotate: false,
     },
     interactions: [
       {
@@ -76,6 +77,30 @@ const PieChartCurrentShift = ({pieToggleDrawer, setShiftData, refresh}) => {
         content: 'Current: ' + shiftName,
       },
     },
+    legend: {
+      position: 'right',
+      offsetX: -70,
+      itemName:{
+        formatter: (text, item) => {
+          const items = data.filter((d) => d.type === item.value);
+          return items.length ? items[0].type + " : " + items[0].value : text;
+        },
+        style: {
+          fontSize: 20,
+        },
+      },
+      // itemValue: {
+      //   formatter: (text, item) => {
+      //     const items = data.filter((d) => d.type === item.value);
+      //     console.log(items);
+      //     // return items.length ? items.reduce((a, b) => a + b.value, 0) / items.length : '-';
+      //     return items.length ? "-" + items[0].value : text;
+      //   },
+      //   style: {
+      //     fontSize: 20,
+      //   },
+      // },
+    }
   };
   return <Pie 
   {...config}  

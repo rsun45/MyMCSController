@@ -309,8 +309,8 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     // const result = await sql.query('select pd.id, SerialNumber, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue, StartTime, EndTime from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 40  order by PartId, StationId, TagId');
@@ -345,8 +345,8 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     const result = await sql.query(
@@ -379,8 +379,8 @@ app.get("/api/CurrentShiftPassFailCounts", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-13 14:00:00"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     const result = await sql.query(
@@ -410,8 +410,10 @@ app.get("/api/LastShiftPassFailCounts", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
+    let inputDT = new Date();
+    inputDT.setHours(inputDT.getHours()-8);
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDT);
     console.log(shiftArr);
 
     const result = await sql.query(
@@ -441,8 +443,10 @@ app.get("/api/LastTwoShiftPassFailCounts", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
+    let inputDT = new Date();
+    inputDT.setHours(inputDT.getHours()-16);
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDT);
     console.log(shiftArr);
 
     const result = await sql.query(
@@ -500,10 +504,10 @@ app.get("/api/ChangeProjectLine/:lineName", async (req, res) => {
 //***************************** query page APIs *********************************/
 // API get query page data
 var config = {
-  user: "mcs",
-  password: "mcs",
-  database: "MCS",
-  server: 'localhost', 
+  user: configData.allLines[configData.currentLineIndex].dbUser,
+  password: configData.allLines[configData.currentLineIndex].dbPassword,
+  database: configData.allLines[configData.currentLineIndex].dbDataBase,
+  server: configData.allLines[configData.currentLineIndex].dbServer,
   requestTimeout: 300000,
   pool: {
     max: 10,

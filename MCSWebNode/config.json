@@ -4,7 +4,11 @@
     "allLines": [
         {
             "name": "boxstep",
-            "databaseConnection": "Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;"
+            "databaseConnection": "Server=localhost,1433;Database=MCS;User Id=mcs;Password=mcs;Encrypt=true;Trusted_Connection=True;TrustServerCertificate=True;",
+            "dbServer": "localhost",
+            "dbDataBase": "MCS",
+            "dbUser": "mcs",
+            "dbPassword": "mcs"
         }
     ]
 }

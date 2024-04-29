@@ -48,8 +48,9 @@ const PieChartLastTwoShift = ({pieToggleDrawer, setShiftData, refresh}) => {
       content: '{value}',
       style: {
         textAlign: 'center',
-        fontSize: 14,
+        fontSize: 24,
       },
+      autoRotate: false,
     },
     //colorField: 'type', // 部分图表使用 seriesField
     color: [ '#2ca02c', '#d62728'], //调整环状图颜色
@@ -73,6 +74,19 @@ const PieChartLastTwoShift = ({pieToggleDrawer, setShiftData, refresh}) => {
         content: 'Last Two: ' + shiftName, //环状图中间的显示
       },
     },
+    legend: {
+      position: 'right',
+      offsetX: -70,
+      itemName:{
+        formatter: (text, item) => {
+          const items = data.filter((d) => d.type === item.value);
+          return items.length ? items[0].type + " : " + items[0].value : text;
+        },
+        style: {
+          fontSize: 20,
+        },
+      },
+    }
   };
   return <Pie 
   {...config}
