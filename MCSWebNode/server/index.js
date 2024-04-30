@@ -9,6 +9,9 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../client/build')));
+
 // app.use(express.json({ limit: "100mb" }));
 
 // create application/json parser
@@ -678,6 +681,10 @@ app.post("/api/AnalysisPage/getDataAndTimeByTagName", jsonParser, async (req, re
 app.get("/api/fakeData02", (req, res) => {
   const jsondata = require('./results.json')
   res.json(jsondata);
+});
+
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
 
 app.listen(PORT, () => {
