@@ -9,8 +9,10 @@ import {
   Route
 } from "react-router-dom";
 import QueryPage from './components/QueryPage';
+import ResultPage from './components/ResultPage';
 import Summary from './components/Summary';
 import AnalysisPage from './components/AnalysisPage';
+import StackBarChartsPage from './components/StackBarChartsPage';
 
 
 function App() {
@@ -21,8 +23,10 @@ return(
     <SectionTabs />
     <Routes>
       <Route  path="/" element={<Summary />} />
-      <Route  path="/query" element={<QueryPage />} />
+      <Route  path="/result" element={<ResultPage />} />
       <Route  path="/analysis" element={<AnalysisPage />} />
+      <Route  path="/monitor" element={<StackBarChartsPage />} />
+      <Route  path="/query" element={<QueryPage />} />
       <Route  path="/serial" element={<SerialPage />} />
 
     </Routes>

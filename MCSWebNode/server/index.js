@@ -666,6 +666,188 @@ app.post("/api/AnalysisPage/getDataAndTimeByTagName", jsonParser, async (req, re
 
 
 
+//***************************** result page APIs *********************************/
+
+app.post("/api/ResultPage/getStationStatusByDateRange", jsonParser, async (req, res) => {
+  console.log("requir /api/ResultPage/getStationStatusByDateRange");
+  console.log(req.body);
+  try {
+    
+    let con = await sql.connect(config);
+    
+    const time1 = new Date();
+
+    const result = await sql.query(
+      "exec [dbo].[GetStationStatusBySerial] @StartTime = '" + req.body.start + "', @EndTime = '" + req.body.end + "';"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
+
+    for (let i=0; i<result.recordsets[0].length; i++){
+      result.recordsets[0][i].id = i;
+    }
+    
+    res.json(result.recordsets[0]);
+
+    console.log("Finish /api/ResultPage/getStationStatusByDateRange");
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+app.post("/api/ResultPage/getDataBySerial", jsonParser, async (req, res) => {
+  console.log("requir /api/ResultPage/getDataBySerial");
+  console.log(req.body);
+  try {
+    
+    let con = await sql.connect(config);
+    
+    const time1 = new Date();
+
+    const result = await sql.query(
+      "exec [dbo].[spGetTagOnePartForOther] @pSerialNumber = '" + req.body.serialNumber +  "';"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
+
+    for (let i=0; i<result.recordsets[0].length; i++){
+      result.recordsets[0][i].id = i;
+    }
+    
+    res.json(result.recordsets[0]);
+
+    console.log("Finish /api/ResultPage/getDataBySerial");
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+
+
+
+//***************************** stack bar chart page APIs *********************************/
+
+// get stations list, return string array stores all station number names e.g. ["10Operator", "10Weld", "20L"...]
+app.get("/api/MonitorPage/getStationNumberList", async (req, res) => {
+
+  console.log("requir /api/MonitorPage/getStationNumberList");
+  
+  try {
+    let con = await sql.connect(config);
+
+    const result = await sql.query(`
+      SELECT DISTINCT (tagName) tagName FROM tblFullTag WITH(NOLOCK)
+    `);
+    
+    // console.log(result.recordsets[0]);
+    let final = [];
+    for (const it of result.recordsets[0]){
+      let tempStr = it.tagName.split("Data")[0];
+      if (!final.includes(tempStr)){
+        final.push(tempStr);
+      }
+    }
+
+    res.json({"result": final});
+
+    await con.close();
+    
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+app.post("/api/MonitorPage/getTotalOperationalTimeByStationAndSerial", jsonParser, async (req, res) => {
+  console.log("requir /api/MonitorPage/getTotalOperationalTimeByStationAndSerial");
+  console.log(req.body);
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    
+    let con = await sql.connect(config);
+    
+    const time1 = new Date();
+
+    const result = await sql.query(
+      "exec [dbo].[spGetTotalOperationalTimeByStationAndSerial] @stationIdentifier = '" + req.body.tagName + "', @startTime = '" + req.body.start + "', @endTime = '" + req.body.end + "';"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
+
+    // console.log(result.recordsets[0]);
+    let final = [];
+    for (const it of result.recordsets[0]){
+      if (it.serial_number === ''){
+        continue;
+      }
+      
+      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "totalTimeValue": it.TotalOperationalTime, "totalTimeFeild": "Total Operational Time"});
+      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.InputTime, "timeFeild": "Input Time"});
+      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.MachineTime, "timeFeild": "Machine Time"});
+      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.TransferTime, "timeFeild": "Transfer Time"});
+      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.OperatorTime, "timeFeild": "Operator Time"});
+      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.FaultTime*-1, "timeFeild": "FaultTime"});
+    }
+
+    
+    res.json(final);
+
+    console.log("Finish /api/MonitorPage/getTotalOperationalTimeByStationAndSerial");
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+// get baseline value for all bar charts
+app.get("/api/MonitorPage/getBaselineValue", async (req, res) => {
+
+  console.log("requir /api/MonitorPage/getBaselineValue");
+  
+  try {
+    let con = await sql.connect(config);
+
+    const result = await sql.query(`
+      SELECT * FROM tblLineParameter;
+    `);
+
+    res.json({"baselineValue": result.recordsets[0][0].CycleTime});
+
+    await con.close();
+    
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

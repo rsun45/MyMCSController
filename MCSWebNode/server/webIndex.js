@@ -9,3 +9,5 @@ app.get('/*', function (req, res) {
 });
 
 app.listen(3000);
+
+// this frontend startup js not work now, because the get request occupied the api channel

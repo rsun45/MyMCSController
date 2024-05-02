@@ -22,8 +22,14 @@ import './SectionTabs.css';
       if (currentTab === "analysis"){
         currentTab = 'AnalysisPage';
       }
+      else if (currentTab === "result"){
+        currentTab = 'ResultPage';
+      }
       else if (currentTab === "query"){
         currentTab = 'QueryPage';
+      }
+      else if (currentTab === "monitor"){
+        currentTab = 'MonitorPage';
       }
       else {
         currentTab = 'SummaryPage';
@@ -37,8 +43,10 @@ import './SectionTabs.css';
       <Box sx={{ borderBottom: 1, borderColor: 'divider', marginBottom: 2 }}>
         <Tabs value={value.activeTab} onChange={handleChange} aria-label="navigation bar">
           <Tab label="Summary" value="SummaryPage" component={Link} to={"/"} />
-          <Tab label="Query" value="QueryPage" component={Link} to={"/query"} />
+          <Tab label="Result" value="ResultPage" component={Link} to={"/result"} />
           <Tab label="Analysis" value="AnalysisPage" component={Link} to={"/analysis"} />
+          <Tab label="Monitor" value="MonitorPage" component={Link} to={"/monitor"} />
+          <Tab label="Query" value="QueryPage" component={Link} to={"/query"} />
         </Tabs>
       </Box>
     );
