@@ -126,8 +126,9 @@ export default function ResultPage() {
 
   const [loadingProcess, setLoadingProcess] = React.useState(false);
 
-
-  const [startTime, setStartTime] = React.useState(new Date());
+  let aHourAgo = new Date();
+  aHourAgo.setHours(aHourAgo.getHours() - 1)
+  const [startTime, setStartTime] = React.useState(aHourAgo);
   const [endTime, setEndTime] = React.useState(new Date());
   const [confirmButtonDisable, setConfirmButtonDisable] = React.useState(false);
   // alart when missing fields
@@ -283,6 +284,8 @@ export default function ResultPage() {
               headerName: key,
               width: 150,
               editable: false,
+              headerAlign: 'center',
+              align:'center',
             }
           );
         }
@@ -293,6 +296,8 @@ export default function ResultPage() {
               headerName: key,
               width: 150,
               editable: false,
+              headerAlign: 'center',
+              align:'center',
               valueGetter: ({ value }) => {
                 if (value === 2 || value === "2") {
                   return "OK";
@@ -337,7 +342,7 @@ export default function ResultPage() {
         sx={{ height: 30, ml: 5 }}
       >
         <ToggleButton value={0} aria-label="Serials Station Status" sx={{ width: 130 }}>
-          {"Serials Grid"}
+          {"Status Grid"}
         </ToggleButton>
         <ToggleButton value={1} aria-label="One Serial Data" sx={{ width: 130 }}>
           {"Data Grid"}
@@ -399,6 +404,8 @@ export default function ResultPage() {
             headerName: key,
             width: 150,
             editable: false,
+            headerAlign: 'center',
+            align:'center',
           }
         );
       }
@@ -555,7 +562,7 @@ export default function ResultPage() {
   return (
 
     /* 数据表格部分 */
-    <div style={{ height: '83vh', width: '100%' }}>
+    <div style={{ height: '83vh', width: '100%', }}>
       <Snackbar open={alertOpen} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} >
         <Alert onClose={handleAlertClose} severity={alertType}>
           {alertMsg}
@@ -563,14 +570,14 @@ export default function ResultPage() {
       </Snackbar>
 
       {/* <TimeSelector data={data} setData={setData} setLoadingProcess={setLoadingProcess} /> */}
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" spacing={2} sx={{pl:2}}>
         <TimeSelectorComp startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} />
-        <Button onClick={() => { confirmOnClick(); }} variant="contained" color='info' disabled={confirmButtonDisable} >Confirm</Button>
+        <Button sx={{width:"100px"}} onClick={() => { confirmOnClick(); }} variant="contained" color='info' disabled={confirmButtonDisable} >Confirm</Button>
 
 
       </Stack>
 
-      <Box sx={{ flexGrow: 1, height: "100%", marginTop: 1 }}>
+      <Box sx={{ flexGrow: 1, height: "100%", marginTop: 1, pl:2 }}>
         <Grid container spacing={1} sx={{ height: "100%" }}>
           <Grid item xs={1.5}>
             <div>
@@ -603,12 +610,13 @@ export default function ResultPage() {
           <Grid item xs={10.5}>
             {
               showGridIndex === 0 ?
-                <Box sx={{ width:"100%", height: "100%", '& .NOK': { backgroundColor: 'rgb(252, 136, 136)', }, '& .OK': { backgroundColor: 'rgb(135, 250, 145)', }, }}>
+                <Box sx={{ width:"100%", height: "100%", '& .NOK': { color: 'rgb(125, 1, 1)', }, '& .OK': { color: 'rgb(20, 117, 2)', }, }}>
                   <DataGrid
                     rows={dataAfterFilter ? dataAfterFilter : []}
                     columns={gridColumns}
                     columnVisibilityModel={myColumnVisibilityModel}
                     onColumnVisibilityModelChange={(model) => { setMyColumnVisibilityModel(model); }}
+                    density="compact"
                     // Tool Bar
                     components={{
                       Toolbar: CustomToolbar,
@@ -656,6 +664,7 @@ export default function ResultPage() {
                   columns={gridColumns2}
                   columnVisibilityModel={myColumnVisibilityModel}
                   onColumnVisibilityModelChange={(model) => { setMyColumnVisibilityModel(model); }}
+                  density="compact"
                   // Tool Bar
                   components={{
                     Toolbar: CustomToolbar,

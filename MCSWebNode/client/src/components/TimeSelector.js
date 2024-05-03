@@ -57,7 +57,9 @@ function getShiftTimeStrByDate( dateTime ) {
 
 const TimeSelector = ({ data, setData, setLoadingProcess }) => {
 
-  const [startTime, setStartTime] = React.useState(new Date());
+  let aHourAgo = new Date();
+  aHourAgo.setHours(aHourAgo.getHours() - 1);
+  const [startTime, setStartTime] = React.useState(aHourAgo);
   const [endTime, setEndTime] = React.useState(new Date());
 
   const [queryButtonDisabled, setQueryButtonDisabled] = React.useState(false);
@@ -182,7 +184,7 @@ const TimeSelector = ({ data, setData, setLoadingProcess }) => {
         </Alert>
       </Snackbar>
 
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" spacing={2} sx={{pl:2}}>
         {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DesktopDateTimePicker
             renderInput={(props) => <TextField {...props} />}
@@ -239,11 +241,12 @@ const TimeSelector = ({ data, setData, setLoadingProcess }) => {
           onClick={handleQuickClick}
           variant="contained"
           color="secondary"
+          sx={{width:"100px"}}
         >
           Quick
         </Button>
 
-        <Button onClick={toggleButton} variant="contained" color='info' disabled={queryButtonDisabled}>Query</Button>
+        <Button onClick={toggleButton} variant="contained" color='info' disabled={queryButtonDisabled} sx={{width:"100px"}}>Confirm</Button>
       </Stack>
 
 

@@ -156,6 +156,7 @@ const TimeSelectorComp = ({ startTime, setStartTime, endTime, setEndTime }) => {
           onClick={handleQuickClick}
           variant="contained"
           color="secondary"
+          sx={{width:"100px"}}
         >
           Quick
         </Button>

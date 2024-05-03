@@ -40,13 +40,13 @@ import './SectionTabs.css';
     }, []);
   
     return (
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', marginBottom: 2 }}>
-        <Tabs value={value.activeTab} onChange={handleChange} aria-label="navigation bar">
-          <Tab label="Summary" value="SummaryPage" component={Link} to={"/"} />
-          <Tab label="Result" value="ResultPage" component={Link} to={"/result"} />
-          <Tab label="Analysis" value="AnalysisPage" component={Link} to={"/analysis"} />
-          <Tab label="Monitor" value="MonitorPage" component={Link} to={"/monitor"} />
-          <Tab label="Query" value="QueryPage" component={Link} to={"/query"} />
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', marginBottom: 2, }}>
+        <Tabs value={value.activeTab} onChange={handleChange} aria-label="navigation bar" >
+          <Tab sx={value.activeTab==="SummaryPage"?{fontWeight: 'bold', }:{}} label="Summary" value="SummaryPage" component={Link} to={"/"} />
+          <Tab sx={value.activeTab==="ResultPage"?{fontWeight: 'bold', }:{}} label="Data" value="ResultPage" component={Link} to={"/result"} />
+          <Tab sx={value.activeTab==="AnalysisPage"?{fontWeight: 'bold', }:{}} label="Analysis" value="AnalysisPage" component={Link} to={"/analysis"} />
+          <Tab sx={value.activeTab==="MonitorPage"?{fontWeight: 'bold', }:{}} label="Cycle Time" value="MonitorPage" component={Link} to={"/monitor"} />
+          <Tab sx={value.activeTab==="QueryPage"?{fontWeight: 'bold', }:{}} label="Query" value="QueryPage" component={Link} to={"/query"} />
         </Tabs>
       </Box>
     );

@@ -37,7 +37,9 @@ export default function AnalysisAllStationLineChart() {
   const [allTagName, setAllTagName] = React.useState([]);
   const [currentTagName, setCurrentTagName] = React.useState("");
 
-  const [startTime, setStartTime] = React.useState(new Date());
+  let aHourAgo = new Date();
+  aHourAgo.setHours(aHourAgo.getHours() - 1)
+  const [startTime, setStartTime] = React.useState(aHourAgo);
   const [endTime, setEndTime] = React.useState(new Date());
 
   
@@ -176,6 +178,7 @@ export default function AnalysisAllStationLineChart() {
         tickMethod:"time-cat",
         type: 'linear',
         tickCount: 10,
+        tickInterval: 11,
         label: {
           // rotate: 0.2,
           formatter: (v) => {
@@ -207,7 +210,15 @@ export default function AnalysisAllStationLineChart() {
           return { name: dtStr, value: datum.tag_cont_number };
         },
         showTitle:false,
-      }
+      },
+      legend: {
+        maxItemWidth: 350,
+        itemName:{
+          style: {
+            fontSize: 18,
+          },
+        },
+      },
 
     })
   };
@@ -225,7 +236,7 @@ export default function AnalysisAllStationLineChart() {
         </Alert>
       </Snackbar>
 
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" spacing={2} sx={{pl:2}}>
         <Autocomplete
           disablePortal
           id="tag_name"

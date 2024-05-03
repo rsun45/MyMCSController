@@ -11,7 +11,8 @@ import {
 import QueryPage from './components/QueryPage';
 import ResultPage from './components/ResultPage';
 import Summary from './components/Summary';
-import AnalysisPage from './components/AnalysisPage';
+// import AnalysisPage from './components/AnalysisPage';
+import AnalysisAllStationLineChart from './components/AnalysisAllStationLineChart';
 import StackBarChartsPage from './components/StackBarChartsPage';
 
 
@@ -24,7 +25,7 @@ return(
     <Routes>
       <Route  path="/" element={<Summary />} />
       <Route  path="/result" element={<ResultPage />} />
-      <Route  path="/analysis" element={<AnalysisPage />} />
+      <Route  path="/analysis" element={<AnalysisAllStationLineChart />} />
       <Route  path="/monitor" element={<StackBarChartsPage />} />
       <Route  path="/query" element={<QueryPage />} />
       <Route  path="/serial" element={<SerialPage />} />

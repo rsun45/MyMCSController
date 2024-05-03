@@ -205,6 +205,8 @@ export default function QueryPage() {
               headerName: key,
               width: 180,
               editable: false,
+              headerAlign: 'center',
+              align:'center',
               valueGetter: ({ value }) => {
                 var newValue = value.replace("T", " ").split(".")[0];
                 return newValue
@@ -219,6 +221,8 @@ export default function QueryPage() {
               headerName: key,
               width: 150,
               editable: false,
+              headerAlign: 'center',
+              align:'center',
             }
           );
       }
@@ -246,7 +250,7 @@ export default function QueryPage() {
     <div style={{ height:'83vh',  width: '100%'}}>
       <TimeSelector data={data} setData={setData} setLoadingProcess={setLoadingProcess} />
 
-      <Box sx={{ flexGrow: 1, height:"100%", marginTop: 1 }}>
+      <Box sx={{ flexGrow: 1, height:"100%", marginTop: 1, pl:2 }}>
         <Grid container spacing={1} sx={{ height:"100%" }}>
           <Grid item xs={1.5}>
             <div>
@@ -282,6 +286,7 @@ export default function QueryPage() {
               columns={gridColumns}
               columnVisibilityModel={myColumnVisibilityModel}
               onColumnVisibilityModelChange={(model)=>{setMyColumnVisibilityModel(model);}}
+              density="compact"
               // Tool Bar
               components={{
                 Toolbar: CustomToolbar,

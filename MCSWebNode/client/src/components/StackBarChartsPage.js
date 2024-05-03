@@ -37,7 +37,9 @@ export default function StackBarChartsPage() {
   const [currentTagName, setCurrentTagName] = React.useState("");
   const [chartTitles, setChartTitles] = React.useState([]);
 
-  const [startTime, setStartTime] = React.useState(new Date());
+  let aHourAgo = new Date();
+  aHourAgo.setHours(aHourAgo.getHours() - 1)
+  const [startTime, setStartTime] = React.useState(aHourAgo);
   const [endTime, setEndTime] = React.useState(new Date());
 
   
@@ -114,9 +116,9 @@ export default function StackBarChartsPage() {
       .then((res) => res.json())
       .then((data) => {
         // console.log(data);
-        // for (const it of data){
-        //   it["getTime"] = new Date(it.tag_add_dt.replace("Z", "")).getTime();
-        // }
+        for (const it of data){
+          it["getTime"] = new Date(it.dateTime.replace("Z", "")).getTime();
+        }
         
         setChartTitles([...chartTitles, currentTagName]);
         setAllChartsData([...allChartsData, data]);
@@ -157,11 +159,11 @@ export default function StackBarChartsPage() {
     let annotations = null;
     if (baselineValue){
       annotations = [
-        // baseline 
+        // baseline - Design Cycle
         {
           type: 'text',
           position: ['min', baselineValue],
-          content: 'Baseline',
+          content: 'Design Cycle',
           offsetY: -4,
           style: {
             fill: '#F4664A',
@@ -177,31 +179,43 @@ export default function StackBarChartsPage() {
             lineDash: [2, 2],
           },
         },
-      ];}
-    // for (const it of inputData){
-    //   if (it.totalTimeValue){
-    //     annotations.push({
-    //       type: 'text',
-    //       position: [it.dateTime, it.totalTimeValue],
-    //       content: "-"+it.totalTimeValue+"-",
-    //       style: {
-    //         textAlign: 'center',
-    //         fontSize: 14,
-    //         fill: 'rgba(200,0,0,0.85)',
-    //       },
-    //     });
-    //   }
-
-    // }
+      ];
+    }
+    for (const it of inputData){
+      if (it.totalTimeValue){
+        annotations.push({
+          type: 'dataMarker',
+          position: [it.getTime, it.totalTimeValue],
+          autoAdjust: false,
+          // point : null,
+          text: null,
+          line: null,
+          // line: {
+          //   style: { stroke: '#222222', lineWidth: 20, shadowColor: "#ffffff", shadowBlur: 0.5, },
+          //   length: 1,
+          // },
+        });
+      }
+    }
 
     return ({
       data: inputData,
       isStack: true,
-      xField: 'dateTime',
+      // xField: 'dateTime',
+      xField: 'getTime',
       yField: 'timeValue',
       seriesField: 'timeFeild',
       xAxis: {
         tickCount: 10,
+        tickMethod:"time-cat",
+        type: 'linear',
+        tickInterval: 11,
+        label: {
+          formatter: (v) => {
+            const date = new Date(Number(v));
+            return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+          },
+        },
       },
       color: ({ timeFeild }) => {
         if (timeFeild === 'Input Time') {
@@ -227,6 +241,28 @@ export default function StackBarChartsPage() {
         start: 0,
         // end: 30/(inputData.length/6),
         end: 1,
+        formatter: (v) => {
+          const date = new Date(Number(v));
+          return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+        },
+      },
+      tooltip: {
+        title: (title) => {
+          const date = new Date(Number(title));
+          const newTitle =  `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+          return newTitle;
+        },
+        customItems: (originalItems) => {
+          for (const it of originalItems){
+            const date = new Date(Number(it.title));
+            const newTitle =  `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+            it.title = newTitle;
+            if(it.name === "FaultTime"){
+              it.value = ""+Math.abs(it.data.timeValue);
+            }
+          }
+          return originalItems;
+        },
       },
       label: null,
       annotations,
