@@ -221,6 +221,9 @@ export default function StackBarChartsPage() {
         if (timeFeild === 'Input Time') {
           return "#8d32a8";
         }
+        else if (timeFeild === 'Output Time') {
+          return "#e68f1e";
+        }
         else if (timeFeild === 'Machine Time'){
           return "#42a832";
         }

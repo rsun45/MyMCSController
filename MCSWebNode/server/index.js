@@ -793,6 +793,7 @@ app.post("/api/MonitorPage/getTotalOperationalTimeByStationAndSerial", jsonParse
       
       final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "totalTimeValue": it.TotalOperationalTime, "totalTimeFeild": "Total Operational Time"});
       final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.InputTime, "timeFeild": "Input Time"});
+      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.OutputTime, "timeFeild": "Output Time"});
       final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.MachineTime, "timeFeild": "Machine Time"});
       final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.TransferTime, "timeFeild": "Transfer Time"});
       final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.OperatorTime, "timeFeild": "Operator Time"});
