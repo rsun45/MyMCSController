@@ -16,24 +16,44 @@ import AnalysisAllStationLineChart from './components/AnalysisAllStationLineChar
 import StackBarChartsPage from './components/StackBarChartsPage';
 
 
+
+
+// store all pages state
+export const AllPagesContext = React.createContext();
+
 function App() {
 
-return(
-  <Router>
-    <TopBar /> 
-    <SectionTabs />
-    <Routes>
-      <Route  path="/" element={<Summary />} />
-      <Route  path="/result" element={<ResultPage />} />
-      <Route  path="/analysis" element={<AnalysisAllStationLineChart />} />
-      <Route  path="/monitor" element={<StackBarChartsPage />} />
-      <Route  path="/query" element={<QueryPage />} />
-      <Route  path="/serial" element={<SerialPage />} />
+  // result page states
+  const [resultPageData, setResultPageData] = React.useState(null);
+  // query page states
+  const [queryPagedata, setQueryPagedata] = React.useState(null);
+  // Analysis page states
+  const [allLineChartsData, setAllLineChartsData] = React.useState([]);
+  // cycle time page states
+  const [allColumnChartsData, setAllColumnChartsData] = React.useState([]);
 
-    </Routes>
-  </Router>
 
-);
+
+
+
+  return (
+    <Router>
+      <TopBar />
+      <SectionTabs />
+      <AllPagesContext.Provider value={{ resultPageData, setResultPageData, queryPagedata, setQueryPagedata, allLineChartsData, setAllLineChartsData, allColumnChartsData, setAllColumnChartsData }}>
+        <Routes>
+          <Route path="/" element={<Summary />} />
+          <Route path="/result" element={<ResultPage />} />
+          <Route path="/analysis" element={<AnalysisAllStationLineChart />} />
+          <Route path="/monitor" element={<StackBarChartsPage />} />
+          <Route path="/query" element={<QueryPage />} />
+          <Route path="/serial" element={<SerialPage />} />
+
+        </Routes>
+      </AllPagesContext.Provider>
+    </Router>
+
+  );
 
 
 

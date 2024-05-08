@@ -11,6 +11,7 @@ import TimeSelectorComp from './TimeSelectorComp';
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import Grid from '@mui/material/Grid';
+import { AllPagesContext } from '../App';
 
 
 // return local datetime string in 'YYYY-MM-DD HH:MM:SS' formate
@@ -85,7 +86,8 @@ export default function StackBarChartsPage() {
 
   
   // dynamic charts
-  const [allChartsData, setAllChartsData] = React.useState([]);
+  // const [allColumnChartsData, setAllColumnChartsData] = React.useState([]);
+  const {allColumnChartsData, setAllColumnChartsData} = React.useContext(AllPagesContext);
 
 
 
@@ -121,7 +123,7 @@ export default function StackBarChartsPage() {
         }
         
         setChartTitles([...chartTitles, currentTagName]);
-        setAllChartsData([...allChartsData, data]);
+        setAllColumnChartsData([...allColumnChartsData, data]);
   
         setConfirmButtonDisable(false);
         
@@ -143,8 +145,8 @@ export default function StackBarChartsPage() {
 
   const deleteLineChartClick = (index) =>{
 
-    allChartsData.splice(index, 1);
-    setAllChartsData([...allChartsData]);
+    allColumnChartsData.splice(index, 1);
+    setAllColumnChartsData([...allColumnChartsData]);
     
     chartTitles.splice(index, 1);
     setChartTitles([...chartTitles]);
@@ -156,7 +158,7 @@ export default function StackBarChartsPage() {
 
   // line chart config
   const chartConfig = (inputData) => {
-    let annotations = null;
+    let annotations = [];
     if (baselineValue){
       annotations = [
         // baseline - Design Cycle
@@ -216,6 +218,13 @@ export default function StackBarChartsPage() {
             return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
           },
         },
+      },
+      yAxis: {
+        offsetX: -15,
+        top: true,
+      },
+      background: {
+        padding: 20,
       },
       color: ({ timeFeild }) => {
         if (timeFeild === 'Input Time') {
@@ -313,7 +322,7 @@ export default function StackBarChartsPage() {
       <br/>
 
 
-      {allChartsData.map((element, index) => {
+      {allColumnChartsData.map((element, index) => {
         return (
           <div key={index} >
             

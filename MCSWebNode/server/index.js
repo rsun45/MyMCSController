@@ -575,9 +575,11 @@ app.get("/api/QueryPage/stationAndTagTitleMapping", async (req, res) => {
   try {
     let con = await sql.connect(config);
 
-    const result = await sql.query(`
-      SELECT tagName, ISNULL(tagTitle, tagName) AS tagTitle FROM tblFullTag WITH(NOLOCK)
-    `);
+    // const result = await sql.query(`
+    //   SELECT tagName, ISNULL(tagTitle, tagName) AS tagTitle FROM tblFullTag WITH(NOLOCK)
+    // `);
+    
+    const result = await sql.query("exec [dbo].[sp_GetTagTitles] ;");
     
     // console.log(result.recordsets[0]);
     res.json(result.recordsets[0]);
@@ -743,9 +745,11 @@ app.get("/api/MonitorPage/getStationNumberList", async (req, res) => {
   try {
     let con = await sql.connect(config);
 
-    const result = await sql.query(`
-      SELECT DISTINCT (tagName) tagName FROM tblFullTag WITH(NOLOCK)
-    `);
+    // const result = await sql.query(`
+    //   SELECT DISTINCT (tagName) tagName FROM tblFullTag WITH(NOLOCK)
+    // `);
+
+    const result = await sql.query("exec [dbo].[sp_GetTagTitles] ;");
     
     // console.log(result.recordsets[0]);
     let final = [];

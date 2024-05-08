@@ -27,6 +27,7 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { AllPagesContext } from '../App';
 
 
 
@@ -115,7 +116,9 @@ function toLocalIsoString(date) {
 export default function ResultPage() {
 
   // grid rows
-  const [data, setData] = React.useState(null);
+  // const [resultPageData, setResultPageData] = React.useState(null); // this states are lifted to app
+  const {resultPageData, setResultPageData} = React.useContext(AllPagesContext);
+
   // grid rows after OK NOK filter
   const [dataAfterFilter, setDataAfterFilter] = React.useState([]);
   // grid columns
@@ -166,7 +169,7 @@ export default function ResultPage() {
       .then((res) => res.json())
       .then((data) => {
         // console.log(data);
-        setData(data);
+        setResultPageData(data);
         // setup dataAfterFilter
         filterOKNOKData(data, showOKNOK);
         setAlertMsg("Successful query.");
@@ -206,6 +209,12 @@ export default function ResultPage() {
         setStationTagMap(tempStationTagMap);
         // console.log(tempStationTagMap);
       });
+
+
+    // when reload this page, get old grid data
+    if (resultPageData){
+      filterOKNOKData(resultPageData, showOKNOK);
+    }
 
   }, []);
 
@@ -267,10 +276,10 @@ export default function ResultPage() {
 
   // after get all data, get all columns
   React.useEffect(() => {
-    if (data) {
+    if (resultPageData) {
 
       let tempGridColumns = [];
-      for (const key in data[0]) {
+      for (const key in resultPageData[0]) {
         // dont show id column
         if (key === "id") {
           continue;
@@ -284,8 +293,8 @@ export default function ResultPage() {
               headerName: key,
               width: 150,
               editable: false,
-              headerAlign: 'center',
-              align:'center',
+              headerAlign: 'left',
+              align:'left',
             }
           );
         }
@@ -316,7 +325,7 @@ export default function ResultPage() {
       setGridColumns(tempGridColumns);
     }
 
-  }, [data]);
+  }, [resultPageData]);
 
 
 
@@ -502,7 +511,7 @@ export default function ResultPage() {
       setShowOKNOK([...newGridIndex]);
 
       // filter the data
-      filterOKNOKData(data, newGridIndex);
+      filterOKNOKData(resultPageData, newGridIndex);
     }
   };
 

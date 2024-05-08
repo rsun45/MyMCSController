@@ -19,6 +19,7 @@ import Grid from '@mui/material/Grid';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import LinearProgress from '@mui/material/LinearProgress';
+import { AllPagesContext } from '../App';
 
 
 function CustomToolbar() {
@@ -101,7 +102,9 @@ function CustomToolbar() {
 export default function QueryPage() {
   
   // grid rows
-  const [data, setData] = React.useState(null);
+  // const [queryPagedata, setQueryPagedata] = React.useState(null);
+  const {queryPagedata, setQueryPagedata} = React.useContext(AllPagesContext);
+
   // grid columns
   const [gridColumns, setGridColumns] = React.useState([]);
   // station and tag mappings; [[a,["tag1","tag2"]], [b,[tag3]]]
@@ -189,16 +192,28 @@ export default function QueryPage() {
 
   // after get all data, get all columns
   React.useEffect(() => { 
-    if (data){           
+    if (queryPagedata){           
       let tempGridColumns = [];
-      for (const key in data[0]) {
+      for (const key in queryPagedata[0]) {
         // dont show id column
         if (key === "id"){
           continue;
         }
         
         // console.log(key + " - " + data[0][key]);
-        if (key === "startTime" || key === "endTime") {
+        if (key === "SerialNumber") {
+          tempGridColumns.push(
+            {
+              field: key,
+              headerName: key,
+              width: 150,
+              editable: false,
+              headerAlign: 'left',
+              align:'left',
+            }
+          );
+        }
+        else if (key === "startTime" || key === "endTime") {
           tempGridColumns.push(
             {
               field: key,
@@ -230,7 +245,7 @@ export default function QueryPage() {
       setGridColumns(tempGridColumns);
     }
        
-  }, [data]);
+  }, [queryPagedata]);
 
   
   
@@ -248,7 +263,7 @@ export default function QueryPage() {
 
     /* 数据表格部分 */
     <div style={{ height:'83vh',  width: '100%'}}>
-      <TimeSelector data={data} setData={setData} setLoadingProcess={setLoadingProcess} />
+      <TimeSelector data={queryPagedata} setData={setQueryPagedata} setLoadingProcess={setLoadingProcess} />
 
       <Box sx={{ flexGrow: 1, height:"100%", marginTop: 1, pl:2 }}>
         <Grid container spacing={1} sx={{ height:"100%" }}>
@@ -282,7 +297,7 @@ export default function QueryPage() {
           </Grid>
           <Grid item xs={10.5}>
             <DataGrid
-              rows={data}
+              rows={queryPagedata}
               columns={gridColumns}
               columnVisibilityModel={myColumnVisibilityModel}
               onColumnVisibilityModelChange={(model)=>{setMyColumnVisibilityModel(model);}}

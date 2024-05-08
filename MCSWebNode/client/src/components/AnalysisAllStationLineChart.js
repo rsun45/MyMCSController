@@ -12,6 +12,7 @@ import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import Checkbox from '@mui/material/Checkbox';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import Grid from '@mui/material/Grid';
+import { AllPagesContext } from '../App';
 
 
 // return local datetime string in 'YYYY-MM-DD HH:MM:SS' formate
@@ -136,7 +137,9 @@ export default function AnalysisAllStationLineChart() {
 
 
   // dynamic line charts
-  const [allLineChartsData, setAllLineChartsData] = React.useState([]);
+  // const [allLineChartsData, setAllLineChartsData] = React.useState([]);
+  const {allLineChartsData, setAllLineChartsData} = React.useContext(AllPagesContext);
+
   const [checkedBoxIndex, setCheckedBoxIndex] = React.useState(-1);
 
 
