@@ -298,6 +298,22 @@ export default function ResultPage() {
             }
           );
         }
+        else if (key === "Modify_Time") {
+          tempGridColumns.push(
+            {
+              field: key,
+              headerName: key,
+              width: 180,
+              editable: false,
+              headerAlign: 'center',
+              align:'center',
+              valueGetter: ({ value }) => {
+                var newValue = value.replace("T", " ").split(".")[0];
+                return newValue
+              }, 
+            }
+          );
+        }
         else {
           tempGridColumns.push(
             {
