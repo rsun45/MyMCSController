@@ -10,5 +10,14 @@
             "dbUser": "mcs",
             "dbPassword": "mcs"
         }
-    ]
+    ],
+    "emailConfig": {
+        "user": "mcs.kyle@outlook.com",
+        "pass": "Passw0rd001yyc",
+        "host": "smtp.office365.com",
+        "port": 587,
+        "secure": false,
+        "from": "mcs.kyle@outlook.com",
+        "reportTo": "sunrc727@gmail.com"
+    }
 }

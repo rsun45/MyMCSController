@@ -52,9 +52,10 @@ const sql = require('mssql')
 async function myQuery(){
     try {
         // make sure that any items are correctly URL encoded in the connection string
-        var con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+        // var con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+        await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
         console.dir("Database is Connected.")
-        await con.close();
+        // await con.close();
     } catch (err) {
       console.log(err);
     }
@@ -382,7 +383,7 @@ app.get("/api/CurrentShiftPassFailCounts", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-13 14:00:00"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-11 14:00:00"));
     let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
@@ -844,13 +845,231 @@ app.get("/api/MonitorPage/getBaselineValue", async (req, res) => {
 
 
 
+//***************************** email reports code *********************************/
+
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  host: configData.emailConfig.host,
+  port: configData.emailConfig.port,
+  secure: false, // Use `true` for port 465, `false` for all other ports
+  auth: {
+    user: configData.emailConfig.user,
+    pass: configData.emailConfig.pass
+  }
+});
+
+// var mailOptions = {
+//   from: configData.emailConfig.from,
+//   to: configData.emailConfig.reportTo,
+//   subject: 'Sending Email using Node.js',
+//   text: 'test'
+// };
+
+// transporter.sendMail(mailOptions, function(error, info){
+//   if (error) {
+//     console.log(error);
+//   } else {
+//     console.log('Email sent: ' + info.response);
+//   }
+// });
+
+
+
+// API get email settings values
+app.get("/api/settings/getEmailReportSettings", async (req, res) => {
+
+  console.log("request /api/settings/getEmailReportSettings");
+  
+  res.json({"emailReportSendTo": configData.emailConfig.reportTo});
+
+});
+
+
+// API modify email config
+app.post("/api/settings/saveEmailConfigs", jsonParser, async (req, res) => {
+  console.log("requir /api/settings/saveEmailConfigs");
+  console.log(req.body);
+  
+  configData.emailConfig.reportTo = req.body.emailReportSendTo;
+
+  let configDataStr = JSON.stringify(configData, null, 4);
+  var fs = require('fs');
+  fs.writeFile('./config.json', configDataStr, 'utf8', ()=>{});
+
+  res.json({"message": "Success"});
+
+});
+
+
+// send test email to emailConfig.reportTo
+app.post("/api/settings/sendTestEmailToReportTo", jsonParser, async (req, res) => {
+  console.log("requir /api/settings/sendTestEmailToReportTo");
+  console.log(req.body);
+
+  const mailOptions = {
+    from: configData.emailConfig.from,
+    to: req.body.emailReportSendTo,
+    subject: 'Testing Email Delivery',
+    text: 'This email is a test sent from MCS Web.'
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+      res.json({"message": error, "success": "error"});
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.json({"message": info.response, "success": "success"});
+    }
+  });
+
+
+});
+
+
+/********* send shift report ************/ 
+
+// create report csv attachement
+const generateShiftReportCSVByDateTime = async (inputDate) =>{
+  let csvStr = "Project Name:," + configData.allLines[configData.currentLineIndex].name + "\n\n";
+
+  
+  try {
+    await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDate);
+
+    csvStr += shiftArr[2] + " Shift:," + shiftArr[0] + "," + shiftArr[1] + "\n\n";
+
+    // All stations sum fault time
+    let result = await sql.query(
+    "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] + 
+    "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] + 
+    "') exec [dbo].[spGetSumFaultTimeByStations] @start, @end"
+    );
+
+    csvStr += "All Stations Sum Fault Time (Second)\n"
+    // tag names row
+    csvStr += "Tag name:"
+    for (let i=0; i<result.recordsets[0].length; i++){
+      csvStr += "," + result.recordsets[0][i].tag_name ;
+    }
+    csvStr += "\n"
+    // time row
+    csvStr += "Sum Fault Time (Second):"
+    for (let i=0; i<result.recordsets[0].length; i++){
+      csvStr += "," + result.recordsets[0][i].SumFaultTime ;
+    }
+    csvStr += "\n\n"
+
+
+
+    // All stations average sum time
+    result = await sql.query(
+      "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] +
+      "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] +
+      "') exec [dbo].[spGetAverageCycleTimeByStations] @start, @end"
+    );
+
+    csvStr += "All Stations Average Cycle Time (Second)\n"
+    // tag names row
+    csvStr += "Tag name:"
+    for (let i = 0; i < result.recordsets[0].length; i++) {
+      csvStr += "," + result.recordsets[0][i].tag_name;
+    }
+    csvStr += "\n"
+    // time row
+    csvStr += "Average Cycle Time (Second):"
+    for (let i = 0; i < result.recordsets[0].length; i++) {
+      csvStr += "," + result.recordsets[0][i].avgCycleTime;
+    }
+    csvStr += "\n\n"
 
 
 
 
+    // shift pass fail counts
+    result = await sql.query(
+      "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] +
+      "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] +
+      "') exec [dbo].[spGetShiftCount] '" + configData.allLines[configData.currentLineIndex].name + "', @start, @end"
+    );
+
+    csvStr += "Pass Fail Counts\n";
+    csvStr += ",Total,Pass,Fail\n";
+    csvStr += "Counts:," + result.recordsets[0][0].tag_cnt + "," + result.recordsets[0][0].pass_cnt + "," + result.recordsets[0][0].reject_cnt + "\n" ;
+
+
+    return csvStr;
+
+  } catch (err) {
+    console.log(err);
+    return "";
+  } 
+}
 
 
 
+
+// send report email
+async function sendShiftReportEmail(inputDate){
+  console.log("Sending Shift Report Email.");
+  let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDate);
+
+  let csvStr = await generateShiftReportCSVByDateTime(inputDate);
+
+  const mailOptions = {
+    from: configData.emailConfig.from,
+    to: configData.emailConfig.reportTo,
+    subject: shiftArr[2] + 'shift report from ' + shiftArr[0] + " to " + shiftArr[1],
+    text: "Please find attached the CSV report for finished shift.",
+    attachments: [
+      {   
+          filename: shiftArr[2] + 'Shift_Report_from' + shiftArr[0] + "_to_" + shiftArr[1] + '.csv',
+          content: csvStr
+      },
+    ]
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+}
+
+
+// set time to send report everyday
+const cron = require('node-cron');
+
+cron.schedule('0 7 * * *', () => {
+  console.log('7am shift report');
+  let inputDT = new Date();
+  inputDT.setHours(inputDT.getHours()-1);
+  sendShiftReportEmail(inputDT);
+});
+
+// Schedule a task to run at 3pm every day
+cron.schedule('0 15 * * *', () => {
+  console.log('3pm shift report');
+  let inputDT = new Date();
+  inputDT.setHours(inputDT.getHours()-1);
+  sendShiftReportEmail(inputDT);
+});
+
+// Schedule a task to run at 11pm every day
+cron.schedule('0 23 * * *', () => {
+  console.log('11pm shift report');
+  let inputDT = new Date();
+  inputDT.setHours(inputDT.getHours()-1);
+  sendShiftReportEmail(inputDT);
+});
+
+
+// test shift report 
+// sendShiftReportEmail(new Date());
 
 
 
