@@ -37,6 +37,12 @@ import './SectionTabs.css';
       else if (currentTab === "alarm"){
         currentTab = 'AlarmPage';
       }
+      else if (currentTab === "settings"){
+        currentTab = 'SettingsPage';
+      }
+      else if (currentTab === "maintenance"){
+        currentTab = 'MaintenancePage';
+      }
       else {
         currentTab = 'SummaryPage';
       }
@@ -55,6 +61,8 @@ import './SectionTabs.css';
           <Tab sx={value.activeTab==="QualityPage"?{fontWeight: 'bold', }:{}} label="Quality" value="QualityPage" component={Link} to={"/quality"} />
           <Tab sx={value.activeTab==="AlarmPage"?{fontWeight: 'bold', }:{}} label="Alarm" value="AlarmPage" component={Link} to={"/alarm"} />
           <Tab sx={value.activeTab==="QueryPage"?{fontWeight: 'bold', }:{}} label="Query" value="QueryPage" component={Link} to={"/query"} />
+          <Tab sx={value.activeTab==="MaintenancePage"?{fontWeight: 'bold', }:{}} label="Maintenance" value="MaintenancePage" component={Link} to={"/maintenance"} />
+          <Tab sx={value.activeTab==="SettingsPage"?{fontWeight: 'bold', }:{}} label="Settings" value="SettingsPage" component={Link} to={"/settings"} />
         </Tabs>
       </Box>
     );

@@ -15,101 +15,101 @@ import Snackbar from '@mui/material/Snackbar';
 export default function TopBar() {
 
   // alart when missing fields
-  const [alertOpen, setAlertOpen] = React.useState(false);
-  const handleAlertClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const [alertOpen, setAlertOpen] = React.useState(false);
+  // const handleAlertClose = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setAlertOpen(false);
-  };
+  //   setAlertOpen(false);
+  // };
 
-  const [alertType, setAlertType] = React.useState("warning");
-  const [alertMsg, setAlertMsg] = React.useState("");
+  // const [alertType, setAlertType] = React.useState("warning");
+  // const [alertMsg, setAlertMsg] = React.useState("");
 
   // settings dialog
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const handleClickOpenDialog = () => {
-    setOpenDialog(true);
-  };
-  const handleCloseDialog = (event, reason) => {
-    if (reason && reason === "backdropClick") 
-        return;
-    setOpenDialog(false);
-  };
+  // const [openDialog, setOpenDialog] = React.useState(false);
+  // const handleClickOpenDialog = () => {
+  //   setOpenDialog(true);
+  // };
+  // const handleCloseDialog = (event, reason) => {
+  //   if (reason && reason === "backdropClick") 
+  //       return;
+  //   setOpenDialog(false);
+  // };
 
   // settings states
   const [reportSendTo, setReportSendTo] = React.useState("");
 
 
   // get settings values
-  React.useEffect( () => {
-    const fetchData = async () => { fetch("/api/settings/getEmailReportSettings")                            
-      .then((res) => res.json())                  
-      .then((data) => {
-        setReportSendTo(data.emailReportSendTo);
-      });    
-    }
+  // React.useEffect( () => {
+  //   const fetchData = async () => { fetch("/api/settings/getEmailReportSettings")                            
+  //     .then((res) => res.json())                  
+  //     .then((data) => {
+  //       setReportSendTo(data.emailReportSendTo);
+  //     });    
+  //   }
     
-    fetchData();
+  //   fetchData();
         
-  }, []);
+  // }, []);
 
 
   // when click save button in settings dialog
-  const saveSettings = () =>{
-    fetch("/api/settings/saveEmailConfigs", {
-      method: "POST",
-      headers: {"Content-Type": "application/JSON"},
-      body: JSON.stringify({"emailReportSendTo":reportSendTo}) 
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data)
-        setAlertType("success");
-        setAlertMsg("Settings are saved.");
-        setAlertOpen(true);
-      })
-      .catch((error) => {
-        setAlertType("error");
-        setAlertMsg("Cannot save settings.");
-        setAlertOpen(true);
-        console.log('Error: cannot save email settings.');
-        console.log(error);
-      }); 
+  // const saveSettings = () =>{
+  //   fetch("/api/settings/saveEmailConfigs", {
+  //     method: "POST",
+  //     headers: {"Content-Type": "application/JSON"},
+  //     body: JSON.stringify({"emailReportSendTo":reportSendTo}) 
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data)
+  //       setAlertType("success");
+  //       setAlertMsg("Settings are saved.");
+  //       setAlertOpen(true);
+  //     })
+  //     .catch((error) => {
+  //       setAlertType("error");
+  //       setAlertMsg("Cannot save settings.");
+  //       setAlertOpen(true);
+  //       console.log('Error: cannot save email settings.');
+  //       console.log(error);
+  //     }); 
 
     
-    setOpenDialog(false);
-  };
+  //   setOpenDialog(false);
+  // };
 
 
   return (
     <div className="TopBar">
-      <Snackbar open={alertOpen} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} >
+      {/* <Snackbar open={alertOpen} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} >
         <Alert onClose={handleAlertClose} severity={alertType}>
           {alertMsg}
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
 
       <a href="/">
         <img src={logo}  alt="MACHINE CONTROL SOLUTION"  height="70%" />
       </a>
 
 
-      <div style={{float: "right", paddingTop:"7px"}}>
+      <div style={{float: "right", paddingTop:"12px"}}>
         <Clock 
           style={{margin:"25px", color:"white" }}
           format={'dddd, MMMM Do YYYY, h:mm:ss a'}
           ticking={true} />
 
           
-        <IconButton aria-label="settings" onClick={() => { handleClickOpenDialog(); }} >
+        {/* <IconButton aria-label="settings" onClick={() => { handleClickOpenDialog(); }} >
           <SettingsIcon sx={{ color: "#ffffff", '&:hover': {color: "#ababab"} }}/>
-        </IconButton>
+        </IconButton> */}
       </div>
 
 
-      <Dialog
+      {/* <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
         aria-labelledby="alert-dialog-title"
@@ -119,9 +119,6 @@ export default function TopBar() {
         disableEscapeKeyDown="true"
       >
 
-        {/* <DialogTitle id="settings-dialog">
-          {"Email Report Settings"}
-        </DialogTitle> */}
         <DialogContent
           sx={{ height: 500 }}>
           <SettingsComp reportSendTo={reportSendTo} setReportSendTo={setReportSendTo} setAlertType={setAlertType} setAlertMsg={setAlertMsg} setAlertOpen={setAlertOpen} />
@@ -132,7 +129,7 @@ export default function TopBar() {
         </DialogActions>
 
 
-      </Dialog>
+      </Dialog> */}
 
     </div>
   );

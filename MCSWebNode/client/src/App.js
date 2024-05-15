@@ -16,6 +16,8 @@ import AnalysisAllStationLineChart from './components/AnalysisAllStationLineChar
 import StackBarChartsPage from './components/StackBarChartsPage';
 import QualityPage from './components/QualityPage';
 import AlarmPage from './components/AlarmPage';
+import SettingsPage from './components/SettingsPage';
+import MaintenancePage from './components/MaintenancePage';
 
 
 
@@ -61,6 +63,8 @@ function App() {
           <Route path="/quality" element={<QualityPage />} />
           <Route path="/query" element={<QueryPage />} />
           <Route path="/alarm" element={<AlarmPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/maintenance" element={<MaintenancePage />} />
           <Route path="/serial" element={<SerialPage />} />
 
         </Routes>

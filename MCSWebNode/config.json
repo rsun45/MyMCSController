@@ -18,6 +18,11 @@
         "port": 587,
         "secure": false,
         "from": "mcs.kyle@outlook.com",
-        "reportTo": "sunrc727@gmail.com"
+        "emailTo": {
+            "reportTo": "sunrc727@gmail.com,test@test.test",
+            "alarmTo": "sunrc727@gmail.com,test@test.test2",
+            "scheduledMaintenanceTo": "sunrc727@gmail.com,test@test.test2",
+            "qualityRejectTo": "sunrc727@gmail.com,test@test.test2"
+        }
     }
 }

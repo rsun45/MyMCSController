@@ -853,7 +853,7 @@ var transporter = nodemailer.createTransport({
 
 // var mailOptions = {
 //   from: configData.emailConfig.from,
-//   to: configData.emailConfig.reportTo,
+//   to: configData.emailConfig.emailTo.reportTo,
 //   subject: 'Sending Email using Node.js',
 //   text: 'test'
 // };
@@ -869,11 +869,79 @@ var transporter = nodemailer.createTransport({
 
 
 // API get email settings values
-app.get("/api/settings/getEmailReportSettings", async (req, res) => {
+app.get("/api/settings/getEmailGridData", async (req, res) => {
 
-  console.log("request /api/settings/getEmailReportSettings");
+  console.log("request /api/settings/getEmailGridData");
+
+  // generate email setting grid data
+  const reportTo = configData.emailConfig.emailTo.reportTo.split(',');
+  const alarmTo = configData.emailConfig.emailTo.alarmTo.split(',');
+  const scheduledMaintenanceTo = configData.emailConfig.emailTo.scheduledMaintenanceTo.split(',');
+  const qualityRejectTo = configData.emailConfig.emailTo.qualityRejectTo.split(',');
+  // generate all distinct email addresses
+  let distinctEmailArr = [];
+  // trim all email addresses
+  for (let i=0; i<reportTo.length; i++){
+    reportTo[i] = reportTo[i].trim();
+    if(!distinctEmailArr.includes(reportTo[i])){
+      distinctEmailArr.push(reportTo[i]);
+    }
+  }
+  for (let i=0; i<alarmTo.length; i++){
+    alarmTo[i] = alarmTo[i].trim();
+    if(!distinctEmailArr.includes(alarmTo[i])){
+      distinctEmailArr.push(alarmTo[i]);
+    }
+  }
+  for (let i=0; i<scheduledMaintenanceTo.length; i++){
+    scheduledMaintenanceTo[i] = scheduledMaintenanceTo[i].trim();
+    if(!distinctEmailArr.includes(scheduledMaintenanceTo[i])){
+      distinctEmailArr.push(scheduledMaintenanceTo[i]);
+    }
+  }
+  for (let i=0; i<qualityRejectTo.length; i++){
+    qualityRejectTo[i] = qualityRejectTo[i].trim();
+    if(!distinctEmailArr.includes(qualityRejectTo[i])){
+      distinctEmailArr.push(qualityRejectTo[i]);
+    }
+  }
+
+
+  let result = [];
+  for (let i=0; i<distinctEmailArr.length; i++){
+    let entry = {"id": i, "emailAddress": distinctEmailArr[i]};
+    if (reportTo.includes(distinctEmailArr[i])){
+      entry.reportTo = 1;
+    }
+    else {
+      entry.reportTo = 0;
+    }
+    if (alarmTo.includes(distinctEmailArr[i])){
+      entry.alarmTo = 1;
+    }
+    else {
+      entry.alarmTo = 0;
+    }
+    if (scheduledMaintenanceTo.includes(distinctEmailArr[i])){
+      entry.scheduledMaintenanceTo = 1;
+    }
+    else {
+      entry.scheduledMaintenanceTo = 0;
+    }
+    if (qualityRejectTo.includes(distinctEmailArr[i])){
+      entry.qualityRejectTo = 1;
+    }
+    else {
+      entry.qualityRejectTo = 0;
+    }
+
+    result.push(entry);
+  }
+
   
-  res.json({"emailReportSendTo": configData.emailConfig.reportTo});
+  // console.log(result);
+  
+  res.json({"emailGridData": result});
 
 });
 
@@ -883,7 +951,10 @@ app.post("/api/settings/saveEmailConfigs", jsonParser, async (req, res) => {
   console.log("requir /api/settings/saveEmailConfigs");
   console.log(req.body);
   
-  configData.emailConfig.reportTo = req.body.emailReportSendTo;
+  configData.emailConfig.emailTo.reportTo = req.body.reportTo;
+  configData.emailConfig.emailTo.alarmTo = req.body.alarmTo;
+  configData.emailConfig.emailTo.scheduledMaintenanceTo = req.body.scheduledMaintenanceTo;
+  configData.emailConfig.emailTo.qualityRejectTo = req.body.qualityRejectTo;
 
   let configDataStr = JSON.stringify(configData, null, 4);
   var fs = require('fs');
@@ -894,7 +965,7 @@ app.post("/api/settings/saveEmailConfigs", jsonParser, async (req, res) => {
 });
 
 
-// send test email to emailConfig.reportTo
+// send test email to emailConfig.emailTo.reportTo
 app.post("/api/settings/sendTestEmailToReportTo", jsonParser, async (req, res) => {
   console.log("requir /api/settings/sendTestEmailToReportTo");
   console.log(req.body);
@@ -1012,7 +1083,7 @@ async function sendShiftReportEmail(inputDate){
 
   const mailOptions = {
     from: configData.emailConfig.from,
-    to: configData.emailConfig.reportTo,
+    to: configData.emailConfig.emailTo.reportTo,
     subject: shiftArr[2] + 'shift report from ' + shiftArr[0] + " to " + shiftArr[1],
     text: "Please find attached the CSV report for finished shift.",
     attachments: [
@@ -1114,13 +1185,16 @@ const checkAlarmAndSendEmail = async () =>{
 // check alarm and send email every 5 min
 cron.schedule('*/5 * * * *', async () => {
   console.log('Checking alarms.');
+  let time = new Date();
+  console.log(time.toLocaleString());
+  
   let emailContent = await checkAlarmAndSendEmail();
   if (emailContent !== ""){
     console.log('Sending alarms emails.');
 
     const mailOptions = {
       from: configData.emailConfig.from,
-      to: configData.emailConfig.reportTo,
+      to: configData.emailConfig.emailTo.alarmTo,
       subject: "Tag alarm, please pay attention.",
       text: emailContent,
     };
