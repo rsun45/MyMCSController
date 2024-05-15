@@ -13,6 +13,7 @@ import Checkbox from '@mui/material/Checkbox';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import Grid from '@mui/material/Grid';
 import { AllPagesContext } from '../App';
+import { Histogram } from '@ant-design/plots';
 
 
 // return local datetime string in 'YYYY-MM-DD HH:MM:SS' formate
@@ -33,7 +34,7 @@ function toLocalIsoString(date) {
 
 
 
-export default function AnalysisAllStationLineChart() {
+export default function QualityPage() {
 
   const [allTagName, setAllTagName] = React.useState([]);
   const [currentTagName, setCurrentTagName] = React.useState("");
@@ -101,33 +102,23 @@ export default function AnalysisAllStationLineChart() {
     })
       .then((res) => res.json())
       .then((data) => {
-        let yMinValue = Number(data[0].tag_cont);
+        let sum = 0;
+        for (const it of data){
+          sum += Number(it.tag_cont);
+        }
+        const average = sum / data.length;
+
         for (const it of data){
           it["tag_cont_number"] = Number(it.tag_cont);
-          if ( Number(it.tag_cont) < yMinValue ){
-            yMinValue = Number(it.tag_cont);
-          }
           it["category"] = currentTagName;
           it["getTime"] = new Date(it.tag_add_dt.replace("Z", "")).getTime();
+          it["diffByAverage"] = Number(it.tag_cont) - average;
         }
         // console.log(data);
-
         
-        if (checkedBoxIndex >= 0){
-          if ( analysisChartsParam[checkedBoxIndex].min > yMinValue ){
-            analysisChartsParam[checkedBoxIndex].min = yMinValue;
-            setAnalysisChartsParam([...analysisChartsParam]);
-          }
-
-          allLineChartsData[checkedBoxIndex] = [...allLineChartsData[checkedBoxIndex], ...data];
-          setAllLineChartsData([...allLineChartsData]);
-        }
-        else {
-          setAnalysisChartsParam([...analysisChartsParam, {"min": yMinValue}]);
-
-          allLineChartsData.push(data);
-          setAllLineChartsData([...allLineChartsData]);
-        }
+        allQualityChartsData.push(data);
+        setAllQualityChartsData([...allQualityChartsData]);
+  
         setConfirmButtonDisable(false);
         
       })
@@ -146,94 +137,37 @@ export default function AnalysisAllStationLineChart() {
 
 
   // dynamic line charts
-  // const [allLineChartsData, setAllLineChartsData] = React.useState([]);
-  const {allLineChartsData, setAllLineChartsData, analysisChartsParam, setAnalysisChartsParam} = React.useContext(AllPagesContext);
-
-  const [checkedBoxIndex, setCheckedBoxIndex] = React.useState(-1);
+  // const [allQualityChartsData, setAllQualityChartsData] = React.useState([]);
+  const {allQualityChartsData, setAllQualityChartsData} = React.useContext(AllPagesContext);
 
 
 
-  const onCheckBoxChanged = (event, index) => {
-    if (checkedBoxIndex===index){
-      setCheckedBoxIndex(-1);
-    }
-    else {
-      setCheckedBoxIndex(index);
-    }
-  };
 
   const deleteLineChartClick = (index) =>{
 
-    if (checkedBoxIndex===index){
-      setCheckedBoxIndex(-1);
-    }
-    else if (checkedBoxIndex > index){
-      setCheckedBoxIndex(checkedBoxIndex-1);
-    }
 
-    allLineChartsData.splice(index, 1);
-    setAllLineChartsData([...allLineChartsData]);
-
-    analysisChartsParam.splice(index, 1);
-    setAnalysisChartsParam([...allLineChartsData]);
+    allQualityChartsData.splice(index, 1);
+    setAllQualityChartsData([...allQualityChartsData]);
 
   };
 
 
 
   // line chart config
-  const lineChartConfig = (inputData, parames) => {
+  const chartConfig = (inputData) => {
+    let maxDiff = Math.abs(inputData[0].diffByAverage);
+    for (const it of inputData){
+      if (maxDiff < Math.abs(it.diffByAverage)){
+        maxDiff = Math.abs(it.diffByAverage);
+      }
+    }
+
+
     return ({
       data: inputData,
-      // xField: 'tag_add_dt',
-      xField: 'getTime',
-      yField: 'tag_cont_number',
-      seriesField: 'category',
-      xAxis: {
-        tickMethod:"time-cat",
-        type: 'linear',
-        tickCount: 10,
-        tickInterval: 11,
-        label: {
-          // rotate: 0.2,
-          formatter: (v) => {
-            const date = new Date(Number(v));
-            return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-            // return v;
-          },
-        },
-      },
-      yAxis: {
-        min: parames?.min?parames.min:0,
-      },
-      point: {
-        size: 5,
-        shape: 'circle',
-      },
-      slider: {
-        start: 0,
-        end: 1,
-        formatter: (v) => {
-          const date = new Date(Number(v));
-          return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-        },
-      },
-      tooltip: {
-        formatter: (datum) => {
-          const date = new Date(Number(datum.getTime));
-          let dtStr = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-          return { name: dtStr, value: datum.tag_cont_number };
-        },
-        showTitle:false,
-      },
-      legend: {
-        maxItemWidth: 350,
-        itemName:{
-          style: {
-            fontSize: 18,
-          },
-        },
-      },
+      
+      binField: 'diffByAverage',
+      binWidth: maxDiff/10,
 
     })
   };
@@ -279,20 +213,14 @@ export default function AnalysisAllStationLineChart() {
       <br/>
 
 
-      {allLineChartsData.map((element, index) => {
+      {allQualityChartsData.map((element, index) => {
         return (
           <div key={index} >
             
-            <Grid container spacing={1} columns={20} sx={{ pt: 1 }} alignItems="center">
-              <Grid item xs={1}>
-                <Checkbox
-                  checked={checkedBoxIndex===index} 
-                  onChange={(event)=>onCheckBoxChanged(event, index)}
-                />
-              </Grid>
+            <Grid container spacing={1} columns={20} sx={{ pt: 1, ml:2 }} alignItems="center">
 
               <Grid item xs={18}>
-                {element ? <Line {...lineChartConfig(element, analysisChartsParam[index])} /> : ""}
+                {element ? <Histogram {...chartConfig(element)} /> : ""}
               </Grid>
 
               <Grid item xs={1}>

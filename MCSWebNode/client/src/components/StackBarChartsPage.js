@@ -36,7 +36,8 @@ export default function StackBarChartsPage() {
 
   const [allTagName, setAllTagName] = React.useState([]);
   const [currentTagName, setCurrentTagName] = React.useState("");
-  const [chartTitles, setChartTitles] = React.useState([]);
+  // const [chartTitles, setChartTitles] = React.useState([]);
+  const {chartTitles, setChartTitles} = React.useContext(AllPagesContext);
 
   let aHourAgo = new Date();
   aHourAgo.setHours(aHourAgo.getHours() - 1)

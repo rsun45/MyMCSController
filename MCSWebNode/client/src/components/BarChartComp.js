@@ -1,7 +1,7 @@
 import React from 'react';
 import { Column } from '@ant-design/plots';
 
-const BarChartComp = ({barChartData, xTitle, yTitle}) => {
+const BarChartComp = ({barChartData, xTitle, yTitle, barColor}) => {
 
   const config = {
     data: barChartData,
@@ -15,6 +15,7 @@ const BarChartComp = ({barChartData, xTitle, yTitle}) => {
       adjustPosition: true,
       offsetY:10,
     },
+    color: barColor?barColor:"#5c87ff",
     // scrollbar: {
     //   type: 'horizontal',
     // },

@@ -67,7 +67,7 @@ export default function SumFaultTimeByStations( {refresh} ) {                   
 
       /> */}
 
-      <BarChartComp barChartData={data} xTitle={"tag_name"} yTitle={"SumFaultTime"}/>
+      <BarChartComp barChartData={data} xTitle={"tag_name"} yTitle={"SumFaultTime"} barColor={"#f56767"} />
 
 
     </div>

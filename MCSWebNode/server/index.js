@@ -1,7 +1,10 @@
 // server/index.js
 // import { getCurrentShiftTimeStr, getLastShiftTimeStr, getLastTwoShiftTimeStr } from './ShiftCalculator';
+const path = require('path');
 const shiftCalculator = require("./ShiftCalculator");
-var configData = require('../config.json');
+
+const serverConfigPath = path.join(__dirname, '../config.json')
+var configData = require(serverConfigPath);
 
 const express = require("express");
 
@@ -9,8 +12,9 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
-const path = require('path');
 app.use(express.static(path.join(__dirname, '../client/build')));
+
+
 
 // app.use(express.json({ limit: "100mb" }));
 
@@ -105,18 +109,6 @@ app.get("/api/data02", async (req, res) => {
 });
 
 
-// refresh config
-
-// app.get("/api/refreshConfig", (req, res) => {
-
-//   configData = require('../config.json');
-
-//   res.json({ message: "Refreshed config." });
-
-//   console.log("Refreshed config.");
-
-
-// });
 
 
 // API to get first page's data
@@ -313,7 +305,7 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-01 14:00:00"));
     let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
@@ -349,7 +341,7 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-01 14:00:00"));
     let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
@@ -496,7 +488,7 @@ app.get("/api/ChangeProjectLine/:lineName", async (req, res) => {
 
   let configDataStr = JSON.stringify(configData, null, 4);
   var fs = require('fs');
-  fs.writeFile('./config.json', configDataStr, 'utf8', ()=>{});
+  fs.writeFile(serverConfigPath, configDataStr, 'utf8', ()=>{});
 
   res.json({"message": "Success", "IndexAfterChange": configData.currentLineIndex});
 
@@ -895,7 +887,7 @@ app.post("/api/settings/saveEmailConfigs", jsonParser, async (req, res) => {
 
   let configDataStr = JSON.stringify(configData, null, 4);
   var fs = require('fs');
-  fs.writeFile('./config.json', configDataStr, 'utf8', ()=>{});
+  fs.writeFile(serverConfigPath, configDataStr, 'utf8', ()=>{});
 
   res.json({"message": "Success"});
 
@@ -928,7 +920,7 @@ app.post("/api/settings/sendTestEmailToReportTo", jsonParser, async (req, res) =
 });
 
 
-/********* send shift report ************/ 
+/********************************* send shift report ***********************************/ 
 
 // create report csv attachement
 const generateShiftReportCSVByDateTime = async (inputDate) =>{
@@ -1070,6 +1062,141 @@ cron.schedule('0 23 * * *', () => {
 
 // test shift report 
 // sendShiftReportEmail(new Date());
+
+
+
+// function for checking alarm actives and send alarm emails
+const checkAlarmAndSendEmail = async () =>{
+  let emailContent = "Please check the following alarms:\n\n";
+  let sendEmail = false;
+
+  try {
+    await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+
+    let result = await sql.query(
+    "exec [dbo].[spFindActiveAlarm]"
+    );
+    
+    // console.log(result.recordsets[0]);
+
+    const currentTime = new Date();
+    for (const it of result.recordsets[0]){
+      const startTimte = new Date(it.EventTime.toISOString().split('.')[0]);
+      const seconds = (currentTime.getTime() - startTimte.getTime()) / 1000;
+      
+      if (seconds >= 300){
+        sendEmail = true;
+        emailContent += "Alarm tag name: " + it.TagName + "\n";
+        emailContent += "Tag description: " + it.TagDescription + "\n";
+        emailContent += "Alarm duration (minutes): " + Math.round((seconds/60) * 100) / 100 + "\n\n";
+      }
+    }
+
+    if (sendEmail){
+      return emailContent;
+    }
+    else {
+      return "";
+    }
+  } catch (err) {
+    console.log(err);
+    return "";
+  } 
+}
+
+
+// async function checkAlarmEmailContent(){
+//   let content = await checkAlarmAndSendEmail();
+//   console.log("email content: \n" + content);
+// }
+// checkAlarmEmailContent();
+
+// check alarm and send email every 5 min
+cron.schedule('*/5 * * * *', async () => {
+  console.log('Checking alarms.');
+  let emailContent = await checkAlarmAndSendEmail();
+  if (emailContent !== ""){
+    console.log('Sending alarms emails.');
+
+    const mailOptions = {
+      from: configData.emailConfig.from,
+      to: configData.emailConfig.reportTo,
+      subject: "Tag alarm, please pay attention.",
+      text: emailContent,
+    };
+  
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+//***************************** Alarm page APIs *********************************/
+
+app.post("/api/AlarmPage/getAlarmHistory", jsonParser, async (req, res) => {
+  console.log("requir /api/AlarmPage/getAlarmHistory");
+  console.log(req.body);
+  try {
+    
+    let con = await sql.connect(config);
+    
+    const time1 = new Date();
+
+    const result = await sql.query(
+      "exec [dbo].[spFindAlarmHistory] @StartTime = '" + req.body.start + "', @EndTime = '" + req.body.end + "';"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
+
+    for (let i=0; i<result.recordsets[0].length; i++){
+      result.recordsets[0][i].id = i;
+    }
+    
+    res.json(result.recordsets[0]);
+
+    console.log("Finish /api/AlarmPage/getAlarmHistory");
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -27,7 +27,7 @@ function CustomToolbar() {
     <GridToolbarContainer>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
+      {/* <GridToolbarDensitySelector /> */}
       <GridToolbarExport />
     </GridToolbarContainer>
   );

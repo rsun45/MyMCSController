@@ -571,7 +571,7 @@ export default function ResultPage() {
       <GridToolbarContainer>
         <GridToolbarColumnsButton />
         <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
+        {/* <GridToolbarDensitySelector /> */}
         <GridToolbarExport />
         <GridSwitch />
         {showGridIndex === 0 ? <OKNOKSwitch /> : null}
