@@ -39,11 +39,21 @@ const columns = [
 export default function AverageCycleTimeByStations( {refresh} ) {                    // props这里可以代表所有传过来的信息，然后用props.去调取。注意名字要和传过来的时候一致
   
   const [data, setData] = React.useState([]);
+  
+  const [baselineValue, setBaselineValue] = React.useState(null);
 
   React.useEffect(() => {                               
     fetch("/api/AverageCycleTimeByStations")                           
         .then((res) => res.json())                 
-        .then((data) => {setData(data); });             
+        .then((data) => {setData(data); });       
+        
+
+
+    fetch("/api/MonitorPage/getBaselineValue")
+      .then((res) => res.json())
+      .then((data) => setBaselineValue(data.baselineValue));
+
+
     }, [refresh]);
 
   return (
@@ -61,7 +71,7 @@ export default function AverageCycleTimeByStations( {refresh} ) {               
       /> */}
 
 
-      <BarChartComp barChartData={data} xTitle={"tag_name"} yTitle={"avgCycleTime"}/>
+      <BarChartComp barChartData={data} xTitle={"tag_name"} yTitle={"avgCycleTime"} baselineValue={baselineValue}/>
 
 
 

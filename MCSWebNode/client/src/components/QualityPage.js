@@ -68,7 +68,7 @@ export default function QualityPage() {
 
   React.useEffect(() => {
 
-    fetch("/api/AnalysisPage/getAllTagNames")
+    fetch("/api/QualityPage/getValueTagTitle")
       .then((res) => res.json())
       .then((data) => setAllTagName(data));
 
@@ -189,7 +189,7 @@ export default function QualityPage() {
         <Autocomplete
           disablePortal
           id="tag_name"
-          options={allTagName.map((option) => option.tagName)}
+          options={allTagName.map((option) => option.tagTitle)}
           // getOptionLabel={(option) => option.customer_names}
           sx={{ width: 500 }}
           renderInput={(params) => <TextField required {...params} label="Tag Name" />}

@@ -19,10 +19,27 @@
         "secure": false,
         "from": "mcs.kyle@outlook.com",
         "emailTo": {
-            "reportTo": "sunrc727@gmail.com,test@test.test",
-            "alarmTo": "sunrc727@gmail.com,test@test.test2",
-            "scheduledMaintenanceTo": "sunrc727@gmail.com,test@test.test2",
-            "qualityRejectTo": "sunrc727@gmail.com,test@test.test2"
+            "reportTo": "sunrc727@gmail.com,test@test.test,test2@test2.test2",
+            "alarmTo": "sunrc727@gmail.com",
+            "scheduledMaintenanceTo": "sunrc727@gmail.com",
+            "qualityRejectTo": "sunrc727@gmail.com",
+            "emailsTimeRange": {
+                "sunrc727@gmail.com": {
+                    "startTime": "09:00:00",
+                    "endTime": "20:00:00"
+                },
+                "test@test.test": {
+                    "startTime": "07:00:00",
+                    "endTime": "16:00:00"
+                },
+                "test2@test2.test2": {
+                    "startTime": "17:00:00",
+                    "endTime": "05:00:00"
+                }
+            }
         }
+    },
+    "settings": {
+        "alarmThreshold": 600
     }
 }

@@ -14,6 +14,8 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import LinearProgress from '@mui/material/LinearProgress';
 import { AllPagesContext } from '../App';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
 
 // return local datetime string in 'YYYY-MM-DD HH:MM:SS' formate
 function toLocalIsoString(date) {
@@ -99,6 +101,48 @@ export default function AlarmPage() {
   }
 
 
+  
+  // force to refresh
+  const [refresh, setRefresh] = React.useState(true);
+  // refresh timer
+  const [refreshTimer, setRefreshTimer] = React.useState(0);
+  // refresh alarm activity
+  React.useEffect(() => {
+
+    // get all lines names and refresh time
+    const getAllProjectNames = async () => {
+      fetch("/api/GetAllLinesNames")
+      .then((res) => res.json())
+      .then((data) => {
+        setRefreshTimer(Number(data.refreshTimer));
+      });
+    }
+    getAllProjectNames();
+
+
+  }, []);
+  // when got refresh timer
+  React.useEffect(() => {
+
+    if (refreshTimer > 0) {
+      const reloadData = () => {
+        console.log("reload in " + refreshTimer);
+        setRefresh(refresh => {
+          return !refresh;
+        });
+
+      };
+
+      const intervalId = setInterval(() => {
+        reloadData();
+      }, refreshTimer);
+
+      return () => clearInterval(intervalId);
+    }
+
+  }, [refreshTimer]);
+
+
 
 
   // alarm grid 
@@ -149,6 +193,48 @@ export default function AlarmPage() {
 
 
 
+  // get active alarm
+  const [alarmActivityContent, setAlarmActivityContent] = React.useState("");
+  React.useEffect( () => {
+    const fetchData = async () => { fetch("/api/AlarmPage/getAlarmActivity")                            
+      .then((res) => res.json())                  
+      .then((data) => {
+        setAlarmActivityContent(data.alarmContent);
+      });    
+    }
+    
+    fetchData();
+        
+  }, [refresh]);
+
+
+  // active alarm switch
+  const [isActiveAlarmHidden, setisActiveAlarmHidden] = React.useState("hidden");
+  const [isActiveHistoryHidden, setisActiveHistoryHidden] = React.useState("visible");
+  
+  const [activeAlarmButtonName, setActiveAlarmButtonName] = React.useState("Active Alarm");
+  const [activeAlarmButtonColor, setActiveAlarmButtonColor] = React.useState("#ed5551");
+
+  const clickActiveAlarmButton = () =>{
+    if (isActiveAlarmHidden === "hidden"){
+      setisActiveAlarmHidden("visible");
+      setisActiveHistoryHidden("hidden");
+      setActiveAlarmButtonName("Active History");
+      setActiveAlarmButtonColor("#d6423e");
+    }
+    else {
+      setisActiveAlarmHidden("hidden");
+      setisActiveHistoryHidden("visible");
+      setActiveAlarmButtonName("Active Alarm");
+      setActiveAlarmButtonColor("#ed5551");
+    }
+  }
+
+
+
+
+
+
   return (
 
     /* 数据表格部分 */
@@ -161,17 +247,24 @@ export default function AlarmPage() {
       </Snackbar>
 
       <Stack direction="row" spacing={2} sx={{pl:2}}>
+        <div style={{ padding:"16px", visibility: isActiveHistoryHidden}} > 
+          <Stack direction="row" spacing={2}>
+            <TimeSelectorComp startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} />
+            <Button onClick={() => { confirmOnClick(); }} variant="contained" color='info' disabled={confirmButtonDisable} >Confirm</Button>
+          </Stack>
+        </div>
 
-        <Stack direction="row" spacing={2}>
-          <TimeSelectorComp startTime={startTime} setStartTime={setStartTime} endTime={endTime} setEndTime={setEndTime} />
-          <Button onClick={() => { confirmOnClick(); }} variant="contained" color='info' disabled={confirmButtonDisable} >Confirm</Button>
-        </Stack>
+        <Divider orientation="vertical" variant="middle" flexItem />
+
+        <div style={{ paddingTop:"16px", paddingLeft: "20px"}} >
+          <Button sx={{height:"56px", width:"160px", backgroundColor: activeAlarmButtonColor, '&:hover': {backgroundColor: '#7d3836'}}} onClick={() => { clickActiveAlarmButton(); }} variant="contained" >{activeAlarmButtonName}</Button>
+        </div>
 
       </Stack>
 
       <br />
 
-      <div style={{ padding:"16px"}}>
+      <div style={{ padding:"16px"}} hidden={isActiveHistoryHidden==="hidden"} >
         <DataGrid
           rows={alarmGridData}
           columns={columns}
@@ -196,6 +289,21 @@ export default function AlarmPage() {
           disableSelectionOnClick
 
         />
+      </div>
+
+      <div style={{ padding:"8px", margin:"8px" }} hidden={isActiveAlarmHidden==="hidden"} >
+        <Box
+          sx={{
+            borderRadius: 1,
+            p: 2,
+            boxShadow: 0,
+            border: '1px solid #d4d4d4',
+            // height: "75vh"
+          }}
+        >
+          <h3>{alarmActivityContent}</h3>
+        </Box>
+
       </div>
 
 

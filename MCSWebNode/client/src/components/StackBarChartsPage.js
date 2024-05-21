@@ -171,6 +171,8 @@ export default function StackBarChartsPage() {
           style: {
             fill: '#F4664A',
             textBaseline: 'bottom',
+            stroke: 'white',
+            lineWidth: 2,
           },
         },
         {
@@ -227,29 +229,30 @@ export default function StackBarChartsPage() {
       background: {
         padding: 20,
       },
-      color: ({ timeFeild }) => {
-        if (timeFeild === 'Input Time') {
-          return "#8d32a8";
-        }
-        else if (timeFeild === 'Output Time') {
-          return "#e68f1e";
-        }
-        else if (timeFeild === 'Machine Time'){
-          return "#42a832";
-        }
-        else if (timeFeild === 'Transfer Time'){
-          return "#2d29ab";
-        }
-        else if (timeFeild === 'Operator Time'){
-          return "#edd21f";
-        }
-        else if (timeFeild === 'FaultTime'){
-          return "#d41923";
-        }
-        else {
-          return "#196dd4";
-        }
-      },
+      // color: ({ timeFeild }) => {
+      //   if (timeFeild === 'Input Time') {
+      //     return "#8d32a8";
+      //   }
+      //   else if (timeFeild === 'Output Time') {
+      //     return "#e68f1e";
+      //   }
+      //   else if (timeFeild === 'Machine Time'){
+      //     return "#42a832";
+      //   }
+      //   else if (timeFeild === 'Transfer Time'){
+      //     return "#2d29ab";
+      //   }
+      //   else if (timeFeild === 'Operator Time'){
+      //     return "#edd21f";
+      //   }
+      //   else if (timeFeild === 'FaultTime'){
+      //     return "#d41923";
+      //   }
+      //   else {
+      //     return "#196dd4";
+      //   }
+      // },
+      color: ['#8d32a8', '#e68f1e', '#42a832', '#2d29ab', '#edd21f', '#d41923', '#196dd4'],
       slider: {
         start: 0,
         // end: 30/(inputData.length/6),
@@ -270,7 +273,7 @@ export default function StackBarChartsPage() {
             const date = new Date(Number(it.title));
             const newTitle =  `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
             it.title = newTitle;
-            if(it.name === "FaultTime"){
+            if(it.name.includes("FaultTime")){
               it.value = ""+Math.abs(it.data.timeValue);
             }
           }

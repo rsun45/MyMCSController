@@ -18,6 +18,7 @@ import QualityPage from './components/QualityPage';
 import AlarmPage from './components/AlarmPage';
 import SettingsPage from './components/SettingsPage';
 import MaintenancePage from './components/MaintenancePage';
+import { CookiesProvider, useCookies } from 'react-cookie'
 
 
 
@@ -27,13 +28,25 @@ export const AllPagesContext = React.createContext();
 
 function App() {
 
+  // setup cookies
+  const [cookies, setCookie, removeCookie] = useCookies(['summaryPageChoices']);
+  
+  if (!cookies.summaryPageChoices){
+    setCookie('summaryPageChoices', 
+      {
+        "Graph1": {"name": "SumFaultTime", "header": "All Stations Sum Fault Time (Second)"}, 
+        "Graph2": {"name": "AverageCycleTime", "header": "All Stations Average Cycle Time (Second)"}
+      }, 
+      { path:"/" })
+  }
+
+
   // result page states
   const [resultPageData, setResultPageData] = React.useState(null);
   // query page states
   const [queryPagedata, setQueryPagedata] = React.useState(null);
   // Analysis page states
   const [allLineChartsData, setAllLineChartsData] = React.useState([]);
-  const [analysisChartsParam, setAnalysisChartsParam] = React.useState([]); // e.g. [{min:3},{min:0},...]
   // cycle time page states
   const [allColumnChartsData, setAllColumnChartsData] = React.useState([]);
   const [chartTitles, setChartTitles] = React.useState([]);
@@ -50,7 +63,7 @@ function App() {
       <TopBar />
       <SectionTabs />
       <AllPagesContext.Provider value={{ resultPageData, setResultPageData, queryPagedata, setQueryPagedata, 
-        allLineChartsData, setAllLineChartsData, analysisChartsParam, setAnalysisChartsParam, 
+        allLineChartsData, setAllLineChartsData, 
         allColumnChartsData, setAllColumnChartsData, chartTitles, setChartTitles,
         allQualityChartsData, setAllQualityChartsData,
         alarmGridData, setAlarmGridData

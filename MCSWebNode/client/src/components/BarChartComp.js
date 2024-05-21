@@ -1,7 +1,35 @@
 import React from 'react';
 import { Column } from '@ant-design/plots';
 
-const BarChartComp = ({barChartData, xTitle, yTitle, barColor}) => {
+const BarChartComp = ({barChartData, xTitle, yTitle, barColor, baselineValue}) => {
+
+  let annotations = [];
+  if (baselineValue) {
+    annotations = [
+      // baseline - Design Cycle
+      {
+        type: 'text',
+        position: ['min', baselineValue],
+        content: 'Design Cycle',
+        offsetY: -4,
+        style: {
+          fill: '#F4664A',
+          textBaseline: 'bottom',
+          stroke: 'white',
+          lineWidth: 2,
+        },
+      },
+      {
+        type: 'line',
+        start: ['min', baselineValue],
+        end: ['max', baselineValue],
+        style: {
+          stroke: '#F4664A',
+          lineDash: [2, 2],
+        },
+      },
+    ];
+  }
 
   const config = {
     data: barChartData,
@@ -23,6 +51,8 @@ const BarChartComp = ({barChartData, xTitle, yTitle, barColor}) => {
     //   start: 0,
     //   end: 1,
     // },
+
+    annotations,
     
   };
 

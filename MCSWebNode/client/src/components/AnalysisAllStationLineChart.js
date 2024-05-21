@@ -101,12 +101,8 @@ export default function AnalysisAllStationLineChart() {
     })
       .then((res) => res.json())
       .then((data) => {
-        let yMinValue = Number(data[0].tag_cont);
         for (const it of data){
           it["tag_cont_number"] = Number(it.tag_cont);
-          if ( Number(it.tag_cont) < yMinValue ){
-            yMinValue = Number(it.tag_cont);
-          }
           it["category"] = currentTagName;
           it["getTime"] = new Date(it.tag_add_dt.replace("Z", "")).getTime();
         }
@@ -114,17 +110,10 @@ export default function AnalysisAllStationLineChart() {
 
         
         if (checkedBoxIndex >= 0){
-          if ( analysisChartsParam[checkedBoxIndex].min > yMinValue ){
-            analysisChartsParam[checkedBoxIndex].min = yMinValue;
-            setAnalysisChartsParam([...analysisChartsParam]);
-          }
-
           allLineChartsData[checkedBoxIndex] = [...allLineChartsData[checkedBoxIndex], ...data];
           setAllLineChartsData([...allLineChartsData]);
         }
         else {
-          setAnalysisChartsParam([...analysisChartsParam, {"min": yMinValue}]);
-
           allLineChartsData.push(data);
           setAllLineChartsData([...allLineChartsData]);
         }
@@ -147,7 +136,7 @@ export default function AnalysisAllStationLineChart() {
 
   // dynamic line charts
   // const [allLineChartsData, setAllLineChartsData] = React.useState([]);
-  const {allLineChartsData, setAllLineChartsData, analysisChartsParam, setAnalysisChartsParam} = React.useContext(AllPagesContext);
+  const {allLineChartsData, setAllLineChartsData} = React.useContext(AllPagesContext);
 
   const [checkedBoxIndex, setCheckedBoxIndex] = React.useState(-1);
 
@@ -174,15 +163,19 @@ export default function AnalysisAllStationLineChart() {
     allLineChartsData.splice(index, 1);
     setAllLineChartsData([...allLineChartsData]);
 
-    analysisChartsParam.splice(index, 1);
-    setAnalysisChartsParam([...allLineChartsData]);
-
   };
 
 
 
   // line chart config
-  const lineChartConfig = (inputData, parames) => {
+  const lineChartConfig = (inputData) => {
+    // console.log(inputData);
+    let minValue = inputData[0]?.tag_cont_number;
+    for (let i=0; i < inputData.length; i++){
+      if (minValue > inputData[i].tag_cont_number){
+        minValue = inputData[i].tag_cont_number;
+      }
+    }
     return ({
       data: inputData,
       // xField: 'tag_add_dt',
@@ -204,7 +197,7 @@ export default function AnalysisAllStationLineChart() {
         },
       },
       yAxis: {
-        min: parames?.min?parames.min:0,
+        min: minValue?minValue:0,
       },
       point: {
         size: 5,
@@ -255,7 +248,7 @@ export default function AnalysisAllStationLineChart() {
         <Autocomplete
           disablePortal
           id="tag_name"
-          options={allTagName.map((option) => option.tagName)}
+          options={allTagName.map((option) => option.tagTitle)}
           // getOptionLabel={(option) => option.customer_names}
           sx={{ width: 500 }}
           renderInput={(params) => <TextField required {...params} label="Tag Name" />}
@@ -292,7 +285,7 @@ export default function AnalysisAllStationLineChart() {
               </Grid>
 
               <Grid item xs={18}>
-                {element ? <Line {...lineChartConfig(element, analysisChartsParam[index])} /> : ""}
+                {element ? <Line {...lineChartConfig(element)} /> : ""}
               </Grid>
 
               <Grid item xs={1}>

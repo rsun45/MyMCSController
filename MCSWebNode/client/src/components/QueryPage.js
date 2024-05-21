@@ -191,15 +191,23 @@ export default function QueryPage() {
 
 
   // after get all data, get all columns
-  React.useEffect(() => { 
-    if (queryPagedata){           
+  React.useEffect(() => {
+    if (queryPagedata) {
       let tempGridColumns = [];
+
       for (const key in queryPagedata[0]) {
+        let value;
+        for (let i = 0; i < queryPagedata.length; i++) {
+          if (queryPagedata[i][key]) {
+            value = queryPagedata[i][key];
+            break;
+          }
+        }
         // dont show id column
-        if (key === "id"){
+        if (key === "id") {
           continue;
         }
-        
+
         // console.log(key + " - " + data[0][key]);
         if (key === "SerialNumber") {
           tempGridColumns.push(
@@ -209,11 +217,23 @@ export default function QueryPage() {
               width: 150,
               editable: false,
               headerAlign: 'left',
-              align:'left',
+              align: 'left',
             }
           );
         }
-        else if (key === "startTime" || key === "endTime") {
+        else if (!value) {
+          tempGridColumns.push(
+            {
+              field: key,
+              headerName: key,
+              width: 150,
+              editable: false,
+              headerAlign: 'center',
+              align: 'center',
+            }
+          );
+        }
+        else if (key === "startTime" || key === "endTime" || (Date.parse(value) && value.includes('T'))) {
           tempGridColumns.push(
             {
               field: key,
@@ -221,11 +241,25 @@ export default function QueryPage() {
               width: 180,
               editable: false,
               headerAlign: 'center',
-              align:'center',
+              align: 'center',
+              type: 'dateTime',
               valueGetter: ({ value }) => {
                 var newValue = value.replace("T", " ").split(".")[0];
                 return newValue
-              }, 
+              },
+            }
+          );
+        }
+        else if (+value || +value===0) {
+          tempGridColumns.push(
+            {
+              field: key,
+              headerName: key,
+              width: 150,
+              editable: false,
+              headerAlign: 'center',
+              align: 'center',
+              type: 'number',
             }
           );
         }
@@ -237,10 +271,10 @@ export default function QueryPage() {
               width: 150,
               editable: false,
               headerAlign: 'center',
-              align:'center',
+              align: 'center',
             }
           );
-      }
+        }
       }
       setGridColumns(tempGridColumns);
     }

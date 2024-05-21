@@ -305,8 +305,8 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-01 14:00:00"));
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-10 14:00:00"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     // const result = await sql.query('select pd.id, SerialNumber, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue, StartTime, EndTime from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 40  order by PartId, StationId, TagId');
@@ -341,8 +341,8 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
 
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-01 14:00:00"));
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-10 14:00:00"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     const result = await sql.query(
@@ -604,7 +604,7 @@ app.get("/api/AnalysisPage/getAllTagNames", async (req, res) => {
     const time1 = new Date();
 
     const result = await sql.query(
-      "EXEC spGetAllFullTagNames;"
+      "EXEC spGetAllFullTagTitle;"
     );
 
     console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
@@ -631,7 +631,7 @@ app.post("/api/AnalysisPage/getDataAndTimeByTagName", jsonParser, async (req, re
     const time1 = new Date();
 
     const result = await sql.query(
-      "exec [dbo].[spGetTagContentByTagName] @tagName = '" + req.body.tagName + "', @startTime = '" + req.body.start + "', @endTime = '" + req.body.end + "';"
+      "exec [dbo].[spGetTagContentByTagTitle] @tagTitle = '" + req.body.tagName + "', @startTime = '" + req.body.start + "', @endTime = '" + req.body.end + "';"
     );
 
     console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
@@ -651,6 +651,37 @@ app.post("/api/AnalysisPage/getDataAndTimeByTagName", jsonParser, async (req, re
 
 });
 
+
+
+
+
+//***************************** quality page APIs *********************************/
+app.get("/api/QualityPage/getValueTagTitle", async (req, res) => {
+  console.log("requir /api/QualityPage/getValueTagTitle");
+  
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    
+    let con = await sql.connect(config);
+    
+    const time1 = new Date();
+
+    const result = await sql.query(
+      "EXEC spGetValueTagTitle;"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
+    
+    res.json(result.recordsets[0]);
+
+    console.log("Finish /api/QualityPage/getValueTagTitle");
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
 
 
 
@@ -704,7 +735,7 @@ app.post("/api/ResultPage/getDataBySerial", jsonParser, async (req, res) => {
     const time1 = new Date();
 
     const result = await sql.query(
-      "exec [dbo].[spGetTagOnePartForOther] @pSerialNumber = '" + req.body.serialNumber +  "';"
+      "exec [dbo].[spGetTagQueryForOnePart] @pSerialNumber = '" + req.body.serialNumber +  "';"
     );
 
     console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
@@ -776,28 +807,53 @@ app.post("/api/MonitorPage/getTotalOperationalTimeByStationAndSerial", jsonParse
     const time1 = new Date();
 
     const result = await sql.query(
-      "exec [dbo].[spGetTotalOperationalTimeByStationAndSerial] @stationIdentifier = '" + req.body.tagName + "', @startTime = '" + req.body.start + "', @endTime = '" + req.body.end + "';"
+      "exec [dbo].[spGetOperationalTime] @stationIdentifier = '" + req.body.tagName + "', @startTime = '" + req.body.start + "', @endTime = '" + req.body.end + "';"
     );
 
     console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
 
-    // console.log(result.recordsets[0]);
+    // console.log(result.recordsets[0][0]);
+    let keyArr = [];
+    for (const key in result.recordsets[0][0]) {
+      // console.log(key);
+      // console.log(result.recordsets[0][0][key]);
+      if (key === "serial_number" || key === "LatestUpdateTime"){
+        continue;
+      }
+      keyArr.push(key);
+    }
+    // console.log(keyArr);
+
     let final = [];
     for (const it of result.recordsets[0]){
       if (it.serial_number === ''){
         continue;
       }
+
+      for (const key of keyArr){
+        if (key.includes("TotalTime")){
+          final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "totalTimeValue": it[key], "totalTimeFeild": "Total Operational Time"});
+        }
+        else if (key.includes("FaultTime")){
+          final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it[key]*-1, "timeFeild": key});
+        }
+        else {
+          final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it[key], "timeFeild": key});
+        }
+
+      }
       
-      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "totalTimeValue": it.TotalOperationalTime, "totalTimeFeild": "Total Operational Time"});
-      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.InputTime, "timeFeild": "Input Time"});
-      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.OutputTime, "timeFeild": "Output Time"});
-      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.MachineTime, "timeFeild": "Machine Time"});
-      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.TransferTime, "timeFeild": "Transfer Time"});
-      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.OperatorTime, "timeFeild": "Operator Time"});
-      final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.FaultTime*-1, "timeFeild": "FaultTime"});
+      // final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "totalTimeValue": it.TotalOperationalTime, "totalTimeFeild": "Total Operational Time"});
+      // final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.InputTime, "timeFeild": "Input Time"});
+      // final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.OutputTime, "timeFeild": "Output Time"});
+      // final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.MachineTime, "timeFeild": "Machine Time"});
+      // final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.TransferTime, "timeFeild": "Transfer Time"});
+      // final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.OperatorTime, "timeFeild": "Operator Time"});
+      // final.push({"dateTime": it.LatestUpdateTime.toISOString().slice(0, -3), "timeValue": it.FaultTime*-1, "timeFeild": "FaultTime"});
     }
 
     
+    // console.log(final);
     res.json(final);
 
     console.log("Finish /api/MonitorPage/getTotalOperationalTimeByStationAndSerial");
@@ -868,6 +924,9 @@ var transporter = nodemailer.createTransport({
 
 
 
+
+/********************** setting page **************************/
+
 // API get email settings values
 app.get("/api/settings/getEmailGridData", async (req, res) => {
 
@@ -878,6 +937,7 @@ app.get("/api/settings/getEmailGridData", async (req, res) => {
   const alarmTo = configData.emailConfig.emailTo.alarmTo.split(',');
   const scheduledMaintenanceTo = configData.emailConfig.emailTo.scheduledMaintenanceTo.split(',');
   const qualityRejectTo = configData.emailConfig.emailTo.qualityRejectTo.split(',');
+  const emailsTimeRange = configData.emailConfig.emailTo.emailsTimeRange;
   // generate all distinct email addresses
   let distinctEmailArr = [];
   // trim all email addresses
@@ -935,6 +995,16 @@ app.get("/api/settings/getEmailGridData", async (req, res) => {
       entry.qualityRejectTo = 0;
     }
 
+    // current email's time range for receiving email
+    if (emailsTimeRange[distinctEmailArr[i]]){
+      entry.startTime = emailsTimeRange[distinctEmailArr[i]].startTime;
+      entry.endTime = emailsTimeRange[distinctEmailArr[i]].endTime;
+    }
+    else {
+      entry.startTime = "";
+      entry.endTime = "";
+    }
+
     result.push(entry);
   }
 
@@ -955,6 +1025,7 @@ app.post("/api/settings/saveEmailConfigs", jsonParser, async (req, res) => {
   configData.emailConfig.emailTo.alarmTo = req.body.alarmTo;
   configData.emailConfig.emailTo.scheduledMaintenanceTo = req.body.scheduledMaintenanceTo;
   configData.emailConfig.emailTo.qualityRejectTo = req.body.qualityRejectTo;
+  configData.emailConfig.emailTo.emailsTimeRange = req.body.emailsTimeRange;
 
   let configDataStr = JSON.stringify(configData, null, 4);
   var fs = require('fs');
@@ -989,6 +1060,35 @@ app.post("/api/settings/sendTestEmailToReportTo", jsonParser, async (req, res) =
 
 
 });
+
+
+// get setting page values
+app.get("/api/settings/getValues", async (req, res) => {
+
+  console.log("request /api/settings/getValues");
+
+  res.json(configData.settings);
+
+});
+// save setting values
+app.post("/api/settings/saveSettingValues", jsonParser, async (req, res) => {
+  console.log("requir /api/settings/saveSettingValues");
+  console.log(req.body);
+
+  for (var key in req.body){
+    configData.settings[key] = req.body[key];
+  }
+  
+  let configDataStr = JSON.stringify(configData, null, 4);
+  var fs = require('fs');
+  fs.writeFile(serverConfigPath, configDataStr, 'utf8', ()=>{});
+
+  res.json({"message": "Success"});
+
+});
+
+
+
 
 
 /********************************* send shift report ***********************************/ 
@@ -1073,6 +1173,45 @@ const generateShiftReportCSVByDateTime = async (inputDate) =>{
 
 
 
+// function for checking sending email time range and filt the address list
+function filterEmailListByTimeRange (emailListStr){
+  let emailArr = emailListStr.split(",");
+
+  const ct = new Date();
+  const ctStr = ct.toLocaleTimeString();
+
+  let newEmailArr = [];
+  for (const it of emailArr){
+    let keep = false;
+
+    if (configData.emailConfig.emailTo.emailsTimeRange[it] && configData.emailConfig.emailTo.emailsTimeRange[it].startTime && configData.emailConfig.emailTo.emailsTimeRange[it].endTime){
+      if (configData.emailConfig.emailTo.emailsTimeRange[it].startTime > configData.emailConfig.emailTo.emailsTimeRange[it].endTime){
+        if (ctStr > configData.emailConfig.emailTo.emailsTimeRange[it].endTime || ctStr < configData.emailConfig.emailTo.emailsTimeRange[it].startTime){
+          keep = true;
+        }
+
+      }
+      else {
+        if (ctStr < configData.emailConfig.emailTo.emailsTimeRange[it].endTime && ctStr > configData.emailConfig.emailTo.emailsTimeRange[it].startTime){
+          keep = true;
+        }
+      }
+
+    }
+    if (keep){
+      newEmailArr.push(it);
+    }
+
+  }
+
+  return newEmailArr.join(",");
+  
+}
+
+// console.log(filterEmailListByTimeRange(configData.emailConfig.emailTo.reportTo));
+
+
+
 
 // send report email
 async function sendShiftReportEmail(inputDate){
@@ -1083,7 +1222,7 @@ async function sendShiftReportEmail(inputDate){
 
   const mailOptions = {
     from: configData.emailConfig.from,
-    to: configData.emailConfig.emailTo.reportTo,
+    to: filterEmailListByTimeRange(configData.emailConfig.emailTo.reportTo),
     subject: shiftArr[2] + 'shift report from ' + shiftArr[0] + " to " + shiftArr[1],
     text: "Please find attached the CSV report for finished shift.",
     attachments: [
@@ -1137,7 +1276,7 @@ cron.schedule('0 23 * * *', () => {
 
 
 // function for checking alarm actives and send alarm emails
-const checkAlarmAndSendEmail = async () =>{
+const checkAlarmAndSendEmail = async ( timeThreshold ) =>{
   let emailContent = "Please check the following alarms:\n\n";
   let sendEmail = false;
 
@@ -1155,7 +1294,7 @@ const checkAlarmAndSendEmail = async () =>{
       const startTimte = new Date(it.EventTime.toISOString().split('.')[0]);
       const seconds = (currentTime.getTime() - startTimte.getTime()) / 1000;
       
-      if (seconds >= 300){
+      if (seconds >= timeThreshold?timeThreshold:60*30){
         sendEmail = true;
         emailContent += "Alarm tag name: " + it.TagName + "\n";
         emailContent += "Tag description: " + it.TagDescription + "\n";
@@ -1183,18 +1322,18 @@ const checkAlarmAndSendEmail = async () =>{
 // checkAlarmEmailContent();
 
 // check alarm and send email every 5 min
-cron.schedule('*/5 * * * *', async () => {
+let backendAlarmChecking = cron.schedule('*/5 * * * *', async () => {
   console.log('Checking alarms.');
   let time = new Date();
   console.log(time.toLocaleString());
   
-  let emailContent = await checkAlarmAndSendEmail();
+  let emailContent = await checkAlarmAndSendEmail(configData.settings.alarmThreshold);
   if (emailContent !== ""){
     console.log('Sending alarms emails.');
 
     const mailOptions = {
       from: configData.emailConfig.from,
-      to: configData.emailConfig.emailTo.alarmTo,
+      to: filterEmailListByTimeRange(configData.emailConfig.emailTo.alarmTo),
       subject: "Tag alarm, please pay attention.",
       text: emailContent,
     };
@@ -1211,8 +1350,35 @@ cron.schedule('*/5 * * * *', async () => {
 });
 
 
+// backendAlarmChecking.stop();
 
 
+
+
+
+//***************************** API for sending test emails  *********************************/
+app.post("/api/settings/testsending", jsonParser, async (req, res) => {
+  console.log("requir /api/settings/testsending");
+  console.log(req.body);
+  
+  const mailOptions = {
+    from: configData.emailConfig.from,
+    to: req.body.sendTo,
+    subject: 'Testing Email Delivery',
+    text: 'This email is a test sent from MCS Web.'
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+      res.json({"message": error, "success": "error"});
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.json({"message": info.response, "success": "success"});
+    }
+  });
+
+});
 
 
 
@@ -1255,7 +1421,50 @@ app.post("/api/AlarmPage/getAlarmHistory", jsonParser, async (req, res) => {
 
 
 
+// get setting page values
+app.get("/api/AlarmPage/getAlarmActivity", async (req, res) => {
 
+  console.log("request /api/AlarmPage/getAlarmActivity");
+
+  let timeThreshold = configData.settings.alarmThreshold
+
+  let emailContent = "Please check the following alarms:\n\n";
+  let sendEmail = false;
+
+  try {
+    await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+
+    let result = await sql.query(
+    "exec [dbo].[spFindActiveAlarm]"
+    );
+    
+    // console.log(result.recordsets[0]);
+
+    const currentTime = new Date();
+    for (const it of result.recordsets[0]){
+      const startTimte = new Date(it.EventTime.toISOString().split('.')[0]);
+      const seconds = (currentTime.getTime() - startTimte.getTime()) / 1000;
+      
+      if (seconds >= timeThreshold?timeThreshold:60*30){
+        sendEmail = true;
+        emailContent += "Alarm tag name: " + it.TagName + "\n";
+        emailContent += "Tag description: " + it.TagDescription + "\n";
+        emailContent += "Alarm duration (minutes): " + Math.round((seconds/60) * 100) / 100 + "\n\n";
+      }
+    }
+
+    if (sendEmail){
+      res.json({"alarmContent": emailContent});
+    }
+    else {
+      res.json({"alarmContent": "No alarm activities."});
+    }
+  } catch (err) {
+    console.log(err);
+    res.json({"alarmContent": "Error on finding alarm activity."});
+  } 
+
+});
 
 
 
