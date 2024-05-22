@@ -181,27 +181,30 @@ export default function StackBarChartsPage() {
           end: ['max', baselineValue],
           style: {
             stroke: '#F4664A',
-            lineDash: [2, 2],
+            lineWidth: 3,
+            lineDash: [10, 2],
+            shadowColor: "white",
+            shadowBlur: 5,
           },
         },
       ];
     }
-    for (const it of inputData){
-      if (it.totalTimeValue){
-        annotations.push({
-          type: 'dataMarker',
-          position: [it.getTime, it.totalTimeValue],
-          autoAdjust: false,
-          // point : null,
-          text: null,
-          line: null,
-          // line: {
-          //   style: { stroke: '#222222', lineWidth: 20, shadowColor: "#ffffff", shadowBlur: 0.5, },
-          //   length: 1,
-          // },
-        });
-      }
-    }
+    // for (const it of inputData){
+    //   if (it.totalTimeValue){
+    //     annotations.push({
+    //       type: 'dataMarker',
+    //       position: [it.getTime, it.totalTimeValue],
+    //       autoAdjust: false,
+    //       // point : null,
+    //       text: null,
+    //       line: null,
+    //       // line: {
+    //       //   style: { stroke: '#222222', lineWidth: 20, shadowColor: "#ffffff", shadowBlur: 0.5, },
+    //       //   length: 1,
+    //       // },
+    //     });
+    //   }
+    // }
 
     return ({
       data: inputData,

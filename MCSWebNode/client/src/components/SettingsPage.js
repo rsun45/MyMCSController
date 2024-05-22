@@ -8,13 +8,34 @@ import TabPanel from '@mui/lab/TabPanel';
 import EmailSettingsComp from './EmailSettingsComp';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import { CookiesProvider, useCookies } from 'react-cookie'
+import Login from './Login';
 
 
 function timeout(delay) {
   return new Promise( res => setTimeout(res, delay) );
 }
 
+
 export default function SettingsPage() {
+
+  // login 
+  const [cookies, setCookie] = useCookies(['user']);
+  function handleLogin(user) {
+    setCookie('user', user, { path:"/", maxAge: user.maxAge });
+    window.location.reload();
+  }
+
+  if(!cookies.user) {
+    return <Login onLogin={handleLogin} />
+  }
+
+
+  return ( <SettingsPageAfterLogin />);
+}
+
+
+function SettingsPageAfterLogin() {
 
   // setting values
   const [settingJson, setSettingJson] = React.useState({});

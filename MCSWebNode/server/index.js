@@ -52,6 +52,7 @@ const jsonParser = bodyParser.json();
 // connection.connect();
 
 const sql = require('mssql')
+sql.ConnectionPool.prototype.setMaxListeners(100);
 
 async function myQuery(){
     try {
@@ -66,6 +67,25 @@ async function myQuery(){
 }
 
 myQuery();
+
+// API get query page data
+var config = {
+  user: configData.allLines[configData.currentLineIndex].dbUser,
+  password: configData.allLines[configData.currentLineIndex].dbPassword,
+  database: configData.allLines[configData.currentLineIndex].dbDataBase,
+  server: configData.allLines[configData.currentLineIndex].dbServer,
+  requestTimeout: 300000,
+  pool: {
+    max: 10,
+    min: 5,
+    idleTimeoutMillis: 30000
+  },
+  options: {
+    encrypt: true, // for azure
+    trustServerCertificate: true, // change to true for local dev / self-signed certs
+    trustedConnection: true
+  }
+};
 
 
 /*
@@ -301,12 +321,13 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
 
 
   console.log("request /api/AverageCycleTimeByStations");
+  let con;
   try {
     // make sure that any items are correctly URL encoded in the connection string
-    let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    await sql.connect(config);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-10 14:00:00"));
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     // const result = await sql.query('select pd.id, SerialNumber, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue, StartTime, EndTime from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 40  order by PartId, StationId, TagId');
@@ -322,11 +343,14 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
     }
 
     res.json(result.recordsets[0]);
-
-    await con.close();
+    console.log("Finished /api/AverageCycleTimeByStations");
 
   } catch (err) {
     console.log(err);
+  } finally {
+    if (con) {
+      await con.close();
+    }
   }
 
 });
@@ -337,12 +361,13 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
 
 
   console.log("request /api/SumFaultTimeByStations");
+  let con;
   try {
     // make sure that any items are correctly URL encoded in the connection string
-    let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    await sql.connect(config);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-10 14:00:00"));
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     const result = await sql.query(
@@ -356,11 +381,14 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
     }
 
     res.json(result.recordsets[0]);
-
-    await con.close();
+    console.log("Finished /api/SumFaultTimeByStations");
 
   } catch (err) {
     console.log(err);
+  } finally {
+    if (con) {
+      await con.close();
+    }
   }
 
 });
@@ -371,9 +399,10 @@ app.get("/api/CurrentShiftPassFailCounts", async (req, res) => {
 
 
   console.log("request /api/CurrentShiftPassFailCounts");
+  let con;
   try {
     // make sure that any items are correctly URL encoded in the connection string
-    let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    await sql.connect(config);
 
     // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-11 14:00:00"));
     let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
@@ -388,11 +417,14 @@ app.get("/api/CurrentShiftPassFailCounts", async (req, res) => {
 
     result.recordsets[0][0].shift = shiftArr[2];
     res.json(result.recordsets[0]);
-
-    await con.close();
+    console.log("Finished /api/CurrentShiftPassFailCounts");
 
   } catch (err) {
     console.log(err);
+  } finally {
+    if (con) {
+      await con.close();
+    }
   }
 
 });
@@ -402,9 +434,10 @@ app.get("/api/LastShiftPassFailCounts", async (req, res) => {
 
 
   console.log("request /api/LastShiftPassFailCounts");
+  let con;
   try {
     // make sure that any items are correctly URL encoded in the connection string
-    let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    await sql.connect(config);
 
     // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
     let inputDT = new Date();
@@ -421,11 +454,14 @@ app.get("/api/LastShiftPassFailCounts", async (req, res) => {
 
     result.recordsets[0][0].shift = shiftArr[2];
     res.json(result.recordsets[0]);
-
-    await con.close();
+    console.log("Finished /api/LastShiftPassFailCounts");
 
   } catch (err) {
     console.log(err);
+  } finally {
+    if (con) {
+      await con.close();
+    }
   }
 
 });
@@ -435,9 +471,10 @@ app.get("/api/LastTwoShiftPassFailCounts", async (req, res) => {
 
 
   console.log("request /api/LastTwoShiftPassFailCounts");
+  let con;
   try {
     // make sure that any items are correctly URL encoded in the connection string
-    let con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    await sql.connect(config);
 
     // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-04-12 14:00:00"));
     let inputDT = new Date();
@@ -453,11 +490,14 @@ app.get("/api/LastTwoShiftPassFailCounts", async (req, res) => {
 
     result.recordsets[0][0].shift = shiftArr[2];
     res.json(result.recordsets[0]);
-
-    await con.close();
+    console.log("Finished /api/LastTwoShiftPassFailCounts");
 
   } catch (err) {
     console.log(err);
+  } finally {
+    if (con) {
+      await con.close();
+    }
   }
 
 });
@@ -498,24 +538,7 @@ app.get("/api/ChangeProjectLine/:lineName", async (req, res) => {
 
 
 //***************************** query page APIs *********************************/
-// API get query page data
-var config = {
-  user: configData.allLines[configData.currentLineIndex].dbUser,
-  password: configData.allLines[configData.currentLineIndex].dbPassword,
-  database: configData.allLines[configData.currentLineIndex].dbDataBase,
-  server: configData.allLines[configData.currentLineIndex].dbServer,
-  requestTimeout: 300000,
-  pool: {
-    max: 10,
-    min: 5,
-    idleTimeoutMillis: 30000
-  },
-  options: {
-    encrypt: true, // for azure
-    trustServerCertificate: true, // change to true for local dev / self-signed certs
-    trustedConnection: true
-  }
-};
+
 app.post("/api/QueryPage/getQueryByDateRange", jsonParser, async (req, res) => {
   console.log("requir /api/QueryPage/getQueryByDateRange");
   console.log(req.body);
@@ -1294,7 +1317,10 @@ const checkAlarmAndSendEmail = async ( timeThreshold ) =>{
       const startTimte = new Date(it.EventTime.toISOString().split('.')[0]);
       const seconds = (currentTime.getTime() - startTimte.getTime()) / 1000;
       
-      if (seconds >= timeThreshold?timeThreshold:60*30){
+      console.log("seconds: "+ seconds);
+      console.log("timeThreshold: "+ timeThreshold);
+      console.log(seconds >= (timeThreshold?timeThreshold:60*30));
+      if (seconds >= (timeThreshold?timeThreshold:60*30)){
         sendEmail = true;
         emailContent += "Alarm tag name: " + it.TagName + "\n";
         emailContent += "Tag description: " + it.TagDescription + "\n";
@@ -1330,6 +1356,8 @@ let backendAlarmChecking = cron.schedule('*/5 * * * *', async () => {
   let emailContent = await checkAlarmAndSendEmail(configData.settings.alarmThreshold);
   if (emailContent !== ""){
     console.log('Sending alarms emails.');
+
+    console.log(emailContent);
 
     const mailOptions = {
       from: configData.emailConfig.from,
@@ -1421,15 +1449,60 @@ app.post("/api/AlarmPage/getAlarmHistory", jsonParser, async (req, res) => {
 
 
 
-// get setting page values
-app.get("/api/AlarmPage/getAlarmActivity", async (req, res) => {
+// get alarm activities for email
+// app.get("/api/AlarmPage/getAlarmActivity", async (req, res) => {
 
-  console.log("request /api/AlarmPage/getAlarmActivity");
+//   console.log("request /api/AlarmPage/getAlarmActivity");
+
+//   let timeThreshold = configData.settings.alarmThreshold
+
+//   let emailContent = "Please check the following alarms:\n\n";
+//   let sendEmail = false;
+
+//   try {
+//     await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+
+//     let result = await sql.query(
+//     "exec [dbo].[spFindActiveAlarm]"
+//     );
+    
+//     // console.log(result.recordsets[0]);
+
+//     const currentTime = new Date();
+//     for (const it of result.recordsets[0]){
+//       const startTimte = new Date(it.EventTime.toISOString().split('.')[0]);
+//       const seconds = (currentTime.getTime() - startTimte.getTime()) / 1000;
+      
+//       if (seconds >= timeThreshold?timeThreshold:60*30){
+//         sendEmail = true;
+//         emailContent += "Alarm tag name: " + it.TagName + "\n";
+//         emailContent += "Tag description: " + it.TagDescription + "\n";
+//         emailContent += "Alarm duration (minutes): " + Math.round((seconds/60) * 100) / 100 + "\n\n";
+//       }
+//     }
+
+//     if (sendEmail){
+//       res.json({"alarmContent": emailContent});
+//     }
+//     else {
+//       res.json({"alarmContent": "No alarm activities."});
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     res.json({"alarmContent": "Error on finding alarm activity."});
+//   } 
+
+// });
+
+
+
+// get alarm activities for alarm page
+app.get("/api/AlarmPage/getAlarmActivityForWeb", async (req, res) => {
+
+  console.log("request /api/AlarmPage/getAlarmActivityForWeb");
 
   let timeThreshold = configData.settings.alarmThreshold
 
-  let emailContent = "Please check the following alarms:\n\n";
-  let sendEmail = false;
 
   try {
     await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
@@ -1438,33 +1511,77 @@ app.get("/api/AlarmPage/getAlarmActivity", async (req, res) => {
     "exec [dbo].[spFindActiveAlarm]"
     );
     
-    // console.log(result.recordsets[0]);
 
-    const currentTime = new Date();
+    const ct = new Date();
+    let i = 0;
     for (const it of result.recordsets[0]){
-      const startTimte = new Date(it.EventTime.toISOString().split('.')[0]);
-      const seconds = (currentTime.getTime() - startTimte.getTime()) / 1000;
-      
-      if (seconds >= timeThreshold?timeThreshold:60*30){
-        sendEmail = true;
-        emailContent += "Alarm tag name: " + it.TagName + "\n";
-        emailContent += "Tag description: " + it.TagDescription + "\n";
-        emailContent += "Alarm duration (minutes): " + Math.round((seconds/60) * 100) / 100 + "\n\n";
-      }
+      let et = new Date(it.EventTime.toISOString().split(".")[0].replace("T", " "))
+      let diff =(ct.getTime() - et.getTime()) / 60000;
+      it.TotalDuration = diff;
+      it.EventTime = it.EventTime.toISOString().split(".")[0].replace("T", " ");
+      it.id = i;
+      i++;
     }
 
-    if (sendEmail){
-      res.json({"alarmContent": emailContent});
-    }
-    else {
-      res.json({"alarmContent": "No alarm activities."});
-    }
+    
+    console.log(result.recordsets[0]);
+
+
+    res.json({"alarmContent": result.recordsets[0]});
+
   } catch (err) {
     console.log(err);
-    res.json({"alarmContent": "Error on finding alarm activity."});
   } 
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*************************** Login API ************************ */
+
+app.use('/login',jsonParser, (req, res) => {
+
+  console.log("\n" + req.body.username+ " is trying to login");
+
+
+  let pass = false;
+  // check user and pw
+  for (const it of configData.login){
+    if (req.body.username === it.user && req.body.password === it.password){
+      pass = true;
+    }
+  }
+
+  if (pass){
+    console.log(req.body.username+ " login");
+    res.send({
+      name: 'admin',
+      level: 0,
+      maxAge: 1800
+    });
+  }
+  else {
+    console.log("Faild login");
+    res.send({});
+  }
+
+
+
+});
+
 
 
 

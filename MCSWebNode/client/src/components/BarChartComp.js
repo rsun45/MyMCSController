@@ -25,7 +25,10 @@ const BarChartComp = ({barChartData, xTitle, yTitle, barColor, baselineValue}) =
         end: ['max', baselineValue],
         style: {
           stroke: '#F4664A',
-          lineDash: [2, 2],
+          lineWidth: 3,
+          lineDash: [10, 2],
+          shadowColor: "white",
+          shadowBlur: 5,
         },
       },
     ];

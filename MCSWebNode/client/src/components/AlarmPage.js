@@ -191,15 +191,50 @@ export default function AlarmPage() {
 
   ];
 
+  //表头
+  const activeAlarmColumns = [
+    {
+      field: 'ControllerIP',
+      headerName: 'Controller IP',
+      width: 250,
+      editable: false,
+    }, {
+      field: 'TagName',
+      headerName: 'Tag Name',
+      width: 250,
+      editable: false,
+    }, {
+      field: 'TagDescription',
+      headerName: 'Tag Description',
+      width: 300,
+      editable: false,
+    }, {
+      field: 'EventTime',
+      headerName: 'Event Time',
+      width: 200,
+      editable: false,
+      type: 'dateTime',
+    }, {
+      field: 'TotalDuration',
+      headerName: 'Total Duration (Minutes)',
+      width: 200,
+      editable: false,
+      type:"number",
+    }, 
+
+  ];
+
 
 
   // get active alarm
-  const [alarmActivityContent, setAlarmActivityContent] = React.useState("");
+  const [alarmActivityContent, setAlarmActivityContent] = React.useState([]);
   React.useEffect( () => {
-    const fetchData = async () => { fetch("/api/AlarmPage/getAlarmActivity")                            
+    const fetchData = async () => { fetch("/api/AlarmPage/getAlarmActivityForWeb")                            
       .then((res) => res.json())                  
       .then((data) => {
-        setAlarmActivityContent(data.alarmContent);
+        // console.log(data.alarmContent);
+        setAlarmActivityContent([...data.alarmContent]);
+        
       });    
     }
     
@@ -219,8 +254,8 @@ export default function AlarmPage() {
     if (isActiveAlarmHidden === "hidden"){
       setisActiveAlarmHidden("visible");
       setisActiveHistoryHidden("hidden");
-      setActiveAlarmButtonName("Active History");
-      setActiveAlarmButtonColor("#d6423e");
+      setActiveAlarmButtonName("History");
+      setActiveAlarmButtonColor("#ba0202");
     }
     else {
       setisActiveAlarmHidden("hidden");
@@ -292,7 +327,7 @@ export default function AlarmPage() {
       </div>
 
       <div style={{ padding:"8px", margin:"8px" }} hidden={isActiveAlarmHidden==="hidden"} >
-        <Box
+        {/* <Box
           sx={{
             borderRadius: 1,
             p: 2,
@@ -302,7 +337,27 @@ export default function AlarmPage() {
           }}
         >
           <h3>{alarmActivityContent}</h3>
-        </Box>
+        </Box> */}
+
+        <DataGrid
+          rows={alarmActivityContent}
+          columns={activeAlarmColumns}
+          density="compact"
+          autoHeight
+          // Tool Bar
+          components={{
+            Toolbar: CustomToolbar,
+          }}
+          //分页
+          pageSize={pageSize}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          rowsPerPageOptions={[50, 100]}
+          pagination
+
+          // checkboxSelection
+          disableSelectionOnClick
+
+        />
 
       </div>
 

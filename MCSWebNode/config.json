@@ -40,6 +40,12 @@
         }
     },
     "settings": {
-        "alarmThreshold": 600
-    }
+        "alarmThreshold": 86400
+    },
+    "login":[
+        {
+            "user": "admin",
+            "password": "admin"
+        }
+    ]
 }
