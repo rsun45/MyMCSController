@@ -52,7 +52,7 @@ const jsonParser = bodyParser.json();
 // connection.connect();
 
 const sql = require('mssql')
-sql.ConnectionPool.prototype.setMaxListeners(100);
+// sql.ConnectionPool.prototype.setMaxListeners(100);
 
 async function myQuery(){
     try {
@@ -75,11 +75,12 @@ var config = {
   database: configData.allLines[configData.currentLineIndex].dbDataBase,
   server: configData.allLines[configData.currentLineIndex].dbServer,
   requestTimeout: 300000,
-  pool: {
-    max: 10,
-    min: 5,
-    idleTimeoutMillis: 30000
-  },
+  // pool: {
+  //   min: 2,
+  //   max: 10,
+  //   idleTimeoutMillis: 30000,
+  //   acquireTimeoutMillis: 60000
+  // },
   options: {
     encrypt: true, // for azure
     trustServerCertificate: true, // change to true for local dev / self-signed certs
@@ -321,7 +322,7 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
 
 
   console.log("request /api/AverageCycleTimeByStations");
-  let con;
+  
   try {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
@@ -347,10 +348,6 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
 
   } catch (err) {
     console.log(err);
-  } finally {
-    if (con) {
-      await con.close();
-    }
   }
 
 });
@@ -361,7 +358,7 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
 
 
   console.log("request /api/SumFaultTimeByStations");
-  let con;
+  
   try {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
@@ -385,10 +382,6 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
 
   } catch (err) {
     console.log(err);
-  } finally {
-    if (con) {
-      await con.close();
-    }
   }
 
 });
@@ -399,7 +392,7 @@ app.get("/api/CurrentShiftPassFailCounts", async (req, res) => {
 
 
   console.log("request /api/CurrentShiftPassFailCounts");
-  let con;
+  
   try {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
@@ -421,10 +414,6 @@ app.get("/api/CurrentShiftPassFailCounts", async (req, res) => {
 
   } catch (err) {
     console.log(err);
-  } finally {
-    if (con) {
-      await con.close();
-    }
   }
 
 });
@@ -434,7 +423,7 @@ app.get("/api/LastShiftPassFailCounts", async (req, res) => {
 
 
   console.log("request /api/LastShiftPassFailCounts");
-  let con;
+  
   try {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
@@ -458,10 +447,6 @@ app.get("/api/LastShiftPassFailCounts", async (req, res) => {
 
   } catch (err) {
     console.log(err);
-  } finally {
-    if (con) {
-      await con.close();
-    }
   }
 
 });
@@ -471,7 +456,7 @@ app.get("/api/LastTwoShiftPassFailCounts", async (req, res) => {
 
 
   console.log("request /api/LastTwoShiftPassFailCounts");
-  let con;
+  
   try {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
@@ -494,13 +479,42 @@ app.get("/api/LastTwoShiftPassFailCounts", async (req, res) => {
 
   } catch (err) {
     console.log(err);
-  } finally {
-    if (con) {
-      await con.close();
-    }
   }
 
 });
+
+
+
+// API get running perfomance
+app.get("/api/RunningPerformance", async (req, res) => {
+
+
+  console.log("request /api/RunningPerformance");
+  
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    await sql.connect(config);
+
+    const result = await sql.query(
+    "exec [dbo].[spGetRunningPerformance]"
+    );
+
+    res.json(result.recordsets[0]);
+    
+    console.log("Finished /api/RunningPerformance");
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+
+
+
+
+
+
 
 // API get all line names
 app.get("/api/GetAllLinesNames", async (req, res) => {
@@ -657,13 +671,14 @@ app.post("/api/AnalysisPage/getDataAndTimeByTagName", jsonParser, async (req, re
       "exec [dbo].[spGetTagContentByTagTitle] @tagTitle = '" + req.body.tagName + "', @startTime = '" + req.body.start + "', @endTime = '" + req.body.end + "';"
     );
 
+    const limits = await sql.query(
+      "exec [dbo].[spGetLatestLimits] @tagTitle = '" + req.body.tagName + "';"
+    );
+
     console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
 
-    // for (let i=0; i<result.recordsets[0].length; i++){
-    //   result.recordsets[0][i].id = i;
-    // }
     
-    res.json(result.recordsets[0]);
+    res.json({"data": result.recordsets[0], "lowLimit": Number(limits.recordsets[0][0].LowLimitContent), "highLimit": Number(limits.recordsets[0][0].HighLimitContent)});
 
     console.log("Finish /api/AnalysisPage/getDataAndTimeByTagName");
     await con.close();
@@ -1681,7 +1696,33 @@ app.use('/login',jsonParser, (req, res) => {
 
 
 
+//***************************** maintenance page APIs *********************************/
+app.get("/api/MaintenancePage/getAllMaintenance", async (req, res) => {
+  console.log("requir /api/MaintenancePage/getAllMaintenance");
+  
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    
+    let con = await sql.connect(config);
+    
+    const time1 = new Date();
 
+    const result = await sql.query(
+      "EXEC spGetMaintCounter;"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
+    
+    res.json(result.recordsets[0]);
+
+    console.log("Finish /api/MaintenancePage/getAllMaintenance");
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
 
 
 

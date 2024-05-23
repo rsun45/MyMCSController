@@ -10,6 +10,20 @@ import EmailSettingsComp from './EmailSettingsComp';
 
 export default function MaintenancePage() {
 
+  const [maintenanceData, setMaintenanceData] = React.useState([]);
+
+  React.useEffect(() => {
+
+    fetch("/api/MaintenancePage/getAllMaintenance")
+      .then((res) => res.json())
+      .then((data) => {
+        setMaintenanceData([...data]);
+
+      });
+
+
+  }, []);
+
 
   return (
     <div style={{marginLeft:"16px", marginRight:"16px"}}>
@@ -26,110 +40,38 @@ export default function MaintenancePage() {
           <Grid item xs={4}>
             <h3>Current</h3>
           </Grid>
-
-
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="schedule 1" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="9999" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="0" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-
-              
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="schedule 2" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="9999" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="0" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-
-          
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="schedule 3" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="9999" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="0" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-
-          
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="schedule 4" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="9999" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="0" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-
-          
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="schedule 5" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="9999" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField variant="outlined" defaultValue="0" sx={{ width: 400 }}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Grid>
-
-
-
         </Grid>
+
+
+          {maintenanceData.map((element, index) => {
+            return (
+              <Grid container key={index} sx={{pt:2}}>
+                <Grid item xs={4}>
+                  <TextField variant="outlined" defaultValue={element.TagName} sx={{ width: 400 }}
+                    InputProps={{
+                      readOnly: true,
+                    }} />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField variant="outlined" defaultValue={element.PresetNumber} sx={{ width: 400 }}
+                    InputProps={{
+                      readOnly: true,
+                    }} />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField variant="outlined" defaultValue={element.CurrentNumber} sx={{ width: 400 }}
+                    InputProps={{
+                      readOnly: true,
+                    }} />
+                </Grid>
+              </Grid>
+            )
+
+          })}
+
+
+
+
       </div>
 
       

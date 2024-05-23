@@ -8,6 +8,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import PieChartLastTwoShift from './PieChartLastTwoShift';
 import PieChartCurrentShift from './PieChartCurrentShift';
 import PieChartLastShift from './PieChartLastShift';
+import PieChartRunningPerformance from './PieChartRunningPerformance';
 import PieChartYesterday from './PieChartYesterday';
 import OptionalFunction1 from './SumFaultTimeByStations';
 import OptionalFunction2 from './AverageCycleTimeByStations';
@@ -260,7 +261,8 @@ export default function Summary(){
                     <PieChartLastShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/>
                 </Grid>
                 <Grid item xs={1}>
-                    <PieChartLastTwoShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/>
+                    {/* <PieChartLastTwoShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/> */}
+                    <PieChartRunningPerformance refresh={refresh}/>
                 </Grid>
                 {/* <Grid item xs={1}>
                     <PieChartYesterday pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData}/>

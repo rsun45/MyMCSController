@@ -14,7 +14,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import Grid from '@mui/material/Grid';
 import { AllPagesContext } from '../App';
 import { Histogram } from '@ant-design/plots';
-import { QualityGraphComp } from './QualityGraphComp';
+import QualityGraphComp from './QualityGraphComp';
 
 
 // return local datetime string in 'YYYY-MM-DD HH:MM:SS' formate
@@ -103,26 +103,26 @@ export default function QualityPage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.length > 0) {
-          let sum = 0;
-          for (const it of data) {
-            sum += Number(it.tag_cont);
-          }
-          const average = sum / data.length;
-
-          for (const it of data) {
-            it["tag_cont_number"] = Number(it.tag_cont);
-            it["category"] = currentTagName;
-            it["getTime"] = new Date(it.tag_add_dt.replace("Z", "")).getTime();
-            it["diffByAverage"] = Number(it.tag_cont) - average;
-          }
-        }
-        
         // if (data.length > 0) {
+        //   let sum = 0;
+        //   for (const it of data) {
+        //     sum += Number(it.tag_cont);
+        //   }
+        //   const average = sum / data.length;
+
         //   for (const it of data) {
         //     it["tag_cont_number"] = Number(it.tag_cont);
+        //     it["category"] = currentTagName;
+        //     it["getTime"] = new Date(it.tag_add_dt.replace("Z", "")).getTime();
+        //     it["diffByAverage"] = Number(it.tag_cont) - average;
         //   }
         // }
+        
+        if (data.data.length > 0) {
+          for (const it of data.data) {
+            it["tag_cont_number"] = Number(it.tag_cont);
+          }
+        }
         // console.log(data);
         
         allQualityChartsData.push(data);
@@ -229,7 +229,7 @@ export default function QualityPage() {
             <Grid container spacing={1} columns={20} sx={{ pt: 1, ml:2 }} alignItems="center">
 
               <Grid item xs={18}>
-                {element ? <Histogram {...chartConfig(element)} /> : ""}
+                <QualityGraphComp lowLimit={element.lowLimit} highLimit={element.highLimit} data={element.data} />
               </Grid>
 
               <Grid item xs={1}>
@@ -240,6 +240,8 @@ export default function QualityPage() {
 
 
             </Grid>
+
+
           </div>
 
         )

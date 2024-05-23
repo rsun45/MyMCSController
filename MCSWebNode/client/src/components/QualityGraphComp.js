@@ -34,7 +34,8 @@ function toLocalIsoString(date) {
 
 
 
-export default function QualityGraphComp( { lowLimite, highLimite, data }) {
+export default function QualityGraphComp( { lowLimit, highLimit, data }) {
+  console.log(data);
 
   // alart when missing fields
   const [alertOpen, setAlertOpen] = React.useState(false);
@@ -52,8 +53,8 @@ export default function QualityGraphComp( { lowLimite, highLimite, data }) {
 
 
   // convert data
-  const [low, setLow] = React.useState(lowLimite);
-  const [high, setHigh] = React.useState(highLimite);
+  const [low, setLow] = React.useState(lowLimit);
+  const [high, setHigh] = React.useState(highLimit);
   // calculate mean
   let total = 0;
   for (const it of data){
@@ -78,12 +79,28 @@ export default function QualityGraphComp( { lowLimite, highLimite, data }) {
       }
     }
 
+    // low and high lines
+    // let annotations = [
+    //   {
+    //     type: 'line',
+    //     start: ['min', 'median'],
+    //     end: ['max', 'median'],
+    //     style: {
+    //       stroke: '#F4664A',
+    //       lineWidth: 3,
+    //       lineDash: [10, 2],
+    //       shadowColor: "white",
+    //       shadowBlur: 5,
+    //     },
+    //   },
+    // ];
+
 
     return ({
       data: data,
-      
       binField: 'tag_cont_number',
       binWidth: (maxV-minV)/15,
+      // annotations,
 
     })
   };
@@ -100,6 +117,8 @@ export default function QualityGraphComp( { lowLimite, highLimite, data }) {
           {alertMsg}
         </Alert>
       </Snackbar>
+
+      <h2>{data?data[0].tagTitle:""}</h2>
 
       <Histogram {...chartConfig()} />
 
