@@ -319,7 +319,7 @@ export default function ResultPage() {
             {
               field: key,
               headerName: key,
-              width: 150,
+              width: 220,
               editable: false,
               headerAlign: 'center',
               align:'center',
@@ -427,7 +427,7 @@ export default function ResultPage() {
           {
             field: key,
             headerName: key,
-            width: 150,
+            width: 200,
             editable: false,
             headerAlign: 'center',
             align:'center',

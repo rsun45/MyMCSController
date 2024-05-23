@@ -14,6 +14,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import Grid from '@mui/material/Grid';
 import { AllPagesContext } from '../App';
 import { Histogram } from '@ant-design/plots';
+import { QualityGraphComp } from './QualityGraphComp';
 
 
 // return local datetime string in 'YYYY-MM-DD HH:MM:SS' formate
@@ -102,18 +103,26 @@ export default function QualityPage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        let sum = 0;
-        for (const it of data){
-          sum += Number(it.tag_cont);
-        }
-        const average = sum / data.length;
+        if (data.length > 0) {
+          let sum = 0;
+          for (const it of data) {
+            sum += Number(it.tag_cont);
+          }
+          const average = sum / data.length;
 
-        for (const it of data){
-          it["tag_cont_number"] = Number(it.tag_cont);
-          it["category"] = currentTagName;
-          it["getTime"] = new Date(it.tag_add_dt.replace("Z", "")).getTime();
-          it["diffByAverage"] = Number(it.tag_cont) - average;
+          for (const it of data) {
+            it["tag_cont_number"] = Number(it.tag_cont);
+            it["category"] = currentTagName;
+            it["getTime"] = new Date(it.tag_add_dt.replace("Z", "")).getTime();
+            it["diffByAverage"] = Number(it.tag_cont) - average;
+          }
         }
+        
+        // if (data.length > 0) {
+        //   for (const it of data) {
+        //     it["tag_cont_number"] = Number(it.tag_cont);
+        //   }
+        // }
         // console.log(data);
         
         allQualityChartsData.push(data);
@@ -155,7 +164,7 @@ export default function QualityPage() {
 
   // line chart config
   const chartConfig = (inputData) => {
-    let maxDiff = Math.abs(inputData[0].diffByAverage);
+    let maxDiff = Math.abs(inputData[0]?.diffByAverage);
     for (const it of inputData){
       if (maxDiff < Math.abs(it.diffByAverage)){
         maxDiff = Math.abs(it.diffByAverage);

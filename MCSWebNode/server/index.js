@@ -1382,6 +1382,47 @@ let backendAlarmChecking = cron.schedule('*/5 * * * *', async () => {
 
 
 
+// create alarm content
+const generateActivityAlarm = async () =>{
+
+  let emailContent = "Please check the following alarms:\n\n";
+  let sendEmail = false;
+
+  try {
+    await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+
+    let result = await sql.query(
+    "exec [dbo].[spFindActiveAlarm]"
+    );
+    
+    // console.log(result.recordsets[0]);
+
+    const currentTime = new Date();
+    for (const it of result.recordsets[0]){
+      const startTimte = new Date(it.EventTime.toISOString().split('.')[0]);
+      const seconds = (currentTime.getTime() - startTimte.getTime()) / 1000;
+      
+      sendEmail = true;
+      emailContent += "Alarm tag name: " + it.TagName + "\n";
+      emailContent += "Tag description: " + it.TagDescription + "\n";
+      emailContent += "Alarm duration (minutes): " + Math.round((seconds/60) * 100) / 100 + "\n\n";
+      
+    }
+
+    if (sendEmail){
+      return emailContent;
+    }
+    else {
+      return "There is no active alarm."
+    }
+  } catch (err) {
+    console.log(err);
+    return "Faild reading alarms."
+  } 
+}
+
+
+
 
 
 //***************************** API for sending test emails  *********************************/
@@ -1389,12 +1430,63 @@ app.post("/api/settings/testsending", jsonParser, async (req, res) => {
   console.log("requir /api/settings/testsending");
   console.log(req.body);
   
-  const mailOptions = {
-    from: configData.emailConfig.from,
-    to: req.body.sendTo,
-    subject: 'Testing Email Delivery',
-    text: 'This email is a test sent from MCS Web.'
-  };
+  if (req.body.testType === "testProduction"){
+    let inputDate = new Date();
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDate);
+
+    let csvStr = await generateShiftReportCSVByDateTime(inputDate);
+
+    var mailOptions = {
+      from: configData.emailConfig.from,
+      to: filterEmailListByTimeRange(configData.emailConfig.emailTo.reportTo),
+      subject: "Testing production report: " + shiftArr[2] + 'shift report from ' + shiftArr[0] + " to " + shiftArr[1],
+      text: "Please find attached the CSV report for finished shift.",
+      attachments: [
+        {
+          filename: shiftArr[2] + 'Shift_Report_from' + shiftArr[0] + "_to_" + shiftArr[1] + '.csv',
+          content: csvStr
+        },
+      ]
+    };
+  }
+  else if (req.body.testType === "testAlarm"){
+
+    let alarmContent = await generateActivityAlarm();
+
+    var mailOptions = {
+      from: configData.emailConfig.from,
+      to: req.body.sendTo,
+      subject: 'Testing alarm',
+      text: alarmContent
+    };
+  }
+  else if (req.body.testType === "testMaintenance"){
+    var mailOptions = {
+      from: configData.emailConfig.from,
+      to: req.body.sendTo,
+      subject: 'Testing maintenance',
+      text: "This email is a maintenance test sent from MCS Web."
+    };
+  }
+  else if (req.body.testType === "testQuality"){
+    var mailOptions = {
+      from: configData.emailConfig.from,
+      to: req.body.sendTo,
+      subject: 'Testing quality',
+      text: "This email is a quality test sent from MCS Web."
+    };
+  }
+  else {
+    var mailOptions = {
+      from: configData.emailConfig.from,
+      to: req.body.sendTo,
+      subject: 'Testing Email Delivery',
+      text: 'This email is a test sent from MCS Web.'
+    };
+  }
+  
+
+
 
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
@@ -1517,7 +1609,7 @@ app.get("/api/AlarmPage/getAlarmActivityForWeb", async (req, res) => {
     for (const it of result.recordsets[0]){
       let et = new Date(it.EventTime.toISOString().split(".")[0].replace("T", " "))
       let diff =(ct.getTime() - et.getTime()) / 60000;
-      it.TotalDuration = diff;
+      it.TotalDuration = Math.round(diff*100)/100;
       it.EventTime = it.EventTime.toISOString().split(".")[0].replace("T", " ");
       it.id = i;
       i++;

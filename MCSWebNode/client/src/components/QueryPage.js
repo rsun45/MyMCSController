@@ -255,7 +255,7 @@ export default function QueryPage() {
             {
               field: key,
               headerName: key,
-              width: 150,
+              width: 220,
               editable: false,
               headerAlign: 'center',
               align: 'center',
@@ -268,7 +268,7 @@ export default function QueryPage() {
             {
               field: key,
               headerName: key,
-              width: 150,
+              width: 220,
               editable: false,
               headerAlign: 'center',
               align: 'center',

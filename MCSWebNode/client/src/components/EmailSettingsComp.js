@@ -152,7 +152,7 @@ export default function EmailSettingsComp({}) {
   };
   // update row
   const updateRow = (newRow) => {
-    console.log(newRow);
+    // console.log(newRow);
     for (const it of emailGridData){
       if (it.id === newRow.id){
         it.emailAddress = newRow.emailAddress;
@@ -266,20 +266,50 @@ export default function EmailSettingsComp({}) {
 
 
   // test sending emails
-  const sendTest = async () =>{
+  const sendTest = async (testType) =>{
     await timeout(200);
     
     let sendTo = "";
 
-    for (const it of emailGridData){
-      sendTo += it.emailAddress.trim() + ",";
+    if (testType === "testEmailReceiving"){
+      for (const it of emailGridData){
+        sendTo += it.emailAddress.trim() + ",";
+      }
     }
-    
+    else if (testType === "testProduction"){
+      for (const it of emailGridData){
+        if (it.reportTo){
+          sendTo += it.emailAddress.trim() + ",";
+        }
+      }
+    }
+    else if (testType === "testAlarm"){
+      for (const it of emailGridData){
+        if (it.alarmTo){
+          sendTo += it.emailAddress.trim() + ",";
+        }
+      }
+    }
+    else if (testType === "testMaintenance"){
+      for (const it of emailGridData){
+        if (it.scheduledMaintenanceTo){
+          sendTo += it.emailAddress.trim() + ",";
+        }
+      }
+    }
+    else if (testType === "testQuality"){
+      for (const it of emailGridData){
+        if (it.qualityRejectTo){
+          sendTo += it.emailAddress.trim() + ",";
+        }
+      }
+    }
+
 
     fetch("/api/settings/testsending", {
       method: "POST",
       headers: { "Content-Type": "application/JSON" },
-      body: JSON.stringify({ "sendTo": sendTo.substring(0, sendTo.length - 1) })
+      body: JSON.stringify({ "sendTo": sendTo.substring(0, sendTo.length - 1), "testType": testType })
     })
       .then((res) => res.json())
       .then((data) => {
@@ -347,11 +377,11 @@ export default function EmailSettingsComp({}) {
       />
       
       <Stack direction="row" spacing={2} sx={{pt:2}}>
-        <Box sx={{ width: 240 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { sendTest(); }} variant="outlined" color='info' >test sending</Button> </Box>
-        <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { console.log("test"); }} variant="outlined" color='info' >test production</Button> </Box>
-        <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { console.log("test"); }} variant="outlined" color='info' >test alarm</Button> </Box>
-        <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { console.log("test"); }} variant="outlined" color='info' >test maintenance</Button> </Box>
-        <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { console.log("test"); }} variant="outlined" color='info' >test quality</Button> </Box>
+        <Box sx={{ width: 240 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { sendTest("testEmailReceiving"); }} variant="outlined" color='info' >test sending</Button> </Box>
+        <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { sendTest("testProduction"); }} variant="outlined" color='info' >test production</Button> </Box>
+        <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { sendTest("testAlarm"); }} variant="outlined" color='info' >test alarm</Button> </Box>
+        <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { sendTest("testMaintenance"); }} variant="outlined" color='info' >test maintenance</Button> </Box>
+        <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { sendTest("testQuality"); }} variant="outlined" color='info' >test quality</Button> </Box>
       </Stack>
 
       <br />
