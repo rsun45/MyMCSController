@@ -35,7 +35,7 @@ const PieChartRunningPerformance = ({refresh}) => {
       autoRotate: false,
     },
     //colorField: 'type', // 部分图表使用 seriesField
-    color: [ '#2ca02c', '#dbd10f', '#d62728'], //调整环状图颜色
+    color: [ '#d62728', '#dbd10f', '#2ca02c' ], //调整环状图颜色
     interactions: [
       {
         type: 'element-selected',
