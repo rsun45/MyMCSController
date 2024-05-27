@@ -34,8 +34,8 @@ function toLocalIsoString(date) {
 
 
 
-export default function QualityGraphComp( { lowLimit, highLimit, data }) {
-  console.log(data);
+export default function QualityGraphComp( { lowLimit, highLimit, data, modifyLowerOrUpperByIndex, index }) {
+  // console.log(data);
 
   // alart when missing fields
   const [alertOpen, setAlertOpen] = React.useState(false);
@@ -52,9 +52,7 @@ export default function QualityGraphComp( { lowLimit, highLimit, data }) {
 
 
 
-  // convert data
-  const [low, setLow] = React.useState(lowLimit);
-  const [high, setHigh] = React.useState(highLimit);
+  
   // calculate mean
   let total = 0;
   for (const it of data){
@@ -62,49 +60,90 @@ export default function QualityGraphComp( { lowLimit, highLimit, data }) {
   }
   const [mean, setMean] = React.useState(total/data.length);
 
+  const getCPK = (l, u, m, data) =>{
+    if (l==="" || u==="" || m===""){
+      return "NA";
+    }
+    l = Number(l);
+    u = Number(u);
+    m = Number(m);
+    if (isNaN(l) || isNaN(u) || isNaN(m)){
+      return "NA";
+    }
+
+    let sqrSum = 0;
+    for (const it of data){
+      sqrSum += (it.tag_cont_number - m)*(it.tag_cont_number - m)
+    }
+    const sd = Math.sqrt(sqrSum/data.length)
+
+    return Math.round( Math.min((u-m)/(3*sd), (m-l)/(3*sd)) *10000)/10000 ;
+
+  };
+
 
 
   // chart config
   const chartConfig = () => {
+    // console.log(data);
     // keep min and max value for calculating interval
-    let maxV = data[0].tag_cont_number;
-    let minV = data[0].tag_cont_number;
+    // let maxV = data[0].tag_cont_number;
+    // let minV = data[0].tag_cont_number;
 
-    for (const it of data){
-      if (minV > it.tag_cont_number){
-        minV = it.tag_cont_number;
-      }
-      if (maxV < it.tag_cont_number){
-        maxV = it.tag_cont_number;
-      }
-    }
+    // for (const it of data){
+    //   if (minV > it.tag_cont_number){
+    //     minV = it.tag_cont_number;
+    //   }
+    //   if (maxV < it.tag_cont_number){
+    //     maxV = it.tag_cont_number;
+    //   }
+    // }
 
     // low and high lines
-    // let annotations = [
-    //   {
-    //     type: 'line',
-    //     start: ['min', 'median'],
-    //     end: ['max', 'median'],
-    //     style: {
-    //       stroke: '#F4664A',
-    //       lineWidth: 3,
-    //       lineDash: [10, 2],
-    //       shadowColor: "white",
-    //       shadowBlur: 5,
-    //     },
-    //   },
-    // ];
+    const annotations = [
+      // {
+      //   type: 'line',
+      //   start: [0, 0],
+      //   end: [13, 0],
+      //   style: {
+      //     stroke: '#F4664A',
+      //     lineWidth: 3,
+      //     lineDash: [10, 2],
+      //     shadowColor: "white",
+      //     shadowBlur: 5,
+      //   },
+      // },
+      {
+        type: 'text',
+        position: [1, 1],
+        content: '辅助文本',
+        style: {
+          fill: 'red',
+        },
+        top:true
+      }
+    ];
 
 
     return ({
       data: data,
       binField: 'tag_cont_number',
-      binWidth: (maxV-minV)/15,
-      // annotations,
+      // binWidth: (maxV-minV)/15,
+      // channel: 'count',
+      binNumber: 15,
+      xAxis: {
+        label: {
+          // rotate: 0.2,
+          formatter: (v) => {
+            const round5 = Math.round(Number(v)*100000)/100000;
+            return `${round5}`;
+            // return v;
+          },
+        },
+      },
 
     })
   };
-
 
 
 
@@ -118,7 +157,41 @@ export default function QualityGraphComp( { lowLimit, highLimit, data }) {
         </Alert>
       </Snackbar>
 
-      <h2>{data?data[0].tagTitle:""}</h2>
+      <h2>{data ? data[0].tagTitle : ""}</h2>
+
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <TextField variant="outlined" value={lowLimit}
+            label="Lower Limit"
+            
+            onChange={(event)=>{modifyLowerOrUpperByIndex(event.target.value, "lower", index);}}
+            />
+
+        </Grid>
+        <Grid item xs={3}>
+          <TextField variant="outlined" value={highLimit}
+            label="Upper Limit"
+            
+            onChange={(event)=>{modifyLowerOrUpperByIndex(event.target.value, "upper", index);}}
+            />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField variant="outlined" value={Math.round(mean*10000)/10000}
+            label="Mean Value"
+            InputProps={{
+              readOnly: true,
+            }} />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField variant="outlined" value={getCPK(lowLimit, highLimit, mean, data)}
+            label="CPK Value"
+            InputProps={{
+              readOnly: true,
+            }} />
+        </Grid>
+      </Grid>
+
+      <br />
 
       <Histogram {...chartConfig()} />
 

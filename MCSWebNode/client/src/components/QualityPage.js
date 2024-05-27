@@ -96,7 +96,7 @@ export default function QualityPage() {
     }
     
 
-    fetch("/api/AnalysisPage/getDataAndTimeByTagName", {
+    fetch("/api/QualityPage/getDataAndTimeByTagName", {
       method: "POST",
       headers: { "Content-Type": "application/JSON" },
       body: JSON.stringify({ "tagName": currentTagName, "start": toLocalIsoString(startTime), "end": toLocalIsoString(endTime) })
@@ -161,6 +161,20 @@ export default function QualityPage() {
   };
 
 
+  // change lower or upper value by index
+  const modifyLowerOrUpperByIndex = (value, type, index) =>{
+    if (type === "lower"){
+      allQualityChartsData[index].lowLimit = value;
+      setAllQualityChartsData([...allQualityChartsData]);
+    }
+    else {
+      allQualityChartsData[index].highLimit = value;
+      setAllQualityChartsData([...allQualityChartsData]);
+    }
+  };
+
+
+
 
   // line chart config
   const chartConfig = (inputData) => {
@@ -221,19 +235,20 @@ export default function QualityPage() {
 
       <br/>
 
+      <Grid container spacing={1} columns={40} alignItems="center" >
+
 
       {allQualityChartsData.map((element, index) => {
         return (
-          <div key={index} >
-            
-            <Grid container spacing={1} columns={20} sx={{ pt: 1, ml:2 }} alignItems="center">
+          <Grid key={index} item xs={20} >
+            <Grid container spacing={1} columns={20} sx={{ pt: 1, ml: 2, }} alignItems="center">
 
               <Grid item xs={18}>
-                <QualityGraphComp lowLimit={element.lowLimit} highLimit={element.highLimit} data={element.data} />
+                <QualityGraphComp lowLimit={element.lowLimit} highLimit={element.highLimit} data={element.data} modifyLowerOrUpperByIndex={modifyLowerOrUpperByIndex} index={index} />
               </Grid>
 
-              <Grid item xs={1}>
-                <Button sx={{ mt: 1.5 }} onClick={()=>deleteLineChartClick(index)}>
+              <Grid item xs={2}>
+                <Button sx={{ mt: 1.5 }} onClick={() => deleteLineChartClick(index)}>
                   <RemoveCircleOutlineIcon />
                 </Button>
               </Grid>
@@ -242,10 +257,12 @@ export default function QualityPage() {
             </Grid>
 
 
-          </div>
+          </Grid>
 
         )
       })}
+
+      </Grid>
 
 
 

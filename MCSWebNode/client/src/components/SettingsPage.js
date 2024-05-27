@@ -10,6 +10,7 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import { CookiesProvider, useCookies } from 'react-cookie'
 import Login from './Login';
+import InputAdornment from '@mui/material/InputAdornment';
 
 
 function timeout(delay) {
@@ -80,6 +81,7 @@ function SettingsPageAfterLogin() {
   const onSaveClick = async () =>{
     await timeout(200);
 
+
     fetch("/api/settings/saveSettingValues", {
       method: "POST",
       headers: { "Content-Type": "application/JSON" },
@@ -138,6 +140,7 @@ function SettingsPageAfterLogin() {
           >
             <Tab label="Email" value="emailSettings" />
             <Tab label="Alarm" value="alarmSettings" />
+            <Tab label="Maintenance" value="maintenanceSettings" />
           </Tabs>
 
           <div hidden={tabValue !== "emailSettings"} style={{width:"100%", overflow: "auto"}} >
@@ -145,6 +148,7 @@ function SettingsPageAfterLogin() {
           </div>
 
         
+          {/* alarm settings */}
           <div hidden={tabValue !== "alarmSettings"} style={{width:"100%", overflow: "auto", paddingTop:"16px"}} >
             <div style={{marginLeft:"16px", marginRight:"16px"}}>
               <TextField id="outlined-basic" label="Excess Time Email Alarm Threshold (in minutes)" variant="outlined" 
@@ -155,6 +159,24 @@ function SettingsPageAfterLogin() {
               <Button sx={{width:"150px", mt:2}} variant="contained" color='primary' onClick={() => {onSaveClick();}} >Save Settings</Button>
             </div>
           </div>
+
+
+          {/* maintenance settings */}
+          <div hidden={tabValue !== "maintenanceSettings"} style={{width:"100%", overflow: "auto", paddingTop:"16px"}} >
+            <div style={{marginLeft:"16px", marginRight:"16px"}}>
+              <TextField id="outlined-basic" label="Excess maintenance Threshold (in percentage)" variant="outlined" 
+                value={Math.round(settingJson.maintenanceThreshold*10000)/100} sx={{width:400}} 
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                }}
+                onChange={(event)=>{setSettingJson({...settingJson, "maintenanceThreshold": event.target.value/100})}}
+              />
+              <br/>
+              <Button sx={{width:"150px", mt:2}} variant="contained" color='primary' onClick={() => {onSaveClick();}} >Save Settings</Button>
+            </div>
+          </div>
+
+
 
 
         </Box>

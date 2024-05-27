@@ -9,6 +9,52 @@ import TabPanel from '@mui/lab/TabPanel';
 import EmailSettingsComp from './EmailSettingsComp';
 
 export default function MaintenancePage() {
+  
+  // force to refresh
+  const [refresh, setRefresh] = React.useState(true);
+  // refresh timer
+  const [refreshTimer, setRefreshTimer] = React.useState(0);
+
+  // get refresh duration time
+  React.useEffect(() => {
+
+    // get all lines names and refresh time
+    const getAllProjectNames = async () => {
+      fetch("/api/GetAllLinesNames")
+      .then((res) => res.json())
+      .then((data) => {
+        setRefreshTimer(Number(data.refreshTimer));
+      });
+    }
+    getAllProjectNames();
+
+
+  }, []);
+  
+  // when got refresh timer
+  React.useEffect(() => {
+
+    if (refreshTimer > 0) {
+      const reloadData = () => {
+        console.log("reload in " + refreshTimer);
+        setRefresh(refresh => {
+          return !refresh;
+        });
+
+      };
+
+      const intervalId = setInterval(() => {
+        reloadData();
+      }, refreshTimer);
+
+      return () => clearInterval(intervalId);
+    }
+
+  }, [refreshTimer]);
+
+
+
+
 
   const [maintenanceData, setMaintenanceData] = React.useState([]);
 
@@ -22,7 +68,7 @@ export default function MaintenancePage() {
       });
 
 
-  }, []);
+  }, [refresh]);
 
 
   return (
@@ -59,7 +105,8 @@ export default function MaintenancePage() {
                     }} />
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField variant="outlined" defaultValue={element.CurrentNumber} sx={{ width: 400 }}
+                  <TextField variant="outlined" 
+                    defaultValue={element.CurrentNumber + "  (" + (Math.round(Number(element.CurrentNumber)/Number(element.PresetNumber)*10000)/100) + "%)"} sx={{ width: 400 }}
                     InputProps={{
                       readOnly: true,
                     }} />

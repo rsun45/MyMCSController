@@ -19,6 +19,7 @@ const PieChartRunningPerformance = ({refresh}) => {
 
   const config = {
     appendPadding: 10,
+    padding: 'auto',
     data,
     angleField: 'tag_cont_number',
     colorField: 'tag_name',
@@ -30,7 +31,7 @@ const PieChartRunningPerformance = ({refresh}) => {
       content: '{value}',
       style: {
         textAlign: 'center',
-        fontSize: 24,
+        fontSize: 20,
       },
       autoRotate: false,
     },
@@ -58,14 +59,18 @@ const PieChartRunningPerformance = ({refresh}) => {
     },
     legend: {
       position: 'right',
-      offsetX: -70,
+      // offsetX: 10,
+      layout: 'horizontal',
+      flipPage: false,
       itemName:{
         formatter: (text, item) => {
-          const items = data.filter((d) => d.type === item.value);
-          return items.length ? items[0].type + " : " + items[0].value : text;
+          // console.log(item);
+          // const items = data.filter((d) => d.type === item.value);
+          // return items.length ? items[0].type + " : " + items[0].value : text;
+          return text.split('.')[1];
         },
         style: {
-          fontSize: 20,
+          fontSize: 18,
         },
       },
     }

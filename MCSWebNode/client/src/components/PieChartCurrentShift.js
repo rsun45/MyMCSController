@@ -40,6 +40,7 @@ const PieChartCurrentShift = ({pieToggleDrawer, setShiftData, refresh}) => {
 
   const config = {
     appendPadding: 10,
+    padding: 'auto',
     data,
     angleField: 'value',
     // colorField: 'type',
@@ -72,21 +73,22 @@ const PieChartCurrentShift = ({pieToggleDrawer, setShiftData, refresh}) => {
           whiteSpace: 'pre-wrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          fontSize: 25,
+          fontSize: 20,
         },
         content: 'Current: ' + shiftName,
       },
     },
     legend: {
       position: 'right',
-      offsetX: -70,
+      // offsetX: 10,
+      layout: 'vertical',
       itemName:{
         formatter: (text, item) => {
           const items = data.filter((d) => d.type === item.value);
           return items.length ? items[0].type + " : " + items[0].value : text;
         },
         style: {
-          fontSize: 20,
+          fontSize: 18,
         },
       },
       // itemValue: {

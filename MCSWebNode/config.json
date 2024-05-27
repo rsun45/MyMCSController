@@ -40,9 +40,10 @@
         }
     },
     "settings": {
-        "alarmThreshold": 86400
+        "alarmThreshold": 86400,
+        "maintenanceThreshold": 0.8
     },
-    "login":[
+    "login": [
         {
             "user": "admin",
             "password": "admin"

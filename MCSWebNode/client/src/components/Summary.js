@@ -12,6 +12,8 @@ import PieChartRunningPerformance from './PieChartRunningPerformance';
 import PieChartYesterday from './PieChartYesterday';
 import OptionalFunction1 from './SumFaultTimeByStations';
 import OptionalFunction2 from './AverageCycleTimeByStations';
+import MaintenanceSummaryComp from './MaintenanceSummaryComp';
+import ActiveAlarmSummaryComp from './ActiveAlarmSummaryComp';
 import SummaryFailGrid from './SummaryFailGrid';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -252,22 +254,46 @@ export default function Summary(){
             </Box>
             
             
-            <Grid 
-            container spacing={0} columns={3} >               
-                <Grid item xs={1}>
-                    <PieChartCurrentShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/>
-                </Grid>
-                <Grid item xs={1}>
+            <Box sx={{ height: "40vh", pr:2}}>
+                <Grid
+                    container spacing={4} columns={4} >
+                    <Grid item xs={1} >
+                        <PieChartCurrentShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh} />
+                        
+                    </Grid>
+                    {/* <Grid item xs={1}>
                     <PieChartLastShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/>
-                </Grid>
-                <Grid item xs={1}>
-                    {/* <PieChartLastTwoShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/> */}
-                    <PieChartRunningPerformance refresh={refresh}/>
-                </Grid>
-                {/* <Grid item xs={1}>
+                </Grid> */}
+                    <Grid item xs={1} >
+                        {/* <PieChartLastTwoShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/> */}
+                        <PieChartRunningPerformance refresh={refresh} />
+                    </Grid>
+                    {/* <Grid item xs={1}>
                     <PieChartYesterday pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData}/>
                 </Grid> */}
-            </Grid>
+
+
+                    <Grid item xs={1}>
+                            <div style={{ display: "flex", justifyContent: "center" }}>
+                                <h3>Maintenance</h3>
+                            </div>
+                            <MaintenanceSummaryComp refresh={refresh} />
+                        
+                    </Grid>
+                    
+
+
+                    <Grid item xs={1}>
+                            <div style={{ display: "flex", justifyContent: "center" }}>
+                                <h3>Active Alarm</h3>
+                            </div>
+                            <ActiveAlarmSummaryComp refresh={refresh} />
+                        
+                    </Grid>
+
+
+                </Grid>
+            </Box>
 
             {/* <Drawer
                 anchor='bottom'

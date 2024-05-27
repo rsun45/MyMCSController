@@ -75,8 +75,9 @@ const PieChartLastShift = ({pieToggleDrawer, setShiftData, refresh}) => {
       },
     },
     legend: {
-      position: 'right',
-      offsetX: -70,
+      position: 'top',
+      offsetX: 10,
+      layout: 'vertical',
       itemName:{
         formatter: (text, item) => {
           const items = data.filter((d) => d.type === item.value);

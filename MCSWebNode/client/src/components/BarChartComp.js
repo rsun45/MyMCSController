@@ -44,7 +44,7 @@ const BarChartComp = ({barChartData, xTitle, yTitle, barColor, baselineValue}) =
         fill: '#333333', // Label text color
       },
       adjustPosition: true,
-      offsetY:10,
+      offsetY:15,
     },
     color: barColor?barColor:"#5c87ff",
     // scrollbar: {
@@ -54,6 +54,12 @@ const BarChartComp = ({barChartData, xTitle, yTitle, barColor, baselineValue}) =
     //   start: 0,
     //   end: 1,
     // },
+    xAxis: {
+      label: {
+        autoHide: false,
+        autoRotate: true,
+      },
+    },
 
     annotations,
     

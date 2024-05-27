@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 
 
 
-// app.use(express.json({ limit: "100mb" }));
+app.use(express.json({ limit: "100mb" }));
 
 // create application/json parser
 const bodyParser = require('body-parser');
@@ -54,19 +54,6 @@ const jsonParser = bodyParser.json();
 const sql = require('mssql')
 // sql.ConnectionPool.prototype.setMaxListeners(100);
 
-async function myQuery(){
-    try {
-        // make sure that any items are correctly URL encoded in the connection string
-        // var con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
-        await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
-        console.dir("Database is Connected.")
-        // await con.close();
-    } catch (err) {
-      console.log(err);
-    }
-}
-
-myQuery();
 
 // API get query page data
 var config = {
@@ -75,18 +62,33 @@ var config = {
   database: configData.allLines[configData.currentLineIndex].dbDataBase,
   server: configData.allLines[configData.currentLineIndex].dbServer,
   requestTimeout: 300000,
-  // pool: {
-  //   min: 2,
-  //   max: 10,
-  //   idleTimeoutMillis: 30000,
-  //   acquireTimeoutMillis: 60000
-  // },
+  pool: {
+    min: 2,
+    max: 50,
+    idleTimeoutMillis: 30000,
+    acquireTimeoutMillis: 60000
+  },
   options: {
     encrypt: true, // for azure
     trustServerCertificate: true, // change to true for local dev / self-signed certs
     trustedConnection: true
   }
 };
+
+
+async function myQuery(){
+  try {
+      // make sure that any items are correctly URL encoded in the connection string
+      // var con = await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+      await sql.connect(config);
+      console.dir("Database is Connected.")
+      // await con.close();
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+myQuery();
 
 
 /*
@@ -327,23 +329,23 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
 
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     // const result = await sql.query('select pd.id, SerialNumber, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue, StartTime, EndTime from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 40  order by PartId, StationId, TagId');
-    const result = await sql.query(
-      "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] + 
-      "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] + 
-      "') exec [dbo].[spGetAverageCycleTimeByStations] @start, @end"
-      );
+    const result = await sql.query(`
+      DECLARE @start DATETIME = '${shiftArr[0]}'
+      DECLARE @end DATETIME = '${shiftArr[1]}'
+      EXEC [dbo].[spGetAverageCycleTimeByStations] @start, @end
+    `);
 
 
-    for (let i=0; i<result.recordsets[0].length; i++){
-      result.recordsets[0][i].id = i;
-    }
+    // for (let i=0; i<result.recordsets[0].length; i++){
+    //   result.recordsets[0][i].id = i;
+    // }
 
-    res.json(result.recordsets[0]);
+    res.json(result.recordset);
     console.log("Finished /api/AverageCycleTimeByStations");
 
   } catch (err) {
@@ -363,21 +365,21 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
 
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
-    const result = await sql.query(
-    "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] + 
-    "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] + 
-    "') exec [dbo].[spGetSumFaultTimeByStations] @start, @end"
-    );
+    const result = await sql.query(`
+      DECLARE @start DATETIME = '${shiftArr[0]}'
+      DECLARE @end DATETIME = '${shiftArr[1]}'
+      EXEC [dbo].[spGetSumFaultTimeByStations] @start, @end
+    `);
 
     for (let i=0; i<result.recordsets[0].length; i++){
       result.recordsets[0][i].id = i;
     }
 
-    res.json(result.recordsets[0]);
+    res.json(result.recordset);
     console.log("Finished /api/SumFaultTimeByStations");
 
   } catch (err) {
@@ -401,15 +403,15 @@ app.get("/api/CurrentShiftPassFailCounts", async (req, res) => {
     let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
-    const result = await sql.query(
-    "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] + 
-    "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] + 
-    "') exec [dbo].[spGetShiftCount] '" + configData.allLines[configData.currentLineIndex].name + "', @start, @end"
-    );
+    const result = await sql.query(`
+      DECLARE @start DATETIME = '${shiftArr[0]}'
+      DECLARE @end DATETIME = '${shiftArr[1]}'
+      EXEC [dbo].[spGetShiftCount] '${configData.allLines[configData.currentLineIndex].name}', @start, @end
+    `);
 
 
     result.recordsets[0][0].shift = shiftArr[2];
-    res.json(result.recordsets[0]);
+    res.json(result.recordset);
     console.log("Finished /api/CurrentShiftPassFailCounts");
 
   } catch (err) {
@@ -442,7 +444,7 @@ app.get("/api/LastShiftPassFailCounts", async (req, res) => {
 
 
     result.recordsets[0][0].shift = shiftArr[2];
-    res.json(result.recordsets[0]);
+    res.json(result.recordset);
     console.log("Finished /api/LastShiftPassFailCounts");
 
   } catch (err) {
@@ -474,7 +476,7 @@ app.get("/api/LastTwoShiftPassFailCounts", async (req, res) => {
     );
 
     result.recordsets[0][0].shift = shiftArr[2];
-    res.json(result.recordsets[0]);
+    res.json(result.recordset);
     console.log("Finished /api/LastTwoShiftPassFailCounts");
 
   } catch (err) {
@@ -495,11 +497,11 @@ app.get("/api/RunningPerformance", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
 
-    const result = await sql.query(
-    "exec [dbo].[spGetRunningPerformance]"
-    );
+    const result = await sql.query(`
+      EXEC [dbo].[spGetRunningPerformance]
+    `);
 
-    res.json(result.recordsets[0]);
+    res.json(result.recordset);
     
     console.log("Finished /api/RunningPerformance");
 
@@ -671,14 +673,10 @@ app.post("/api/AnalysisPage/getDataAndTimeByTagName", jsonParser, async (req, re
       "exec [dbo].[spGetTagContentByTagTitle] @tagTitle = '" + req.body.tagName + "', @startTime = '" + req.body.start + "', @endTime = '" + req.body.end + "';"
     );
 
-    const limits = await sql.query(
-      "exec [dbo].[spGetLatestLimits] @tagTitle = '" + req.body.tagName + "';"
-    );
-
     console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
 
     
-    res.json({"data": result.recordsets[0], "lowLimit": Number(limits.recordsets[0][0].LowLimitContent), "highLimit": Number(limits.recordsets[0][0].HighLimitContent)});
+    res.json(result.recordsets[0]);
 
     console.log("Finish /api/AnalysisPage/getDataAndTimeByTagName");
     await con.close();
@@ -723,6 +721,37 @@ app.get("/api/QualityPage/getValueTagTitle", async (req, res) => {
 
 
 
+app.post("/api/QualityPage/getDataAndTimeByTagName", jsonParser, async (req, res) => {
+  console.log("requir /api/QualityPage/getDataAndTimeByTagName");
+  console.log(req.body);
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    
+    let con = await sql.connect(config);
+    
+    const time1 = new Date();
+
+    const result = await sql.query(
+      "exec [dbo].[spGetTagContentByTagTitle] @tagTitle = '" + req.body.tagName + "', @startTime = '" + req.body.start + "', @endTime = '" + req.body.end + "';"
+    );
+
+    const limits = await sql.query(
+      "exec [dbo].[spGetLatestLimits] @tagTitle = '" + req.body.tagName + "';"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
+
+    
+    res.json({"data": result.recordsets[0], "lowLimit": Number(limits.recordsets[0][0].LowLimitContent), "highLimit": Number(limits.recordsets[0][0].HighLimitContent)});
+
+    console.log("Finish /api/QualityPage/getDataAndTimeByTagName");
+    await con.close();
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
 
 
 
@@ -1453,7 +1482,7 @@ app.post("/api/settings/testsending", jsonParser, async (req, res) => {
 
     var mailOptions = {
       from: configData.emailConfig.from,
-      to: filterEmailListByTimeRange(configData.emailConfig.emailTo.reportTo),
+      to: req.body.sendTo,
       subject: "Testing production report: " + shiftArr[2] + 'shift report from ' + shiftArr[0] + " to " + shiftArr[1],
       text: "Please find attached the CSV report for finished shift.",
       attachments: [
@@ -1631,8 +1660,9 @@ app.get("/api/AlarmPage/getAlarmActivityForWeb", async (req, res) => {
     }
 
     
-    console.log(result.recordsets[0]);
+    // console.log(result.recordsets[0]);
 
+    console.log("Finished /api/AlarmPage/getAlarmActivityForWeb");
 
     res.json({"alarmContent": result.recordsets[0]});
 
@@ -1725,6 +1755,79 @@ app.get("/api/MaintenancePage/getAllMaintenance", async (req, res) => {
 });
 
 
+// set schedule to check maintenance and send email
+// create maintenance email content
+const generateMaintenanceContent = async () =>{
+
+  let emailContent = "Please check the following maintenance information:\n\n";
+  let sendEmail = false;
+  const percentThreshold = configData.settings.maintenanceThreshold;
+
+  try {
+    await sql.connect(config);
+
+    let result = await sql.query(
+    "exec spGetMaintCounter"
+    );
+
+    for (const it of result.recordsets[0]){
+      let currentNum = Number(it.CurrentNumber);
+      let presetNum = Number(it.PresetNumber);
+      if (currentNum/presetNum >= percentThreshold){
+        sendEmail = true;
+        emailContent += "Tag Name: " + it.TagName + "\n";
+        emailContent += "Preset Number: " + it.PresetNumber + "\n";
+        emailContent += "Current Number: " + it.CurrentNumber + "\n";
+        emailContent += "Percentage: " + Math.round(currentNum/presetNum*10000)/100 + "%\n\n";
+        
+      }
+    }
+
+
+    if (sendEmail){
+      return emailContent;
+    }
+    else {
+      return ""
+    }
+  } catch (err) {
+    console.log(err);
+    return "Faild reading maintenance information."
+  } 
+}
+
+
+
+// set schedule 
+let backendMaintenanceChecking = cron.schedule('*/5 * * * *', async () => {
+  console.log('Checking Maintenance.');
+  let time = new Date();
+  console.log(time.toLocaleString());
+  
+  let emailContent = await generateMaintenanceContent();
+
+  if (emailContent !== ""){
+    console.log('Sending maintenance emails.');
+
+    console.log(emailContent);
+
+    const mailOptions = {
+      from: configData.emailConfig.from,
+      to: filterEmailListByTimeRange(configData.emailConfig.emailTo.scheduledMaintenanceTo),
+      subject: "Maintenance reminder, please pay attention.",
+      text: emailContent,
+    };
+  
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+
+  }
+});
 
 
 
