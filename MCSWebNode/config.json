@@ -37,6 +37,10 @@
                     "endTime": "05:00:00"
                 }
             }
+        },
+        "lastMaintenanceRecord": {
+            "ScheduleNames": [],
+            "emailSendHour": 13
         }
     },
     "settings": {

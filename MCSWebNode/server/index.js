@@ -802,7 +802,7 @@ app.post("/api/ResultPage/getStationStatusByDateRange", jsonParser, async (req, 
   console.log(req.body);
   try {
     
-    let con = await sql.connect(config);
+    await sql.connect(config);
     
     const time1 = new Date();
 
@@ -819,7 +819,7 @@ app.post("/api/ResultPage/getStationStatusByDateRange", jsonParser, async (req, 
     res.json(result.recordsets[0]);
 
     console.log("Finish /api/ResultPage/getStationStatusByDateRange");
-    await con.close();
+    
 
   } catch (err) {
     console.log(err);
@@ -1806,11 +1806,30 @@ const generateMaintenanceContent = async () =>{
     "exec spGetMaintCounter"
     );
 
+    let tagNamesArr = [];
+
     for (const it of result.recordsets[0]){
       let currentNum = Number(it.CurrentNumber);
       let presetNum = Number(it.PresetNumber);
       if (currentNum/presetNum >= percentThreshold){
-        sendEmail = true;
+
+        // check if new tag need maintain 
+        if (!configData.emailConfig.lastMaintenanceRecord.ScheduleNames.includes(it.TagName)){
+          sendEmail = true;
+        }
+        // check if time comes to new shift
+        const currentDT = new Date();
+        var currentHour = currentDT.getHours();
+        const lastSendHour = configData.emailConfig.lastMaintenanceRecord.emailSendHour;
+        if ( (lastSendHour >= 23 && lastSendHour < 7 && currentHour >= 7 && currentHour < 15) || 
+              (lastSendHour >= 7 && lastSendHour < 15 && currentHour >= 15 && currentHour < 23) || 
+              (lastSendHour >= 15 && lastSendHour < 23 && (currentHour >= 23 || currentHour < 7)) )
+        {
+          sendEmail = true;
+        }
+
+        tagNamesArr.push(it.TagName);
+        
         emailContent += "Tag Name: " + it.TagName + "\n";
         emailContent += "Preset Number: " + it.PresetNumber + "\n";
         emailContent += "Current Number: " + it.CurrentNumber + "\n";
@@ -1819,8 +1838,22 @@ const generateMaintenanceContent = async () =>{
       }
     }
 
+    // condotion for no maintenance tag found
+    if (tagNamesArr.length === 0 && configData.emailConfig.lastMaintenanceRecord.ScheduleNames.length !== 0){
+      configData.emailConfig.lastMaintenanceRecord.ScheduleNames = [];
+      let configDataStr = JSON.stringify(configData, null, 4);
+      var fs = require('fs');
+      fs.writeFile(serverConfigPath, configDataStr, 'utf8', () => { });
+    }
 
-    if (sendEmail){
+    if (sendEmail) {
+      configData.emailConfig.lastMaintenanceRecord.ScheduleNames = tagNamesArr;
+      configData.emailConfig.lastMaintenanceRecord.emailSendHour = currentHour;
+
+      let configDataStr = JSON.stringify(configData, null, 4);
+      var fs = require('fs');
+      fs.writeFile(serverConfigPath, configDataStr, 'utf8', () => { });
+
       return emailContent;
     }
     else {
@@ -1841,6 +1874,8 @@ let backendMaintenanceChecking = cron.schedule('*/5 * * * *', async () => {
   console.log(time.toLocaleString());
   
   let emailContent = await generateMaintenanceContent();
+
+  console.log(emailContent);
 
   if (emailContent !== ""){
     console.log('Sending maintenance emails.');
