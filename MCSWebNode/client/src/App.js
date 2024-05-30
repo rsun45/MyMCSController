@@ -14,6 +14,7 @@ import Summary from './components/Summary';
 // import AnalysisPage from './components/AnalysisPage';
 import AnalysisAllStationLineChart from './components/AnalysisAllStationLineChart';
 import StackBarChartsPage from './components/StackBarChartsPage';
+import OperatorTimePage from './components/OperatorTimePage';
 import QualityPage from './components/QualityPage';
 import AlarmPage from './components/AlarmPage';
 import SettingsPage from './components/SettingsPage';
@@ -58,6 +59,9 @@ function App() {
   const [allQualityChartsData, setAllQualityChartsData] = React.useState([]);
   // Alarm page states
   const [alarmGridData, setAlarmGridData] = React.useState([]);
+  // operator page states
+  const [operatorTimeData, setOperatorTimeData] = React.useState([]);
+  const [operatorTableTitle, setOperatorTableTitle] = React.useState("");
 
 
 
@@ -70,13 +74,15 @@ function App() {
         allLineChartsData, setAllLineChartsData, 
         allColumnChartsData, setAllColumnChartsData, chartTitles, setChartTitles,
         allQualityChartsData, setAllQualityChartsData,
-        alarmGridData, setAlarmGridData
+        alarmGridData, setAlarmGridData,
+        operatorTimeData, setOperatorTimeData, operatorTableTitle, setOperatorTableTitle
        }}>
         <Routes>
           <Route path="/" element={<Summary />} />
           <Route path="/result" element={<ResultPage />} />
           <Route path="/analysis" element={<AnalysisAllStationLineChart />} />
           <Route path="/monitor" element={<StackBarChartsPage />} />
+          <Route path="/operator" element={<OperatorTimePage />} />
           <Route path="/quality" element={<QualityPage />} />
           <Route path="/query" element={<QueryPage />} />
           <Route path="/alarm" element={<AlarmPage />} />

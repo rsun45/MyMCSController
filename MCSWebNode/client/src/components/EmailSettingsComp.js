@@ -1,4 +1,5 @@
 import React from "react";
+// import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid,
@@ -107,7 +108,7 @@ export default function EmailSettingsComp({}) {
         // console.log(params);
         return <div>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <TimePicker value={dayjs(params.value, "HH:mm:ss")} onChange={(newValue) => handleStartTimeChange(params, newValue.format('HH:mm:ss')) } />
+            <TimePicker ampm={false} disableOpenPicker={true} value={dayjs(params.value, "HH:mm:ss")} onChange={(newValue) => handleStartTimeChange(params, newValue.format('HH:mm:ss')) } />
           </LocalizationProvider>
         </div>
       },
@@ -121,7 +122,7 @@ export default function EmailSettingsComp({}) {
       renderCell: (params) => {
         return <div>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <TimePicker value={dayjs(params.value, "HH:mm:ss")} onChange={(newValue) => handleEndTimeChange(params, newValue.format('HH:mm:ss')) } />
+            <TimePicker ampm={false} value={dayjs(params.value, "HH:mm:ss")} onChange={(newValue) => handleEndTimeChange(params, newValue.format('HH:mm:ss')) } />
           </LocalizationProvider>
         </div>
       },
