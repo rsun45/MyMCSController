@@ -37,9 +37,10 @@ const PieChartLastShift = ({pieToggleDrawer, setShiftData, refresh}) => {
   // ];
   const config = {
     appendPadding: 10,
+    padding: 'auto',
     data,
     angleField: 'value',
-    // colorField: 'type',
+    colorField: 'type',
     radius: 1,
     innerRadius: 0.6,
     label: {
@@ -69,22 +70,23 @@ const PieChartLastShift = ({pieToggleDrawer, setShiftData, refresh}) => {
           whiteSpace: 'pre-wrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          fontSize: 25,
+          fontSize: 20,
         },
         content: 'Last: ' + shiftName,
       },
     },
     legend: {
-      position: 'top',
-      offsetX: 10,
-      layout: 'vertical',
+      position: 'right',
+      // offsetX: 10,
+      // layout: 'vertical',
+      maxWidthRatio:0.5,
       itemName:{
         formatter: (text, item) => {
           const items = data.filter((d) => d.type === item.value);
           return items.length ? items[0].type + " : " + items[0].value : text;
         },
         style: {
-          fontSize: 20,
+          fontSize: 18,
         },
       },
     }

@@ -157,7 +157,7 @@ export default function QualityGraphComp( { lowLimit, highLimit, data, modifyLow
         </Alert>
       </Snackbar>
 
-      <h2>{data ? data[0].tagTitle : ""}</h2>
+      <h2>{data ? data[0]?.tagTitle : ""}</h2>
 
       <Grid container spacing={2}>
         <Grid item xs={3}>

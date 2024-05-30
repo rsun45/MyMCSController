@@ -20,18 +20,10 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import LinearProgress from '@mui/material/LinearProgress';
 import { AllPagesContext } from '../App';
+import Button from '@mui/material/Button';
 
 
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton />
-      {/* <GridToolbarDensitySelector /> */}
-      <GridToolbarExport />
-    </GridToolbarContainer>
-  );
-}
+
 
 // function getFullTime(params) {
 //   return `${params.row.tag_add_dt.substr(0, params.row.tag_add_dt.indexOf('T')) || ''} ${params.row.tag_add_dt.substr(params.row.tag_add_dt.indexOf('T') + 1, params.row.tag_add_dt.length) || ''}`
@@ -114,6 +106,8 @@ export default function QueryPage() {
   const [loadingProcess, setLoadingProcess] = React.useState(false);
 
   
+
+  
   React.useEffect(() => { 
     // get station and tagTitle mapping data
     fetch("/api/QueryPage/stationAndTagTitleMapping")
@@ -172,6 +166,7 @@ export default function QueryPage() {
   // after change selection of stations to show, modify grid Visibility model
   React.useEffect(() => {
     if (checked) {
+
       const stationTagMapArr = [...stationTagMap.entries()];
       let tempVisibility = {};
       for (let i = 0; i < checked.length; i++) {
@@ -182,6 +177,7 @@ export default function QueryPage() {
         }
       }
       setMyColumnVisibilityModel(tempVisibility);
+      
     }
 
   }, [checked]);
@@ -286,6 +282,93 @@ export default function QueryPage() {
 
 
 
+  // filter state
+  const [filterModel, setFilterModel] = React.useState({items: []});
+  // sort state
+  const [sortModel, setSortModel] = React.useState([]);
+  // disable rule button
+  const [disableRuleButton, setDisableRuleButton] = React.useState(-1);
+
+
+
+  // customized filter and sorting rules
+  const FilterRule1OnClick = () =>{
+    setDisableRuleButton(0);
+    // only show first which is station 10 operator data
+    for (let i=0; i<checked.length; i++){
+      checked[i] = false;
+    }
+    checked[0] = true;
+    setChecked([...checked]);
+
+    // filter wait table turn is 0
+    setFilterModel({
+      items: [
+        {
+          columnField: '10Op.WaitTableTurn',
+          operatorValue: '=',
+          value: "0",
+        },
+      ],
+    });
+
+    // sorting total time desc
+    setSortModel([{field: "10Op.TotalTime", sort: "desc"}]);
+
+
+  };
+
+  const FilterRule1 = () => {
+    return (
+      <Button variant="outlined" sx={{ height: 30, width:150, ml: 5 }} onClick={()=>{FilterRule1OnClick()}} disabled={disableRuleButton===0} >Rule 1</Button>
+    );
+  };
+
+
+  // clear rule
+  const clearRuleOnClick = () =>{
+    setDisableRuleButton(-1);
+    // only show first which is station 10 operator data
+    for (let i=0; i<checked.length; i++){
+      checked[i] = true;
+    }
+    setChecked([...checked]);
+
+    // filter wait table turn is 0
+    setFilterModel({
+      items: [],
+    });
+
+    // sorting total time desc
+    setSortModel([]);
+
+
+  };
+  
+  const ClearRule = () => {
+    return (
+      <Button variant="outlined" sx={{ height: 30, width:150, ml: 5 }} onClick={()=>{clearRuleOnClick()}}>Clear</Button>
+    );
+  };
+
+
+
+
+  // customize data grid tool bar
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarExport />
+        <FilterRule1 />
+        <ClearRule />
+      </GridToolbarContainer>
+    );
+  }
+
+
+
 
 
   const [pageSize, setPageSize] = React.useState(100);
@@ -331,10 +414,19 @@ export default function QueryPage() {
           </Grid>
           <Grid item xs={10.5}>
             <DataGrid
-              rows={queryPagedata}
+              rows={queryPagedata || []}
               columns={gridColumns}
               columnVisibilityModel={myColumnVisibilityModel}
               onColumnVisibilityModelChange={(model)=>{setMyColumnVisibilityModel(model);}}
+              // filter
+              filterModel={filterModel}
+              onFilterModelChange={(newFilterModel) => {setFilterModel(newFilterModel); setDisableRuleButton(-1);}}
+              // sort
+              sortModel={sortModel}
+              onSortModelChange={(newSortModel) => {setSortModel(newSortModel); setDisableRuleButton(-1);}}
+
+
+
               density="compact"
               // Tool Bar
               components={{

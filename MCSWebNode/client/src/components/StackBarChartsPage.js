@@ -284,6 +284,7 @@ export default function StackBarChartsPage() {
         },
       },
       label: null,
+      intervalPadding: 5,
       annotations,
     })
   };

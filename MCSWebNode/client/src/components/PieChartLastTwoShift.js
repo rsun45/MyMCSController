@@ -37,6 +37,7 @@ const PieChartLastTwoShift = ({pieToggleDrawer, setShiftData, refresh}) => {
   // ];
   const config = {
     appendPadding: 10,
+    padding: 'auto',
     data,
     angleField: 'value',
     colorField: 'type',
@@ -69,21 +70,22 @@ const PieChartLastTwoShift = ({pieToggleDrawer, setShiftData, refresh}) => {
           whiteSpace: 'pre-wrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          fontSize: 25,
+          fontSize: 20,
         },
         content: 'Last Two: ' + shiftName, //环状图中间的显示
       },
     },
     legend: {
-      position: 'top',
-      offsetX: 10,
+      position: 'right',
+      // offsetX: 10,
+      maxWidthRatio:0.5,
       itemName:{
         formatter: (text, item) => {
           const items = data.filter((d) => d.type === item.value);
           return items.length ? items[0].type + " : " + items[0].value : text;
         },
         style: {
-          fontSize: 20,
+          fontSize: 18,
         },
       },
     }

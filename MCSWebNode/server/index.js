@@ -329,8 +329,8 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     // const result = await sql.query('select pd.id, SerialNumber, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue, StartTime, EndTime from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 40  order by PartId, StationId, TagId');
@@ -365,8 +365,8 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
 
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     const result = await sql.query(`
@@ -509,6 +509,43 @@ app.get("/api/RunningPerformance", async (req, res) => {
     console.log(err);
   }
 
+});
+
+
+
+// Search Operator Summary Times, group bar chart
+app.get("/api/OperatorSummaryTimes", async (req, res) => {
+
+
+  console.log("request /api/OperatorSummaryTimes");
+  
+  try {
+    // make sure that any items are correctly URL encoded in the connection string
+    await sql.connect(config);
+
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-16 14:00:00"));
+    let inputDT = new Date();
+    inputDT.setHours(inputDT.getHours());
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDT);
+    console.log(shiftArr);
+
+    const time1 = new Date();
+
+    const result = await sql.query(
+    "declare @StartTime datetime = CONVERT(DATETIME,'" + shiftArr[0] + 
+    "') declare @EndTime datetime = CONVERT(DATETIME,'" + shiftArr[1] + 
+    "') " + 
+    " exec [dbo].[spSearchOperatorSummaryTimes] @StartTime, @EndTime, 'station10operatordata'"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used for OperatorSummaryTimes.");
+
+    res.json(result.recordset);
+    console.log("Finished /api/OperatorSummaryTimes");
+
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 
@@ -675,7 +712,6 @@ app.post("/api/AnalysisPage/getDataAndTimeByTagName", jsonParser, async (req, re
 
     console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
 
-    
     res.json(result.recordsets[0]);
 
     console.log("Finish /api/AnalysisPage/getDataAndTimeByTagName");
@@ -741,7 +777,7 @@ app.post("/api/QualityPage/getDataAndTimeByTagName", jsonParser, async (req, res
 
     console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
 
-    
+    console.log( result.recordsets[0]);
     res.json({"data": result.recordsets[0], "lowLimit": Number(limits.recordsets[0][0].LowLimitContent), "highLimit": Number(limits.recordsets[0][0].HighLimitContent)});
 
     console.log("Finish /api/QualityPage/getDataAndTimeByTagName");

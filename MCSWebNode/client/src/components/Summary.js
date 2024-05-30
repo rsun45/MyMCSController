@@ -12,6 +12,7 @@ import PieChartRunningPerformance from './PieChartRunningPerformance';
 import PieChartYesterday from './PieChartYesterday';
 import OptionalFunction1 from './SumFaultTimeByStations';
 import OptionalFunction2 from './AverageCycleTimeByStations';
+import OperatorSummaryTimes from './OperatorSummaryTimes';
 import MaintenanceSummaryComp from './MaintenanceSummaryComp';
 import ActiveAlarmSummaryComp from './ActiveAlarmSummaryComp';
 import SummaryFailGrid from './SummaryFailGrid';
@@ -145,6 +146,41 @@ export default function Summary(){
         setCookie("summaryPageChoices", cookies.summaryPageChoices);
         handleCloseMenu();
     };
+    const handleMenuItem3Click = () => {
+        cookies.summaryPageChoices[currentGraph] = {"name": "OperatorSummaryTimes", "header": "Operator Summary Times"};
+        setCookie("summaryPageChoices", cookies.summaryPageChoices);
+        handleCloseMenu();
+    };
+    const handleMenuItem4Click = () => {
+        cookies.summaryPageChoices[currentGraph] = {"name": "CurrentShiftPassFailCounts", "header": ""};
+        setCookie("summaryPageChoices", cookies.summaryPageChoices);
+        handleCloseMenu();
+    };
+    const handleMenuItem5Click = () => {
+        cookies.summaryPageChoices[currentGraph] = {"name": "RunningPerformance", "header": ""};
+        setCookie("summaryPageChoices", cookies.summaryPageChoices);
+        handleCloseMenu();
+    };
+    const handleMenuItem6Click = () => {
+        cookies.summaryPageChoices[currentGraph] = {"name": "Maintenance", "header": "Maintenance"};
+        setCookie("summaryPageChoices", cookies.summaryPageChoices);
+        handleCloseMenu();
+    };
+    const handleMenuItem7Click = () => {
+        cookies.summaryPageChoices[currentGraph] = {"name": "ActiveAlarm", "header": "Active Alarm"};
+        setCookie("summaryPageChoices", cookies.summaryPageChoices);
+        handleCloseMenu();
+    };
+    const handleMenuItem8Click = () => {
+        cookies.summaryPageChoices[currentGraph] = {"name": "LastShiftPassFailCounts", "header": ""};
+        setCookie("summaryPageChoices", cookies.summaryPageChoices);
+        handleCloseMenu();
+    };
+    const handleMenuItem9Click = () => {
+        cookies.summaryPageChoices[currentGraph] = {"name": "LastTwoShiftPassFailCounts", "header": ""};
+        setCookie("summaryPageChoices", cookies.summaryPageChoices);
+        handleCloseMenu();
+    };
 
 
     // return graph component base on cookie name
@@ -154,6 +190,27 @@ export default function Summary(){
         }
         else if (graphName === "AverageCycleTime"){
             return <OptionalFunction2 refresh={refresh} />
+        }
+        else if (graphName === "OperatorSummaryTimes"){
+            return <OperatorSummaryTimes refresh={refresh} />
+        }
+        else if (graphName === "CurrentShiftPassFailCounts"){
+            return <PieChartCurrentShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh} />
+        }
+        else if (graphName === "LastShiftPassFailCounts"){
+            return <PieChartLastShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/>
+        }
+        else if (graphName === "LastTwoShiftPassFailCounts"){
+            return <PieChartLastTwoShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/>
+        }
+        else if (graphName === "RunningPerformance"){
+            return <PieChartRunningPerformance refresh={refresh} />
+        }
+        else if (graphName === "Maintenance"){
+            return <MaintenanceSummaryComp refresh={refresh} />
+        }
+        else if (graphName === "ActiveAlarm"){
+            return <ActiveAlarmSummaryComp refresh={refresh} />
         }
     }
 
@@ -176,6 +233,13 @@ export default function Summary(){
             >
                 <MenuItem onClick={handleMenuItem1Click}>Sum Fault Time</MenuItem>
                 <MenuItem onClick={handleMenuItem2Click}>Average Cycle Time</MenuItem>
+                <MenuItem onClick={handleMenuItem3Click}>Operator Summary Times</MenuItem>
+                <MenuItem onClick={handleMenuItem4Click}>Current Shift Pass Fail Counts</MenuItem>
+                <MenuItem onClick={handleMenuItem8Click}>Last Shift Pass Fail Counts</MenuItem>
+                <MenuItem onClick={handleMenuItem9Click}>Last Two Shift Pass Fail Counts</MenuItem>
+                <MenuItem onClick={handleMenuItem5Click}>Running Performance</MenuItem>
+                <MenuItem onClick={handleMenuItem6Click}>Maintenance</MenuItem>
+                <MenuItem onClick={handleMenuItem7Click}>Active Alarm</MenuItem>
             </Menu>
 
 
@@ -242,7 +306,7 @@ export default function Summary(){
                     </Grid>
                     <Grid item xs={1} style={{ textAlign: "center" }}sx={{ height: "40vh",}}>
                         <div style={{display:"flex", justifyContent: "center" }}>
-                        <h3>All Stations Average Cycle Time (Second)</h3>
+                        <h3>{cookies.summaryPageChoices["Graph2"].header}</h3>
                             <IconButton onClick={(event)=>handleClickOpenMenu(event, "Graph2")} >
                                 <ArrowDropDownCircleIcon />
                             </IconButton>
@@ -256,9 +320,17 @@ export default function Summary(){
             
             <Box sx={{ height: "40vh", pr:2}}>
                 <Grid
-                    container spacing={4} columns={4} >
+                    container spacing={4} columns={4} sx={{ height: "100%"}} >
                     <Grid item xs={1} >
-                        <PieChartCurrentShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh} />
+                        <div style={{display:"flex", justifyContent: "center" }}>
+                            <h3>{cookies.summaryPageChoices["Graph3"].header}</h3>
+                            <IconButton onClick={(event)=>handleClickOpenMenu(event, "Graph3")}>
+                                <ArrowDropDownCircleIcon />
+                            </IconButton>
+                        </div>
+                        { getGraphCompByCookie(cookies.summaryPageChoices["Graph3"].name) }
+                        
+                        {/* <PieChartCurrentShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh} /> */}
                         
                     </Grid>
                     {/* <Grid item xs={1}>
@@ -266,7 +338,16 @@ export default function Summary(){
                 </Grid> */}
                     <Grid item xs={1} >
                         {/* <PieChartLastTwoShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/> */}
-                        <PieChartRunningPerformance refresh={refresh} />
+
+                        <div style={{display:"flex", justifyContent: "center" }}>
+                            <h3>{cookies.summaryPageChoices["Graph4"].header}</h3>
+                            <IconButton onClick={(event)=>handleClickOpenMenu(event, "Graph4")}>
+                                <ArrowDropDownCircleIcon />
+                            </IconButton>
+                        </div>
+                        { getGraphCompByCookie(cookies.summaryPageChoices["Graph4"].name) }
+
+                        {/* <PieChartRunningPerformance refresh={refresh} /> */}
                     </Grid>
                     {/* <Grid item xs={1}>
                     <PieChartYesterday pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData}/>
@@ -274,21 +355,37 @@ export default function Summary(){
 
 
                     <Grid item xs={1}>
-                            <div style={{ display: "flex", justifyContent: "center" }}>
+                            {/* <div style={{ display: "flex", justifyContent: "center" }}>
                                 <h3>Maintenance</h3>
-                            </div>
-                            <MaintenanceSummaryComp refresh={refresh} />
-                        
+                            </div> */}
+                        <div style={{ display: "flex", justifyContent: "center" }}>
+                            <h3>{cookies.summaryPageChoices["Graph5"].header}</h3>
+                            <IconButton onClick={(event) => handleClickOpenMenu(event, "Graph5")}>
+                                <ArrowDropDownCircleIcon />
+                            </IconButton>
+                        </div>
+                        {getGraphCompByCookie(cookies.summaryPageChoices["Graph5"].name)}
+
+                        {/* <MaintenanceSummaryComp refresh={refresh} /> */}
+
                     </Grid>
-                    
+
 
 
                     <Grid item xs={1}>
-                            <div style={{ display: "flex", justifyContent: "center" }}>
+                            {/* <div style={{ display: "flex", justifyContent: "center" }}>
                                 <h3>Active Alarm</h3>
                             </div>
-                            <ActiveAlarmSummaryComp refresh={refresh} />
-                        
+                            <ActiveAlarmSummaryComp refresh={refresh} /> */}
+
+                        <div style={{ display: "flex", justifyContent: "center" }}>
+                            <h3>{cookies.summaryPageChoices["Graph6"].header}</h3>
+                            <IconButton onClick={(event) => handleClickOpenMenu(event, "Graph6")}>
+                                <ArrowDropDownCircleIcon />
+                            </IconButton>
+                        </div>
+                        {getGraphCompByCookie(cookies.summaryPageChoices["Graph6"].name)}
+
                     </Grid>
 
 

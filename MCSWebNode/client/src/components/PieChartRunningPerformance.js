@@ -52,7 +52,7 @@ const PieChartRunningPerformance = ({refresh}) => {
           whiteSpace: 'pre-wrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          fontSize: 25,
+          fontSize: 20,
         },
         content: 'Running Performance', //环状图中间的显示
       },
@@ -60,15 +60,11 @@ const PieChartRunningPerformance = ({refresh}) => {
     legend: {
       position: 'right',
       // offsetX: 10,
-      layout: 'horizontal',
-      flipPage: false,
+      // layout: 'horizontal',
+      // flipPage: true,
+      // itemWidth: 170,
+      maxWidthRatio:0.5,
       itemName:{
-        formatter: (text, item) => {
-          // console.log(item);
-          // const items = data.filter((d) => d.type === item.value);
-          // return items.length ? items[0].type + " : " + items[0].value : text;
-          return text.split('.')[1];
-        },
         style: {
           fontSize: 18,
         },

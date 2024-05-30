@@ -42,6 +42,8 @@ const BarChartComp = ({barChartData, xTitle, yTitle, barColor, baselineValue}) =
       position: 'top', // Show labels at the middle of bars
       style: {
         fill: '#333333', // Label text color
+        stroke: 'white',
+        lineWidth: 2,
       },
       adjustPosition: true,
       offsetY:15,

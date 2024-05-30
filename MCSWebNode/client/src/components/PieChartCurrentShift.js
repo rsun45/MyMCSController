@@ -81,7 +81,9 @@ const PieChartCurrentShift = ({pieToggleDrawer, setShiftData, refresh}) => {
     legend: {
       position: 'right',
       // offsetX: 10,
-      layout: 'vertical',
+      // layout: 'vertical',
+      // itemWidth: 170,
+      maxWidthRatio:0.5,
       itemName:{
         formatter: (text, item) => {
           const items = data.filter((d) => d.type === item.value);

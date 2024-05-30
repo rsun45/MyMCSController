@@ -31,11 +31,15 @@ function App() {
   // setup cookies
   const [cookies, setCookie, removeCookie] = useCookies(['summaryPageChoices']);
   
-  if (!cookies.summaryPageChoices){
+  if (!cookies.summaryPageChoices || !cookies.summaryPageChoices?.Graph6){
     setCookie('summaryPageChoices', 
       {
         "Graph1": {"name": "SumFaultTime", "header": "All Stations Sum Fault Time (Second)"}, 
-        "Graph2": {"name": "AverageCycleTime", "header": "All Stations Average Cycle Time (Second)"}
+        "Graph2": {"name": "AverageCycleTime", "header": "All Stations Average Cycle Time (Second)"},
+        "Graph3": {"name": "CurrentShiftPassFailCounts", "header": ""},
+        "Graph4": {"name": "RunningPerformance", "header": ""},
+        "Graph5": {"name": "Maintenance", "header": "Maintenance"},
+        "Graph6": {"name": "ActiveAlarm", "header": "Active Alarm"}
       }, 
       { path:"/" })
   }
