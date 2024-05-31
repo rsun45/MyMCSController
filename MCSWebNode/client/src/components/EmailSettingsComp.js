@@ -1,5 +1,6 @@
 import React from "react";
-// import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid,
@@ -28,6 +29,26 @@ function timeout(delay) {
 
 
 export default function EmailSettingsComp({}) {
+
+  const theme = createTheme({
+    components: {
+      MuiMultiSectionDigitalClock: {
+        styleOverrides: {
+          root: {
+            '&&': {
+              '.MuiList-root': {
+                width: '100px',
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+
+
+
   const [emailGridData, setEmailGridData] = React.useState([]);
   // alart
   const [alertOpen, setAlertOpen] = React.useState(false);
@@ -100,6 +121,13 @@ export default function EmailSettingsComp({}) {
       editable: true,
     },
     {
+      field: 'operatorTo',
+      headerName: 'Operator report',
+      type: 'boolean',
+      width: 180,
+      editable: true,
+    },
+    {
       field: 'startTime',
       headerName: 'Start Time',
       width: 160,
@@ -108,7 +136,7 @@ export default function EmailSettingsComp({}) {
         // console.log(params);
         return <div>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <TimePicker ampm={false} disableOpenPicker={true} value={dayjs(params.value, "HH:mm:ss")} onChange={(newValue) => handleStartTimeChange(params, newValue.format('HH:mm:ss')) } />
+            <TimePicker ampm={false} value={dayjs(params.value, "HH:mm:ss")} onChange={(newValue) => handleStartTimeChange(params, newValue.format('HH:mm:ss')) } />
           </LocalizationProvider>
         </div>
       },
@@ -161,6 +189,7 @@ export default function EmailSettingsComp({}) {
         it.alarmTo = newRow.alarmTo;
         it.scheduledMaintenanceTo = newRow.scheduledMaintenanceTo;
         it.qualityRejectTo = newRow.qualityRejectTo;
+        it.operatorTo = newRow.operatorTo;
       }
     }
     setEmailGridData([...emailGridData]);
@@ -169,7 +198,7 @@ export default function EmailSettingsComp({}) {
   // customize tool bar
   const handleAddRowClick = () => {
     const id = emailGridData[emailGridData.length-1].id + 1;
-    setEmailGridData([...emailGridData, { "id": id, "emailAddress": '', "reportTo": 0, "alarmTo": 0, "scheduledMaintenanceTo": 0, "qualityRejectTo": 0, "startTime": "", "endTime": "" }]);
+    setEmailGridData([...emailGridData, { "id": id, "emailAddress": '', "reportTo": 0, "alarmTo": 0, "scheduledMaintenanceTo": 0, "qualityRejectTo": 0, "operatorTo": 0, "startTime": "", "endTime": "" }]);
   };
   const AddRow = () => {
     return (
@@ -197,6 +226,7 @@ export default function EmailSettingsComp({}) {
     let alarmToStr = "";
     let scheduledMaintenanceToStr = "";
     let qualityRejectToStr = "";
+    let operatorToStr = "";
 
     let emailsTimeRange = {};
 
@@ -215,6 +245,9 @@ export default function EmailSettingsComp({}) {
       if (it.qualityRejectTo){
         qualityRejectToStr += it.emailAddress.trim() + ",";
       }
+      if (it.operatorTo){
+        operatorToStr += it.emailAddress.trim() + ",";
+      }
     }
     
 
@@ -225,6 +258,7 @@ export default function EmailSettingsComp({}) {
                               "alarmTo": alarmToStr.substring(0, alarmToStr.length - 1), 
                               "scheduledMaintenanceTo": scheduledMaintenanceToStr.substring(0, scheduledMaintenanceToStr.length - 1), 
                               "qualityRejectTo": qualityRejectToStr.substring(0, qualityRejectToStr.length - 1),
+                              "operatorTo": operatorToStr.substring(0, operatorToStr.length - 1),
                               "emailsTimeRange": emailsTimeRange
                             })
     })
@@ -305,6 +339,13 @@ export default function EmailSettingsComp({}) {
         }
       }
     }
+    else if (testType === "testOperator"){
+      for (const it of emailGridData){
+        if (it.operatorTo){
+          sendTo += it.emailAddress.trim() + ",";
+        }
+      }
+    }
 
 
     fetch("/api/settings/testsending", {
@@ -346,7 +387,7 @@ export default function EmailSettingsComp({}) {
 
 
   return (
-    <div style={{marginLeft:"16px", marginRight:"16px", width:"1500px", }}>
+    <div style={{marginLeft:"16px", marginRight:"16px", width:"1600px", }}>
 
       <Snackbar open={alertOpen} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} >
         <Alert onClose={handleAlertClose} severity={alertType}>
@@ -354,28 +395,32 @@ export default function EmailSettingsComp({}) {
         </Alert>
       </Snackbar>
 
-      <DataGrid
-        rows={emailGridData}
-        columns={columns}
-        autoHeight
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 50,
+
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <DataGrid
+          rows={emailGridData}
+          columns={columns}
+          autoHeight
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 50,
+              },
             },
-          },
-        }}
-        // Tool Bar
-        components={{
-          Toolbar: CustomToolbar,
-        }}
-        editMode="row" 
-        onRowEditStop={(params, event) => {
-          updateRow(params.row);
-        }}
-        pageSizeOptions={[20, 50, 100]}
-        disableRowSelectionOnClick
-      />
+          }}
+          // Tool Bar
+          components={{
+            Toolbar: CustomToolbar,
+          }}
+          editMode="row" 
+          onRowEditStop={(params, event) => {
+            updateRow(params.row);
+          }}
+          pageSizeOptions={[20, 50, 100]}
+          disableRowSelectionOnClick
+        />
+      </ThemeProvider>
       
       <Stack direction="row" spacing={2} sx={{pt:2}}>
         <Box sx={{ width: 240 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { sendTest("testEmailReceiving"); }} variant="outlined" color='info' >test sending</Button> </Box>
@@ -383,6 +428,7 @@ export default function EmailSettingsComp({}) {
         <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { sendTest("testAlarm"); }} variant="outlined" color='info' >test alarm</Button> </Box>
         <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { sendTest("testMaintenance"); }} variant="outlined" color='info' >test maintenance</Button> </Box>
         <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { sendTest("testQuality"); }} variant="outlined" color='info' >test quality</Button> </Box>
+        <Box sx={{ width: 170 }}> <Button sx={{width:"150px", fontSize: 12,}} size="small" onClick={() => { sendTest("testOperator"); }} variant="outlined" color='info' >test Operator</Button> </Box>
       </Stack>
 
       <br />

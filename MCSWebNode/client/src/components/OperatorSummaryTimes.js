@@ -11,6 +11,7 @@ export default function OperatorSummaryTimes( {refresh} ) {                    /
     fetch("/api/OperatorSummaryTimes")                           
         .then((res) => res.json())                 
         .then((data) => {
+          // console.log(data);
           let resultData = [];
           for (const it of data){
             for (const key in it){

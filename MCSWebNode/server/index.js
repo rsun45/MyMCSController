@@ -15,6 +15,10 @@ const app = express();
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 
+// set time schedule
+const cron = require('node-cron');
+
+
 
 app.use(express.json({ limit: "100mb" }));
 
@@ -1040,6 +1044,7 @@ app.get("/api/settings/getEmailGridData", async (req, res) => {
   const alarmTo = configData.emailConfig.emailTo.alarmTo.split(',');
   const scheduledMaintenanceTo = configData.emailConfig.emailTo.scheduledMaintenanceTo.split(',');
   const qualityRejectTo = configData.emailConfig.emailTo.qualityRejectTo.split(',');
+  const operatorTo = configData.emailConfig.emailTo.operatorTo.split(',');
   const emailsTimeRange = configData.emailConfig.emailTo.emailsTimeRange;
   // generate all distinct email addresses
   let distinctEmailArr = [];
@@ -1066,6 +1071,12 @@ app.get("/api/settings/getEmailGridData", async (req, res) => {
     qualityRejectTo[i] = qualityRejectTo[i].trim();
     if(!distinctEmailArr.includes(qualityRejectTo[i])){
       distinctEmailArr.push(qualityRejectTo[i]);
+    }
+  }
+  for (let i=0; i<operatorTo.length; i++){
+    operatorTo[i] = operatorTo[i].trim();
+    if(!distinctEmailArr.includes(operatorTo[i])){
+      distinctEmailArr.push(operatorTo[i]);
     }
   }
 
@@ -1096,6 +1107,12 @@ app.get("/api/settings/getEmailGridData", async (req, res) => {
     }
     else {
       entry.qualityRejectTo = 0;
+    }
+    if (operatorTo.includes(distinctEmailArr[i])){
+      entry.operatorTo = 1;
+    }
+    else {
+      entry.operatorTo = 0;
     }
 
     // current email's time range for receiving email
@@ -1128,6 +1145,7 @@ app.post("/api/settings/saveEmailConfigs", jsonParser, async (req, res) => {
   configData.emailConfig.emailTo.alarmTo = req.body.alarmTo;
   configData.emailConfig.emailTo.scheduledMaintenanceTo = req.body.scheduledMaintenanceTo;
   configData.emailConfig.emailTo.qualityRejectTo = req.body.qualityRejectTo;
+  configData.emailConfig.emailTo.operatorTo = req.body.operatorTo;
   configData.emailConfig.emailTo.emailsTimeRange = req.body.emailsTimeRange;
 
   let configDataStr = JSON.stringify(configData, null, 4);
@@ -1202,7 +1220,8 @@ const generateShiftReportCSVByDateTime = async (inputDate) =>{
 
   
   try {
-    await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    // await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection); 
+    await sql.connect(config);
     let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDate);
 
     csvStr += shiftArr[2] + " Shift:," + shiftArr[0] + "," + shiftArr[1] + "\n\n";
@@ -1252,6 +1271,46 @@ const generateShiftReportCSVByDateTime = async (inputDate) =>{
     csvStr += "\n\n"
 
 
+    
+    // operator summary times
+    result = await sql.query(
+      "declare @StartTime datetime = CONVERT(DATETIME,'" + shiftArr[0] +
+      "') declare @EndTime datetime = CONVERT(DATETIME,'" + shiftArr[1] +
+      "') " +
+      " exec [dbo].[spSearchOperatorSummaryTimes] @StartTime, @EndTime, 'station10operatordata'"
+    );
+
+    csvStr += "Operator Summary Times\n"
+    // table headers
+    csvStr += "Date,Hour,Total Operator Time (second),Average Operator Time (second),Total Over Design Time (second),Total Over Design Time Without Fault (second)\n";
+
+    // lop for table rows
+    for (const it of result.recordset){
+      csvStr += it.Date.toISOString().split('T')[0] + "," + it.Hour + "," + it.TotalOperatorTime + "," + it.AverageOperatorTime + "," + 
+                it.TotalOverDesignTime + "," + it.TotalOverDesignTimeWithoutFault + "\n";
+    }
+
+    csvStr += "\n\n";
+
+
+    // running performance
+    result = await sql.query(`
+      EXEC [dbo].[spGetRunningPerformance]
+    `);
+    
+    csvStr += "Running performance Counts\n";
+    for (const it of result.recordset){
+      csvStr += ",";
+      csvStr += it.tag_name;
+    }
+    csvStr += "\n";
+    csvStr += "Counts:";
+    for (const it of result.recordset){
+      csvStr += ",";
+      csvStr += it.tag_cont;
+    }
+    csvStr += "\n\n\n" ;
+
 
 
     // shift pass fail counts
@@ -1265,6 +1324,43 @@ const generateShiftReportCSVByDateTime = async (inputDate) =>{
     csvStr += ",Total,Pass,Fail\n";
     csvStr += "Counts:," + result.recordsets[0][0].tag_cnt + "," + result.recordsets[0][0].pass_cnt + "," + result.recordsets[0][0].reject_cnt + "\n" ;
 
+    csvStr += "\n\n" ;
+
+
+
+    // maintenance
+    result = await sql.query(
+      "EXEC spGetMaintCounter;"
+    );
+    
+    csvStr += "Maintenance\n";
+    csvStr += "Schedule,Preset,Current,Percentage\n";
+    for (const it of result.recordset){
+      const percentNum = Math.round(Number(it.CurrentNumber)/Number(it.PresetNumber)*10000)/100;
+      csvStr += it.TagName + "," + it.PresetNumber + "," + it.CurrentNumber + "," + percentNum + "%";
+      csvStr += "\n";
+    }
+    csvStr += "\n\n" ;
+
+
+
+
+    // alarm history
+    result = await sql.query(
+      "exec [dbo].[spFindAlarmHistory] @StartTime = '" + shiftArr[0] + "', @EndTime = '" + shiftArr[1] + "';"
+    );
+
+    csvStr += "Alarm History\n";
+    csvStr += "Alarm Type,Alarm Name,Tag Description,Occurrences,Total Duration\n";
+    for (const it of result.recordset){
+      csvStr += it.AlarmType + "," + it.AlarmName + "," + it.TagDescription + "," + it.Occurrences + "," + it.TotalDuration ;
+      csvStr += "\n";
+    }
+    csvStr += "\n\n" ;
+
+
+
+
 
     return csvStr;
 
@@ -1274,6 +1370,13 @@ const generateShiftReportCSVByDateTime = async (inputDate) =>{
   } 
 }
 
+// async function printCSV () {
+//   let tempstr = await generateShiftReportCSVByDateTime(new Date("2024-05-16 13:00:00"));
+//   console.log("csv report conent: \n");
+//   console.log(tempstr);
+
+// }
+// printCSV();
 
 
 // function for checking sending email time range and filt the address list
@@ -1346,35 +1449,7 @@ async function sendShiftReportEmail(inputDate){
 }
 
 
-// set time to send report everyday
-const cron = require('node-cron');
 
-cron.schedule('0 7 * * *', () => {
-  console.log('7am shift report');
-  let inputDT = new Date();
-  inputDT.setHours(inputDT.getHours()-1);
-  sendShiftReportEmail(inputDT);
-});
-
-// Schedule a task to run at 3pm every day
-cron.schedule('0 15 * * *', () => {
-  console.log('3pm shift report');
-  let inputDT = new Date();
-  inputDT.setHours(inputDT.getHours()-1);
-  sendShiftReportEmail(inputDT);
-});
-
-// Schedule a task to run at 11pm every day
-cron.schedule('0 23 * * *', () => {
-  console.log('11pm shift report');
-  let inputDT = new Date();
-  inputDT.setHours(inputDT.getHours()-1);
-  sendShiftReportEmail(inputDT);
-});
-
-
-// test shift report 
-// sendShiftReportEmail(new Date());
 
 
 
@@ -1384,7 +1459,8 @@ const checkAlarmAndSendEmail = async ( timeThreshold ) =>{
   let sendEmail = false;
 
   try {
-    await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    // await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    await sql.connect(config);
 
     let result = await sql.query(
     "exec [dbo].[spFindActiveAlarm]"
@@ -1469,7 +1545,8 @@ const generateActivityAlarm = async () =>{
   let sendEmail = false;
 
   try {
-    await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    // await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    await sql.connect(config);
 
     let result = await sql.query(
     "exec [dbo].[spFindActiveAlarm]"
@@ -1503,6 +1580,117 @@ const generateActivityAlarm = async () =>{
 
 
 
+
+//************ operator email  ********************/
+
+// create operator report csv attachement
+const generateOperatorReportCSVByDateTime = async (inputDate) =>{
+  let csvStr = "Project Name:," + configData.allLines[configData.currentLineIndex].name + "\n\n";
+
+  
+  try {
+    await sql.connect(config);
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDate);
+
+    csvStr += shiftArr[2] + " Shift: ," + shiftArr[0] + "," + shiftArr[1] + "\n\n";
+    
+    csvStr += "Operator Time Table: \n\n";
+
+    // table header
+    csvStr += "Date,Hour,Exact Time,Serial Number,Operator Time,Fault Time,Over Design Time,Over Design Time Without Fault\n";
+
+    // operator times
+    let result = await sql.query(
+      "exec [dbo].[spSearchOperatorDetailedTimes] @TagPrefix = 'Station10Operator', @StartTime = '" + shiftArr[0] + "', @EndTime = '" + shiftArr[1] + "';"
+    );
+
+    // lop for table rows
+    for (const it of result.recordset){
+      csvStr += it.Date.toISOString().split('T')[0] + "," + it.Hour + "," + it.ExactTime.toISOString().split('.')[0] + "," + it.serial_number + "," + 
+                it.OperatorTime + "," + it.FaultTime + "," + it.OverDesignTime + "," + it.OverDesignTimeWithoutFault + "\n";
+    }
+
+
+    return csvStr;
+
+  } catch (err) {
+    console.log(err);
+    return "";
+  } 
+}
+
+// send operator email
+async function sendOperatorReportEmail(inputDate){
+  console.log("Sending operator Report Email.");
+  let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDate);
+
+  let csvStr = await generateOperatorReportCSVByDateTime(inputDate);
+
+  const mailOptions = {
+    from: configData.emailConfig.from,
+    to: filterEmailListByTimeRange(configData.emailConfig.emailTo.operatorTo),
+    subject: shiftArr[2] + ' operator report from ' + shiftArr[0] + " to " + shiftArr[1],
+    text: "Please find attached the CSV operator report for finished shift.",
+    attachments: [
+      {   
+          filename: shiftArr[2] + '_operator_Report_from' + shiftArr[0] + "_to_" + shiftArr[1] + '.csv',
+          content: csvStr
+      },
+    ]
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+}
+
+
+
+
+// set shift schedule to send emails
+
+cron.schedule('0 7 * * *', () => {
+  console.log('7am shift report');
+  let inputDT = new Date();
+  inputDT.setHours(inputDT.getHours()-1);
+  // shift report email
+  sendShiftReportEmail(inputDT);
+
+  // operator email
+  sendOperatorReportEmail(inputDT);
+});
+
+// Schedule a task to run at 3pm every day
+cron.schedule('0 15 * * *', () => {
+  console.log('3pm shift report');
+  let inputDT = new Date();
+  inputDT.setHours(inputDT.getHours()-1);
+  // shift report email
+  sendShiftReportEmail(inputDT);
+
+  // operator email
+  sendOperatorReportEmail(inputDT);
+});
+
+// Schedule a task to run at 11pm every day
+cron.schedule('0 23 * * *', () => {
+  console.log('11pm shift report');
+  let inputDT = new Date();
+  inputDT.setHours(inputDT.getHours()-1);
+  // shift report email
+  sendShiftReportEmail(inputDT);
+  
+  // operator email
+  sendOperatorReportEmail(inputDT);
+});
+
+
+// test shift report 
+// sendShiftReportEmail(new Date());
 
 
 //***************************** API for sending test emails  *********************************/
@@ -1556,6 +1744,25 @@ app.post("/api/settings/testsending", jsonParser, async (req, res) => {
       text: "This email is a quality test sent from MCS Web."
     };
   }
+  else if (req.body.testType === "testOperator"){
+    let inputDate = new Date();
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDate);
+
+    let csvStr = await generateOperatorReportCSVByDateTime(inputDate);
+
+    var mailOptions = {
+      from: configData.emailConfig.from,
+      to: filterEmailListByTimeRange(configData.emailConfig.emailTo.operatorTo),
+      subject: shiftArr[2] + ' operator report from ' + shiftArr[0] + " to " + shiftArr[1],
+      text: "Please find attached the CSV operator report for finished shift.",
+      attachments: [
+        {   
+            filename: shiftArr[2] + '_operator_Report_from' + shiftArr[0] + "_to_" + shiftArr[1] + '.csv',
+            content: csvStr
+        },
+      ]
+    };
+  }
   else {
     var mailOptions = {
       from: configData.emailConfig.from,
@@ -1594,7 +1801,7 @@ app.post("/api/AlarmPage/getAlarmHistory", jsonParser, async (req, res) => {
   console.log(req.body);
   try {
     
-    let con = await sql.connect(config);
+    await sql.connect(config);
     
     const time1 = new Date();
 
@@ -1611,7 +1818,6 @@ app.post("/api/AlarmPage/getAlarmHistory", jsonParser, async (req, res) => {
     res.json(result.recordsets[0]);
 
     console.log("Finish /api/AlarmPage/getAlarmHistory");
-    await con.close();
 
   } catch (err) {
     console.log(err);
@@ -1677,7 +1883,8 @@ app.get("/api/AlarmPage/getAlarmActivityForWeb", async (req, res) => {
 
 
   try {
-    await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    // await sql.connect(configData.allLines[configData.currentLineIndex].databaseConnection);
+    await sql.connect(config);
 
     let result = await sql.query(
     "exec [dbo].[spFindActiveAlarm]"
@@ -1769,7 +1976,7 @@ app.get("/api/MaintenancePage/getAllMaintenance", async (req, res) => {
   try {
     // make sure that any items are correctly URL encoded in the connection string
     
-    let con = await sql.connect(config);
+    await sql.connect(config);
     
     const time1 = new Date();
 
@@ -1782,7 +1989,6 @@ app.get("/api/MaintenancePage/getAllMaintenance", async (req, res) => {
     res.json(result.recordsets[0]);
 
     console.log("Finish /api/MaintenancePage/getAllMaintenance");
-    await con.close();
 
   } catch (err) {
     console.log(err);

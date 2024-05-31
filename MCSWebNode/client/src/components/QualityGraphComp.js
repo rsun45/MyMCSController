@@ -169,18 +169,18 @@ export default function QualityGraphComp( { lowLimit, highLimit, data, modifyLow
 
         </Grid>
         <Grid item xs={3}>
-          <TextField variant="outlined" value={highLimit}
-            label="Upper Limit"
-            
-            onChange={(event)=>{modifyLowerOrUpperByIndex(event.target.value, "upper", index);}}
-            />
-        </Grid>
-        <Grid item xs={3}>
           <TextField variant="outlined" value={Math.round(mean*10000)/10000}
             label="Mean Value"
             InputProps={{
               readOnly: true,
             }} />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField variant="outlined" value={highLimit}
+            label="Upper Limit"
+            
+            onChange={(event)=>{modifyLowerOrUpperByIndex(event.target.value, "upper", index);}}
+            />
         </Grid>
         <Grid item xs={3}>
           <TextField variant="outlined" value={getCPK(lowLimit, highLimit, mean, data)}
