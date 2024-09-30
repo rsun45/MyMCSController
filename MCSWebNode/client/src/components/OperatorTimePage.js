@@ -19,6 +19,9 @@ import { DataGrid,
          GridToolbarFilterButton,
        } from '@mui/x-data-grid';
 import { AllPagesContext } from '../App';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
 
 
 // return local datetime string in 'YYYY-MM-DD HH:MM:SS' formate
@@ -274,9 +277,31 @@ export default function OperatorTimePage() {
 
 
 
+  // fult time detail dialog
+  const [faultTimeDetailDialogOpen, setFaultTimeDetailDialogOpen] = React.useState(false);
+  const handleFaultTimeDetailDialogClose = () => {
+    setFaultTimeDetailDialogOpen(false);
+  };
+
+
+
   return (
     <Box sx={{ width: '100%' }}>
-      
+
+      <Dialog onClose={handleFaultTimeDetailDialogClose} open={faultTimeDetailDialogOpen} fullWidth maxWidth="md">
+        <DialogTitle>Fault Time Detail</DialogTitle>
+        <Box sx={{ height: 400, p:3 }}>
+          <p>Coming soon.</p>
+        </Box>
+        <DialogActions>
+          <Button onClick={handleFaultTimeDetailDialogClose} autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+
       <Snackbar open={alertOpen} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} >
         <Alert onClose={handleAlertClose} severity={alertType}>
           {alertMsg}
@@ -337,7 +362,22 @@ export default function OperatorTimePage() {
 
         autoHeight
 
-        sx={{ml:2, mr:2}}
+        sx={{ ml: 2, mr: 2 }}
+
+
+        // double click event, show fault time detail
+        onCellDoubleClick={
+          (params) => {
+            console.log(params);
+            if (params.field === "FaultTime"){
+              setFaultTimeDetailDialogOpen(true);
+
+            }
+            // doubleClickSerialRow(params.row.serial_number);
+          }
+        }
+
+
 
       />
 

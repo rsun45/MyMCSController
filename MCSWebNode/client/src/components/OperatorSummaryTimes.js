@@ -8,7 +8,7 @@ export default function OperatorSummaryTimes( {refresh} ) {                    /
   const [data, setData] = React.useState([]);
 
   React.useEffect(() => {                               
-    fetch("/api/OperatorSummaryTimes")                           
+    fetch("/api/OperatorSummaryTimesQuick")                           
         .then((res) => res.json())                 
         .then((data) => {
           // console.log(data);

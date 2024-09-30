@@ -141,8 +141,10 @@ function SettingsPageAfterLogin() {
             <Tab label="Email" value="emailSettings" />
             <Tab label="Alarm" value="alarmSettings" />
             <Tab label="Maintenance" value="maintenanceSettings" />
+            <Tab label="User Parameters" value="userParameters" />
           </Tabs>
 
+          {/* email settings */}
           <div hidden={tabValue !== "emailSettings"} style={{width:"100%", overflow: "auto"}} >
             <EmailSettingsComp />
           </div>
@@ -176,6 +178,18 @@ function SettingsPageAfterLogin() {
             </div>
           </div>
 
+
+          {/* chart parameters settings */}
+          <div hidden={tabValue !== "userParameters"} style={{width:"100%", overflow: "auto", paddingTop:"16px"}} >
+            <div style={{marginLeft:"16px", marginRight:"16px"}}>
+              <TextField id="outlined-basic" label="Design Cycle Time" variant="outlined" 
+                value={settingJson.designCycleTime} sx={{width:400}} 
+                onChange={(event)=>{setSettingJson({...settingJson, "designCycleTime": parseFloat(event.target.value)})}}
+              />
+              <br/>
+              <Button sx={{width:"150px", mt:2}} variant="contained" color='primary' onClick={() => {onSaveClick();}} >Save Settings</Button>
+            </div>
+          </div>
 
 
 

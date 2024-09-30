@@ -45,7 +45,7 @@ export default function SumFaultTimeByStations( {refresh} ) {                   
   const [data, setData] = React.useState([]);
 
   React.useEffect(() => {                               
-    fetch("/api/SumFaultTimeByStations")                           
+    fetch("/api/SumFaultTimeByStationsQuick")                           
         .then((res) => res.json())                 
         .then((data) => {setData(data);});             
     }, [refresh]);

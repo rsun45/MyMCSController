@@ -6,7 +6,7 @@ const PieChartRunningPerformance = ({refresh}) => {
   const [data, setData] = React.useState([]);
 
   React.useEffect(() => {                               
-    fetch("/api/RunningPerformance")                           
+    fetch("/api/RunningPerformanceQuick")                           
         .then((res) => res.json())                 
         .then((data) => {
           // console.log(data);

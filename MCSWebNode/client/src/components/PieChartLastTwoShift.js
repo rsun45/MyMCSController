@@ -7,7 +7,7 @@ const PieChartLastTwoShift = ({pieToggleDrawer, setShiftData, refresh}) => {
   const [shiftName, setShiftName] = React.useState("");
 
   React.useEffect(() => {                               
-    fetch("/api/LastTwoShiftPassFailCounts")                           
+    fetch("/api/LastTwoShiftPassFailCountsQuick")                           
         .then((res) => res.json())                 
         .then((data) => {
           let tempData = [

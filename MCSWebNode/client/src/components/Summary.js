@@ -185,6 +185,7 @@ export default function Summary(){
 
     // return graph component base on cookie name
     const getGraphCompByCookie = (graphName) => {
+
         if (graphName === "SumFaultTime"){
             return <OptionalFunction1 refresh={refresh} />;
         }

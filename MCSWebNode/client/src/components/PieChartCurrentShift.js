@@ -7,7 +7,7 @@ const PieChartCurrentShift = ({pieToggleDrawer, setShiftData, refresh}) => {
   const [shiftName, setShiftName] = React.useState("");
 
   React.useEffect(() => {                               
-    fetch("/api/CurrentShiftPassFailCounts")                           
+    fetch("/api/CurrentShiftPassFailCountsQuick")                           
         .then((res) => res.json())                 
         .then((data) => {
           let tempData = [

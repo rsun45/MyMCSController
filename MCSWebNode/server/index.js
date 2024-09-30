@@ -324,10 +324,10 @@ app.get("/api/station40-allData", async (req, res) => {
 //***************************** summary page APIs *********************************/
 
 // API All stations average sum time
-app.get("/api/AverageCycleTimeByStations", async (req, res) => {
+const saveAverageCycleTimeByStations = async() => {
 
 
-  console.log("request /api/AverageCycleTimeByStations");
+  console.log("Server side save /api/AverageCycleTimeByStations");
   
   try {
     // make sure that any items are correctly URL encoded in the connection string
@@ -336,6 +336,9 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
     // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
     let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
+
+    
+    const time1 = new Date();
 
     // const result = await sql.query('select pd.id, SerialNumber, pd.PartId, st.Name, ta.tagName, TagStatus, tagValue, StartTime, EndTime from tblPartDetail pd join tblParts pa on pa.id = pd.PartId join tblTags ta on ta.id = pd.TagId join tblStation st on st.id = pd.StationId where st.name = 40  order by PartId, StationId, TagId');
     const result = await sql.query(`
@@ -345,25 +348,46 @@ app.get("/api/AverageCycleTimeByStations", async (req, res) => {
     `);
 
 
-    // for (let i=0; i<result.recordsets[0].length; i++){
-    //   result.recordsets[0][i].id = i;
-    // }
+    
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used for AverageCycleTimeByStations.");
 
-    res.json(result.recordset);
+
+    // save query result to local json file, for quick fetch by other terminals
+    var fs = require('fs');
+    let jsonData = JSON.stringify(result.recordset, null, 4);
+    fs.writeFile(path.join(__dirname, "SummaryPageQueryResults/AverageCycleTimeByStations.json"), jsonData, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+
     console.log("Finished /api/AverageCycleTimeByStations");
 
   } catch (err) {
     console.log(err);
   }
 
+};
+
+
+// API All stations average sum time - Quick fetch
+app.get("/api/AverageCycleTimeByStationsQuick", async (req, res) => {
+  console.log("request /api/AverageCycleTimeByStationsQuick");
+
+  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/AverageCycleTimeByStations.json"));
+  
+  res.json(jsonData);
 });
 
 
+
+
 // API All stations sum fault time
-app.get("/api/SumFaultTimeByStations", async (req, res) => {
+const saveSumFaultTimeByStations = async () => {
 
 
-  console.log("request /api/SumFaultTimeByStations");
+  console.log("server side save /api/SumFaultTimeByStations");
   
   try {
     // make sure that any items are correctly URL encoded in the connection string
@@ -372,6 +396,9 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
     // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
     let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
+
+    
+    const time1 = new Date();
 
     const result = await sql.query(`
       DECLARE @start DATETIME = '${shiftArr[0]}'
@@ -383,18 +410,39 @@ app.get("/api/SumFaultTimeByStations", async (req, res) => {
       result.recordsets[0][i].id = i;
     }
 
-    res.json(result.recordset);
+    
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used for SumFaultTimeByStations.");
+
+    // save query result to local json file, for quick fetch by other terminals
+    var fs = require('fs');
+    let jsonData = JSON.stringify(result.recordset, null, 4);
+    fs.writeFile(path.join(__dirname, "SummaryPageQueryResults/SumFaultTimeByStations.json"), jsonData, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+
     console.log("Finished /api/SumFaultTimeByStations");
 
   } catch (err) {
     console.log(err);
   }
 
+};
+
+// API All stations sum fault time - Quick fetch
+app.get("/api/SumFaultTimeByStationsQuick", async (req, res) => {
+  console.log("request /api/SumFaultTimeByStationsQuick");
+
+  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/SumFaultTimeByStations.json"));
+  
+  res.json(jsonData);
 });
 
 
+
 // API current shift pass fail counts
-app.get("/api/CurrentShiftPassFailCounts", async (req, res) => {
+const saveCurrentShiftPassFailCounts = async () => {
 
 
   console.log("request /api/CurrentShiftPassFailCounts");
@@ -415,17 +463,36 @@ app.get("/api/CurrentShiftPassFailCounts", async (req, res) => {
 
 
     result.recordsets[0][0].shift = shiftArr[2];
-    res.json(result.recordset);
+
+    // save query result to local json file, for quick fetch by other terminals
+    var fs = require('fs');
+    let jsonData = JSON.stringify(result.recordset, null, 4);
+    fs.writeFile(path.join(__dirname, "SummaryPageQueryResults/CurrentShiftPassFailCounts.json"), jsonData, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+
     console.log("Finished /api/CurrentShiftPassFailCounts");
 
   } catch (err) {
     console.log(err);
   }
 
+};
+
+// API current shift pass fail counts - Quick fetch
+app.get("/api/CurrentShiftPassFailCountsQuick", async (req, res) => {
+  console.log("request /api/CurrentShiftPassFailCountsQuick");
+
+  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/CurrentShiftPassFailCounts.json"));
+  
+  res.json(jsonData);
 });
 
+
 // API last shift pass fail counts
-app.get("/api/LastShiftPassFailCounts", async (req, res) => {
+const saveLastShiftPassFailCounts = async () => {
 
 
   console.log("request /api/LastShiftPassFailCounts");
@@ -448,17 +515,36 @@ app.get("/api/LastShiftPassFailCounts", async (req, res) => {
 
 
     result.recordsets[0][0].shift = shiftArr[2];
-    res.json(result.recordset);
+
+    // save query result to local json file, for quick fetch by other terminals
+    var fs = require('fs');
+    let jsonData = JSON.stringify(result.recordset, null, 4);
+    fs.writeFile(path.join(__dirname, "SummaryPageQueryResults/LastShiftPassFailCounts.json"), jsonData, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+
     console.log("Finished /api/LastShiftPassFailCounts");
 
   } catch (err) {
     console.log(err);
   }
 
+};
+
+// API last shift pass fail counts - Quick fetch
+app.get("/api/LastShiftPassFailCountsQuick", async (req, res) => {
+  console.log("request /api/LastShiftPassFailCountsQuick");
+
+  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/LastShiftPassFailCounts.json"));
+  
+  res.json(jsonData);
 });
 
+
 // API last two shift pass fail counts
-app.get("/api/LastTwoShiftPassFailCounts", async (req, res) => {
+const saveLastTwoShiftPassFailCounts = async () => {
 
 
   console.log("request /api/LastTwoShiftPassFailCounts");
@@ -480,19 +566,37 @@ app.get("/api/LastTwoShiftPassFailCounts", async (req, res) => {
     );
 
     result.recordsets[0][0].shift = shiftArr[2];
-    res.json(result.recordset);
+
+    // save query result to local json file, for quick fetch by other terminals
+    var fs = require('fs');
+    let jsonData = JSON.stringify(result.recordset, null, 4);
+    fs.writeFile(path.join(__dirname, "SummaryPageQueryResults/LastTwoShiftPassFailCounts.json"), jsonData, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+
     console.log("Finished /api/LastTwoShiftPassFailCounts");
 
   } catch (err) {
     console.log(err);
   }
 
+};
+
+// API last two shift pass fail counts - Quick fetch
+app.get("/api/LastTwoShiftPassFailCountsQuick", async (req, res) => {
+  console.log("request /api/LastTwoShiftPassFailCountsQuick");
+
+  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/LastTwoShiftPassFailCounts.json"));
+  
+  res.json(jsonData);
 });
 
 
 
 // API get running perfomance
-app.get("/api/RunningPerformance", async (req, res) => {
+const saveRunningPerformance = async () => {
 
 
   console.log("request /api/RunningPerformance");
@@ -505,7 +609,15 @@ app.get("/api/RunningPerformance", async (req, res) => {
       EXEC [dbo].[spGetRunningPerformance]
     `);
 
-    res.json(result.recordset);
+    // save query result to local json file, for quick fetch by other terminals
+    var fs = require('fs');
+    let jsonData = JSON.stringify(result.recordset, null, 4);
+    fs.writeFile(path.join(__dirname, "SummaryPageQueryResults/RunningPerformance.json"), jsonData, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+
     
     console.log("Finished /api/RunningPerformance");
 
@@ -513,12 +625,21 @@ app.get("/api/RunningPerformance", async (req, res) => {
     console.log(err);
   }
 
+};
+
+// API get running perfomance - Quick fetch
+app.get("/api/RunningPerformanceQuick", async (req, res) => {
+  console.log("request /api/RunningPerformanceQuick");
+
+  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/RunningPerformance.json"));
+  
+  res.json(jsonData);
 });
 
 
 
 // Search Operator Summary Times, group bar chart
-app.get("/api/OperatorSummaryTimes", async (req, res) => {
+const saveOperatorSummaryTimes = async () => {
 
 
   console.log("request /api/OperatorSummaryTimes");
@@ -527,7 +648,7 @@ app.get("/api/OperatorSummaryTimes", async (req, res) => {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
 
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-16 14:00:00"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 14:00:00"));
     let inputDT = new Date();
     inputDT.setHours(inputDT.getHours());
     let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDT);
@@ -544,16 +665,51 @@ app.get("/api/OperatorSummaryTimes", async (req, res) => {
 
     console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used for OperatorSummaryTimes.");
 
-    res.json(result.recordset);
+    // save query result to local json file, for quick fetch by other terminals
+    var fs = require('fs');
+    let jsonData = JSON.stringify(result.recordset, null, 4);
+    fs.writeFile(path.join(__dirname, "SummaryPageQueryResults/OperatorSummaryTimes.json"), jsonData, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+
     console.log("Finished /api/OperatorSummaryTimes");
 
   } catch (err) {
     console.log(err);
   }
+};
+
+// Search Operator Summary Times, group bar chart - Quick fetch
+app.get("/api/OperatorSummaryTimesQuick", async (req, res) => {
+  console.log("request /api/OperatorSummaryTimesQuick");
+
+  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/OperatorSummaryTimes.json"));
+  
+  res.json(jsonData);
 });
 
 
 
+
+/********************* fetch and save data every minutes *********************/
+cron.schedule('* * * * *', () => {
+  console.log('\nSever side fetch summary page data.');
+
+  saveAverageCycleTimeByStations();
+  saveSumFaultTimeByStations();
+  saveCurrentShiftPassFailCounts();
+  saveLastShiftPassFailCounts();
+  saveLastTwoShiftPassFailCounts();
+  saveRunningPerformance();
+  saveOperatorSummaryTimes();
+  
+});
+
+
+
+//***************************** End of summary page APIs *********************************/
 
 
 
@@ -978,21 +1134,25 @@ app.get("/api/MonitorPage/getBaselineValue", async (req, res) => {
 
   console.log("requir /api/MonitorPage/getBaselineValue");
   
-  try {
-    let con = await sql.connect(config);
+  // try {
+  //   let con = await sql.connect(config);
 
-    const result = await sql.query(`
-      SELECT * FROM tblLineParameter;
-    `);
+  //   const result = await sql.query(`
+  //     SELECT * FROM tblLineParameter;
+  //   `);
 
-    res.json({"baselineValue": result.recordsets[0][0].CycleTime});
+  //   res.json({"baselineValue": result.recordsets[0][0].CycleTime});
 
-    await con.close();
+  //   await con.close();
     
 
-  } catch (err) {
-    console.log(err);
-  }
+  // } catch (err) {
+  //   console.log(err);
+  // }
+
+  res.json({"baselineValue": configData.settings.designCycleTime});
+
+  
 
 });
 
@@ -1249,7 +1409,7 @@ const generateShiftReportCSVByDateTime = async (inputDate) =>{
 
 
 
-    // All stations average sum time
+    // All stations average cycle time
     result = await sql.query(
       "declare @start datetime = CONVERT(DATETIME,'" + shiftArr[0] +
       "') declare @end datetime = CONVERT(DATETIME,'" + shiftArr[1] +

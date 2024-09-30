@@ -1,0 +1,62 @@
+[
+    {
+        "tag_name": "MHR 1 Fault",
+        "SumFaultTime": 724,
+        "id": 0
+    },
+    {
+        "tag_name": "MHR 2 Fault",
+        "SumFaultTime": 372,
+        "id": 1
+    },
+    {
+        "tag_name": "MHR 3 Fault",
+        "SumFaultTime": 379,
+        "id": 2
+    },
+    {
+        "tag_name": "MWR 1 Fault",
+        "SumFaultTime": 821,
+        "id": 3
+    },
+    {
+        "tag_name": "MWR 2 Fault",
+        "SumFaultTime": 222,
+        "id": 4
+    },
+    {
+        "tag_name": "OP35 Fault",
+        "SumFaultTime": 169,
+        "id": 5
+    },
+    {
+        "tag_name": "OP50 Fault",
+        "SumFaultTime": 6,
+        "id": 6
+    },
+    {
+        "tag_name": "OP60 Fault",
+        "SumFaultTime": 44,
+        "id": 7
+    },
+    {
+        "tag_name": "SideA Fault",
+        "SumFaultTime": 265,
+        "id": 8
+    },
+    {
+        "tag_name": "SideB Fault",
+        "SumFaultTime": 24,
+        "id": 9
+    },
+    {
+        "tag_name": "System Fault",
+        "SumFaultTime": 1944,
+        "id": 10
+    },
+    {
+        "tag_name": "Table Index Fault",
+        "SumFaultTime": 18,
+        "id": 11
+    }
+]

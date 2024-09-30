@@ -1,0 +1,46 @@
+[
+    {
+        "tag_name": "Station10",
+        "avgCycleTime": 71
+    },
+    {
+        "tag_name": "Station20L",
+        "avgCycleTime": 70
+    },
+    {
+        "tag_name": "Station20R",
+        "avgCycleTime": 70
+    },
+    {
+        "tag_name": "Station30",
+        "avgCycleTime": 70
+    },
+    {
+        "tag_name": "Station35",
+        "avgCycleTime": 70
+    },
+    {
+        "tag_name": "Station40",
+        "avgCycleTime": 35
+    },
+    {
+        "tag_name": "Station45",
+        "avgCycleTime": 35
+    },
+    {
+        "tag_name": "Station50L",
+        "avgCycleTime": 62
+    },
+    {
+        "tag_name": "Station50R",
+        "avgCycleTime": 71
+    },
+    {
+        "tag_name": "Station60L",
+        "avgCycleTime": 70
+    },
+    {
+        "tag_name": "Station60R",
+        "avgCycleTime": 68
+    }
+]

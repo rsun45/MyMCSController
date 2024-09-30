@@ -40,13 +40,17 @@
             }
         },
         "lastMaintenanceRecord": {
-            "ScheduleNames": [],
-            "emailSendHour": 13
+            "ScheduleNames": [
+                "MWR_1.Tip_Change_CTR",
+                "MWR_2.Tip_Change_CTR"
+            ],
+            "emailSendHour": 23
         }
     },
     "settings": {
         "alarmThreshold": 86400,
-        "maintenanceThreshold": 0.8
+        "maintenanceThreshold": 0.8,
+        "designCycleTime": 55
     },
     "login": [
         {

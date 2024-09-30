@@ -43,7 +43,7 @@ export default function AverageCycleTimeByStations( {refresh} ) {               
   const [baselineValue, setBaselineValue] = React.useState(null);
 
   React.useEffect(() => {                               
-    fetch("/api/AverageCycleTimeByStations")                           
+    fetch("/api/AverageCycleTimeByStationsQuick")                           
         .then((res) => res.json())                 
         .then((data) => {setData(data); });       
         
