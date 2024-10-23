@@ -307,9 +307,9 @@ export default function ResultPage() {
               editable: false,
               headerAlign: 'center',
               align:'center',
-              valueGetter: ({ value }) => {
+              valueGetter: ( value ) => {
                 var newValue = value.replace("T", " ").split(".")[0];
-                return newValue
+                return new Date(newValue)
               }, 
             }
           );
@@ -323,7 +323,7 @@ export default function ResultPage() {
               editable: false,
               headerAlign: 'center',
               align:'center',
-              valueGetter: ({ value }) => {
+              valueGetter: ( value ) => {
                 if (value === 2 || value === "2") {
                   return "OK";
                 }
@@ -643,11 +643,11 @@ export default function ResultPage() {
                     onColumnVisibilityModelChange={(model) => { setMyColumnVisibilityModel(model); }}
                     density="compact"
                     // Tool Bar
-                    components={{
-                      Toolbar: CustomToolbar,
-                    }}
+                    // components={{
+                    //   Toolbar: CustomToolbar,
+                    // }}
                     slots={{
-                      // toolbar: CustomToolbar,
+                      toolbar: CustomToolbar,
                       loadingOverlay: LinearProgress,
                     }}
                     loading={loadingProcess}
@@ -691,11 +691,11 @@ export default function ResultPage() {
                   onColumnVisibilityModelChange={(model) => { setMyColumnVisibilityModel(model); }}
                   density="compact"
                   // Tool Bar
-                  components={{
-                    Toolbar: CustomToolbar,
-                  }}
+                  // components={{
+                  //   Toolbar: CustomToolbar,
+                  // }}
                   slots={{
-                    // toolbar: CustomToolbar,
+                    toolbar: CustomToolbar,
                     loadingOverlay: LinearProgress,
                   }}
                   loading={loadingProcess}

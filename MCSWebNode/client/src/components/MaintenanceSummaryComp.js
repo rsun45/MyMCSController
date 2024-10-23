@@ -1,5 +1,5 @@
 import React from "react";
-import Box from '@mui/material/Box';
+// import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 
 export default function MaintenanceSummaryComp({refresh}) {
@@ -39,16 +39,16 @@ export default function MaintenanceSummaryComp({refresh}) {
       editable: false,
       headerAlign: 'center',
       align: 'center',
-      valueGetter: (value) => {
-        const preset = Number(value.row.PresetNumber);
-        const current = Number(value.row.CurrentNumber);
+      valueGetter: (value,row) => {
+        // console.log(row);
+        const preset = Number(row.PresetNumber);
+        const current = Number(row.CurrentNumber);
         return Math.round((current/preset)*100) + "%";
       },
     },
     {
       field: 'CurrentNumber',
       headerName: 'Current',
-      type: 'number',
       width: 80,
       editable: false,
       headerAlign: 'center',
@@ -70,7 +70,7 @@ export default function MaintenanceSummaryComp({refresh}) {
   return (
     <div style={{ height: "80%"}}>
       <DataGrid
-        rows={maintenanceData}
+        rows={maintenanceData || []}
         columns={columns}
         density="compact"
         initialState={{

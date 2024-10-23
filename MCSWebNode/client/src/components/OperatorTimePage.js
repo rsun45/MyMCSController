@@ -144,6 +144,122 @@ export default function OperatorTimePage() {
   }
 
 
+
+
+
+  // get fault time detail
+
+  // fault time detail chart data
+  const [faultTimeDetail, setFaultTimeDetail] = React.useState([]);
+
+
+  // fault time detail fetch api
+  const getFaultTimedetail = (serialNumberStr, endDateTimeStr) =>{
+
+    // find last serial number row
+    for (let i = 0; i < operatorTimeData.length; i++){
+      if (operatorTimeData[i].serial_number === serialNumberStr && i > 0){
+        const startDT = operatorTimeData[i-1].ExactTime.replace('T', ' ').split('Z')[0];
+        const endDT = endDateTimeStr.replace('T', ' ').split('Z')[0];
+
+        fetch("/api/OperatorPage/getFaultTimeDetailByTimes", {
+          method: "POST",
+          headers: { "Content-Type": "application/JSON" },
+          body: JSON.stringify({ "start": startDT, "end": endDT })
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            // console.log(data);
+
+            if (data.length === 0){
+              setAlertMsg("Cell stop request.");
+              setAlertType("info");
+              setAlertOpen(true);
+              setConfirmButtonDisable(false);
+            }
+            else {
+              setAlertMsg("Fault time details are displaying.");
+              setAlertType("success");
+              setAlertOpen(true);
+              setConfirmButtonDisable(false);
+            }
+            
+            setFaultTimeDetail([...data]);
+      
+            
+          })
+          .catch((error) => {
+            console.log('Error: Failed query fault time detail.');
+            console.log(error);
+            setAlertMsg("Failed query fault time detail.");
+            setAlertType("error");
+            setAlertOpen(true);
+            setConfirmButtonDisable(false);
+          });
+
+        break;
+      }
+      else if (operatorTimeData[i].serial_number === serialNumberStr && i === 0){
+        // no detail
+        setAlertMsg("Cell stop request.");
+        setAlertType("info");
+        setAlertOpen(true);
+        setConfirmButtonDisable(false);
+        break;
+      }
+
+    }
+
+
+  };
+
+  // fault detail grid columns
+  const faultTimeDetailColumns = [
+    {
+      field: 'AlarmType',
+      headerName: 'Alarm Type',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'AlarmName',
+      headerName: 'Alarm Name',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'TagDescription',
+      headerName: 'Tag Description',
+      width: 450,
+      editable: false,
+    },
+    {
+      field: 'Occurrences',
+      headerName: 'Occurrences',
+      width: 170,
+      editable: false,
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
+    },
+    {
+      field: 'TotalDuration',
+      headerName: 'Total Duration',
+      width: 170,
+      editable: false,
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
+    },
+  ];
+
+
+
+
+
+
+
+
   
   // grid columns
   const [gridColumns, setGridColumns] = React.useState([]);
@@ -152,6 +268,7 @@ export default function OperatorTimePage() {
   React.useEffect(() => {
     if (operatorTimeData.length > 0) {
       let tempGridColumns = [];
+
 
       for (const key in operatorTimeData[0]) {
         let value;
@@ -179,6 +296,20 @@ export default function OperatorTimePage() {
             }
           );
         }
+        else if (key === "FaultTime") {
+          tempGridColumns.push(
+            {
+              field: key,
+              cellClassName: 'button-layout',
+              headerName: key,
+              width: 220,
+              editable: false,
+              headerAlign: 'center',
+              align: 'center',
+              type: 'number',
+            }
+          );
+        }
         else if (!value) {
           tempGridColumns.push(
             {
@@ -201,9 +332,10 @@ export default function OperatorTimePage() {
               headerAlign: 'center',
               align: 'center',
               type: 'date',
-              valueGetter: ({ value }) => {
-                var newValue = value.split("T")[0];
-                return newValue
+              valueGetter: ( tempValue ) => {
+                // console.log(value);
+                var newValue = tempValue.split("T")[0];
+                return new Date(newValue)
               },
             }
           );
@@ -218,9 +350,9 @@ export default function OperatorTimePage() {
               headerAlign: 'center',
               align: 'center',
               type: 'dateTime',
-              valueGetter: ({ value }) => {
-                var newValue = value.replace("T", " ").split(".")[0];
-                return newValue
+              valueGetter: ( tempValue ) => {
+                var newValue = tempValue.replace("T", " ").split(".")[0];
+                return  new Date(newValue)
               },
             }
           );
@@ -288,10 +420,32 @@ export default function OperatorTimePage() {
   return (
     <Box sx={{ width: '100%' }}>
 
-      <Dialog onClose={handleFaultTimeDetailDialogClose} open={faultTimeDetailDialogOpen} fullWidth maxWidth="md">
+      <Dialog onClose={handleFaultTimeDetailDialogClose} open={faultTimeDetailDialogOpen} fullWidth maxWidth="xl">
         <DialogTitle>Fault Time Detail</DialogTitle>
-        <Box sx={{ height: 400, p:3 }}>
-          <p>Coming soon.</p>
+        <Box sx={{ height: 400, p: 3 }}>
+          {faultTimeDetail.length > 0?
+            <DataGrid
+              rows={faultTimeDetail || []}
+              columns={faultTimeDetailColumns}
+
+              density="compact"
+              // Tool Bar
+              slots={{
+                toolbar: CustomToolbar,
+              }}
+              //分页
+              pageSize={pageSize}
+              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              rowsPerPageOptions={[50, 100]}
+              pagination
+              // checkboxSelection
+              disableSelectionOnClick
+              sx={{ ml: 2, mr: 2 }}
+
+            />
+            :
+            <p>Cell stop request.</p>
+          }
         </Box>
         <DialogActions>
           <Button onClick={handleFaultTimeDetailDialogClose} autoFocus>
@@ -337,49 +491,70 @@ export default function OperatorTimePage() {
       <br/>
 
 
-      <DataGrid
-        rows={operatorTimeData || []}
-        columns={gridColumns}
-
-        density="compact"
-        // Tool Bar
-        components={{
-          Toolbar: CustomToolbar,
+      <Box
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 200,
         }}
-        slots={{
-          // toolbar: CustomToolbar,
-          loadingOverlay: LinearProgress,
+        sx={{
+          '& .button-layout': {
+            backgroundColor: '#fcdad4',
+            color: '#000000',
+            fontWeight: '500',
+            borderRadius: '5px',
+            boxShadow: 2,
+            '&:hover': { backgroundColor: '#fac1b6' },
+          },
         }}
-        loading={loadingProcess}
-        //分页
-        pageSize={pageSize}
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        rowsPerPageOptions={[50, 100]}
-        pagination
-
-        // checkboxSelection
-        disableSelectionOnClick
-
-        autoHeight
-
-        sx={{ ml: 2, mr: 2 }}
+      >
+        <DataGrid
+          rows={operatorTimeData || []}
+          columns={gridColumns}
 
 
-        // double click event, show fault time detail
-        onCellDoubleClick={
-          (params) => {
-            console.log(params);
-            if (params.field === "FaultTime"){
-              setFaultTimeDetailDialogOpen(true);
+          density="compact"
+          // Tool Bar
+          // components={{
+          //   Toolbar: CustomToolbar,
+          // }}
+          slots={{
+            toolbar: CustomToolbar,
+            loadingOverlay: LinearProgress,
+          }}
+          loading={loadingProcess}
+          //分页
+          pageSize={pageSize}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          rowsPerPageOptions={[50, 100]}
+          pagination
 
+          // checkboxSelection
+          disableSelectionOnClick
+
+          // autoHeight
+
+          sx={{ ml: 2, mr: 2 }}
+
+
+          // double click event, show fault time detail
+          onCellClick={
+            (params) => {
+              // console.log(params);
+              if (params.field === "FaultTime") {
+
+                getFaultTimedetail(params.row.serial_number, params.row.ExactTime);
+                setFaultTimeDetailDialogOpen(true);
+
+              }
+              // doubleClickSerialRow(params.row.serial_number);
             }
-            // doubleClickSerialRow(params.row.serial_number);
           }
-        }
 
 
+        />
 
-      />
+      </Box>
 
 
 

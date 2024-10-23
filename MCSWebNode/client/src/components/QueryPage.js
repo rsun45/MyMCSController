@@ -239,9 +239,9 @@ export default function QueryPage() {
               headerAlign: 'center',
               align: 'center',
               type: 'dateTime',
-              valueGetter: ({ value }) => {
+              valueGetter: ( value ) => {
                 var newValue = value.replace("T", " ").split(".")[0];
-                return newValue
+                return new Date(newValue)
               },
             }
           );
@@ -305,8 +305,8 @@ export default function QueryPage() {
     setFilterModel({
       items: [
         {
-          columnField: '10Op.WaitTableTurn',
-          operatorValue: '=',
+          field: '10Op.WaitTableTurn',
+          operator: '=',
           value: "0",
         },
       ],
@@ -429,11 +429,11 @@ export default function QueryPage() {
 
               density="compact"
               // Tool Bar
-              components={{
-                Toolbar: CustomToolbar,
-              }}
+              // components={{
+              //   Toolbar: CustomToolbar,
+              // }}
               slots={{
-                // toolbar: CustomToolbar,
+                toolbar: CustomToolbar,
                 loadingOverlay: LinearProgress,
               }}
               loading={loadingProcess}

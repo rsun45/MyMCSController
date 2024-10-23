@@ -299,31 +299,39 @@ export default function AlarmPage() {
 
       <br />
 
-      <div style={{ padding:"16px"}} hidden={isActiveHistoryHidden==="hidden"} >
-        <DataGrid
-          rows={alarmGridData}
-          columns={columns}
-          density="compact"
-          autoHeight
-          // Tool Bar
-          components={{
-            Toolbar: CustomToolbar,
+      <div style={{ padding: "16px" }} hidden={isActiveHistoryHidden === "hidden"} >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 200,
           }}
-          slots={{
-            // toolbar: CustomToolbar,
-            loadingOverlay: LinearProgress,
-          }}
-          loading={loadingProcess}
-          //分页
-          pageSize={pageSize}
-          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          rowsPerPageOptions={[50, 100]}
-          pagination
+        >
+          <DataGrid
+            rows={alarmGridData}
+            columns={columns}
+            density="compact"
+            // autoHeight
+            // Tool Bar
+            // components={{
+            //   Toolbar: CustomToolbar,
+            // }}
+            slots={{
+              toolbar: CustomToolbar,
+              loadingOverlay: LinearProgress,
+            }}
+            loading={loadingProcess}
+            //分页
+            pageSize={pageSize}
+            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+            rowsPerPageOptions={[50, 100]}
+            pagination
 
-          // checkboxSelection
-          disableSelectionOnClick
+            // checkboxSelection
+            disableSelectionOnClick
 
-        />
+          />
+        </div>
       </div>
 
       <div style={{ padding:"8px", margin:"8px" }} hidden={isActiveAlarmHidden==="hidden"} >
@@ -343,10 +351,13 @@ export default function AlarmPage() {
           rows={alarmActivityContent}
           columns={activeAlarmColumns}
           density="compact"
-          autoHeight
+          // autoHeight
           // Tool Bar
-          components={{
-            Toolbar: CustomToolbar,
+          // components={{
+          //   Toolbar: CustomToolbar,
+          // }}
+          slots={{
+            toolbar: CustomToolbar,
           }}
           //分页
           pageSize={pageSize}

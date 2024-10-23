@@ -2305,6 +2305,35 @@ app.post("/api/OperatorPage/getOperatorDataByTimeAndName", jsonParser, async (re
 
 
 
+// API for getting fault time detail
+app.post("/api/OperatorPage/getFaultTimeDetailByTimes", jsonParser, async (req, res) => {
+  console.log("requir /api/OperatorPage/getFaultTimeDetailByTimes");
+  console.log(req.body);
+  try {
+    await sql.connect(config);
+
+    const time1 = new Date();
+
+    const result = await sql.query(
+      "exec [dbo].[spFindSpecificAlarms] @StartTime = '" + req.body.start + "', @EndTime = '" + req.body.end + "';"
+    );
+
+    console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
+
+    for (let i=0; i<result.recordset.length; i++){
+      result.recordset[i].id = i;
+    }
+
+    // console.log(result.recordset);
+
+    res.json(result.recordset);
+    console.log("Finished /api/OperatorPage/getFaultTimeDetailByTimes");
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
 
 
 

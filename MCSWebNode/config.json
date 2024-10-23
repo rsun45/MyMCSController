@@ -41,10 +41,9 @@
         },
         "lastMaintenanceRecord": {
             "ScheduleNames": [
-                "MWR_1.Tip_Change_CTR",
-                "MWR_2.Tip_Change_CTR"
+                "OP40_SMG.Maint_Counter"
             ],
-            "emailSendHour": 23
+            "emailSendHour": 11
         }
     },
     "settings": {

@@ -1,14 +1,14 @@
 [
     {
         "tag_name": "State.Fault_Sec",
-        "tag_cont": "2978"
+        "tag_cont": "14385"
     },
     {
         "tag_name": "State.Idle_Sec",
-        "tag_cont": "3"
+        "tag_cont": "130"
     },
     {
         "tag_name": "State.Running_Sec",
-        "tag_cont": "7818"
+        "tag_cont": "7085"
     }
 ]
