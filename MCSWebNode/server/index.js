@@ -2145,6 +2145,15 @@ app.get("/api/MaintenancePage/getAllMaintenance", async (req, res) => {
     );
 
     console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
+
+    for (let i=0; i< result.recordsets[0].length; i++){
+      if (configData.maintenanceDurationRecords[result.recordsets[0][i].TagName] && configData.maintenanceDurationRecords[result.recordsets[0][i].TagName].durationMinute){
+        result.recordsets[0][i]["DurationMinute"] = configData.maintenanceDurationRecords[result.recordsets[0][i].TagName].durationMinute;
+      }
+      else {
+        result.recordsets[0][i]["DurationMinute"] = null;
+      }
+    }
     
     res.json(result.recordsets[0]);
 
@@ -2155,6 +2164,98 @@ app.get("/api/MaintenancePage/getAllMaintenance", async (req, res) => {
   }
 
 });
+
+
+// fetch maintenance info and set duration when needed
+const checkMaintenanceSetDuration = async () =>{
+  console.log("check maintenance and set duration.");
+  try {
+    
+    await sql.connect(config);
+
+    const result = await sql.query(
+      "EXEC spGetMaintCounter;"
+    );
+
+    // iterate database maintenance result
+    // check if there is new tagName, then add new to config file or delete uncontinued one
+    // calculate duration minutes
+    let configMaintenanceObj = configData.maintenanceDurationRecords;
+    let dbMaintenanceArr = result.recordsets[0];
+
+    let newConfigMaintenanceObj = {};
+
+    for (let i=0; i< dbMaintenanceArr.length; i++){
+      newConfigMaintenanceObj[dbMaintenanceArr[i].TagName] = {};
+      // config has the tagName
+      if (configMaintenanceObj[dbMaintenanceArr[i].TagName]){
+        // when current >= preset
+        if (Number(dbMaintenanceArr[i].PresetNumber) <= Number(dbMaintenanceArr[i].CurrentNumber)){
+          // set start time when start time is empty, erase the end time
+          if (!configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime){
+            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = new Date().toLocaleString();
+            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
+            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = configMaintenanceObj[dbMaintenanceArr[i].TagName].durationMinute;
+          }
+        }
+        // when current < preset
+        else {
+          // has start and end is empty, calulate duration minutes, then empty start
+          if (configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime && !configMaintenanceObj[dbMaintenanceArr[i].TagName].endDateTime){
+            let diff = (new Date().getTime() - new Date(configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime).getTime()) / 1000;
+            const durationMinute = Math.abs(Math.ceil(diff/60));
+
+            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
+            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = new Date().toLocaleString();
+            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = durationMinute;
+          }
+          else {
+            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
+            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
+            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
+          }
+        }
+      }
+      // add the new tagName to config
+      else {
+        // current >= preset
+        if (Number(dbMaintenanceArr[i].PresetNumber) <= Number(dbMaintenanceArr[i].CurrentNumber)){
+          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = new Date().toLocaleString();
+          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
+          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
+        }
+        // current < preset
+        else {
+          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
+          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
+          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
+        }
+      }
+    }
+    
+    // write new maintenanceDurationRecords to config file
+    configData.maintenanceDurationRecords = newConfigMaintenanceObj;
+    
+    let configDataStr = JSON.stringify(configData, null, 4);
+    var fs = require('fs');
+    fs.writeFile(serverConfigPath, configDataStr, 'utf8', ()=>{});
+
+    console.log("Finish check maintenance and set duration.");
+
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
+
+// schedule for maintenance schedule checking
+let scheduleMaintenanceDurationChecking = cron.schedule('* * * * *', async () => {
+  console.log('Scheduled maintenance duration checking.');
+  checkMaintenanceSetDuration();
+});
+
+
 
 
 // set schedule to check maintenance and send email
@@ -2273,6 +2374,8 @@ let backendMaintenanceChecking = cron.schedule('*/5 * * * *', async () => {
 
 
 
+
+
 //***************************** operator page APIs *********************************/
 app.post("/api/OperatorPage/getOperatorDataByTimeAndName", jsonParser, async (req, res) => {
   console.log("requir /api/OperatorPage/getOperatorDataByTimeAndName");
@@ -2290,9 +2393,15 @@ app.post("/api/OperatorPage/getOperatorDataByTimeAndName", jsonParser, async (re
 
     for (let i=0; i<result.recordset.length; i++){
       result.recordset[i].id = i;
+      // rename column attributes, OverDesignTime -> OverDesignCycleTime  改 OverDesignTimeWithoutFault -> OverDesignCycleTimeWithoutFault
+      Object.defineProperty(result.recordset[i], "OverDesignCycleTime", Object.getOwnPropertyDescriptor(result.recordset[i], "OverDesignTime"));
+      delete result.recordset[i]["OverDesignTime"];
+      Object.defineProperty(result.recordset[i], "OverDesignCycleTimeWithoutFault", Object.getOwnPropertyDescriptor(result.recordset[i], "OverDesignTimeWithoutFault"));
+      delete result.recordset[i]["OverDesignTimeWithoutFault"];
     }
 
     // console.log(result.recordset);
+
 
     res.json(result.recordset);
     console.log("Finished /api/OperatorPage/getOperatorDataByTimeAndName");

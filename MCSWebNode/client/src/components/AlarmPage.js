@@ -16,6 +16,9 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { AllPagesContext } from '../App';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
 
 // return local datetime string in 'YYYY-MM-DD HH:MM:SS' formate
 function toLocalIsoString(date) {
@@ -180,13 +183,20 @@ export default function AlarmPage() {
     }, {
       field: 'Occurrences',
       headerName: 'Occurrences',
+      cellClassName: 'button-layout',
       width: 150,
       editable: false,
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
     }, {
       field: 'TotalDuration',
       headerName: 'Total Duration',
       width: 150,
       editable: false,
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
     }, 
 
   ];
@@ -219,7 +229,9 @@ export default function AlarmPage() {
       headerName: 'Total Duration (Minutes)',
       width: 200,
       editable: false,
-      type:"number",
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
     }, 
 
   ];
@@ -267,14 +279,32 @@ export default function AlarmPage() {
 
 
 
+  // occurrence detail dialog
+  const [occurrenceDialogOpen, setOccurrenceDialogOpen] = React.useState(false);
+  const handleOccurrenceDialogClose = () => {
+    setOccurrenceDialogOpen(false);
+  };
+
 
 
 
   return (
 
     /* 数据表格部分 */
-    <div style={{ width: '100%'}}>
-      
+    <div style={{ width: '100%' }}>
+
+      <Dialog onClose={handleOccurrenceDialogClose} open={occurrenceDialogOpen} fullWidth maxWidth="xl">
+        <DialogTitle>Occurrence Detail</DialogTitle>
+        <Box sx={{ height: 400, p: 3 }}>
+          <p>Coming soon.</p>
+        </Box>
+        <DialogActions>
+          <Button onClick={handleOccurrenceDialogClose} autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Snackbar open={alertOpen} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} >
         <Alert onClose={handleAlertClose} severity={alertType}>
           {alertMsg}
@@ -307,45 +337,61 @@ export default function AlarmPage() {
             minHeight: 200,
           }}
         >
-          <DataGrid
-            rows={alarmGridData}
-            columns={columns}
-            density="compact"
-            // autoHeight
-            // Tool Bar
-            // components={{
-            //   Toolbar: CustomToolbar,
-            // }}
-            slots={{
-              toolbar: CustomToolbar,
-              loadingOverlay: LinearProgress,
+
+          <Box
+            sx={{
+              '& .button-layout': {
+                backgroundColor: '#fcdad4',
+                color: '#000000',
+                fontWeight: '500',
+                borderRadius: '5px',
+                boxShadow: 2,
+                '&:hover': { backgroundColor: '#fac1b6' },
+              },
             }}
-            loading={loadingProcess}
-            //分页
-            pageSize={pageSize}
-            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-            rowsPerPageOptions={[50, 100]}
-            pagination
+          >
+            <DataGrid
+              rows={alarmGridData}
+              columns={columns}
+              density="compact"
+              // autoHeight
+              // Tool Bar
+              // components={{
+              //   Toolbar: CustomToolbar,
+              // }}
+              slots={{
+                toolbar: CustomToolbar,
+                loadingOverlay: LinearProgress,
+              }}
+              loading={loadingProcess}
+              //分页
+              pageSize={pageSize}
+              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              rowsPerPageOptions={[50, 100]}
+              pagination
 
-            // checkboxSelection
-            disableSelectionOnClick
+              // checkboxSelection
+              disableSelectionOnClick
 
-          />
+              // click event, show fault time detail
+              onCellClick={
+                (params) => {
+                  // console.log(params);
+                  if (params.field === "Occurrences") {
+
+                    setOccurrenceDialogOpen(true);
+
+                  }
+                }
+              }
+
+            />
+          </Box>
         </div>
       </div>
 
-      <div style={{ padding:"8px", margin:"8px" }} hidden={isActiveAlarmHidden==="hidden"} >
-        {/* <Box
-          sx={{
-            borderRadius: 1,
-            p: 2,
-            boxShadow: 0,
-            border: '1px solid #d4d4d4',
-            // height: "75vh"
-          }}
-        >
-          <h3>{alarmActivityContent}</h3>
-        </Box> */}
+      <div style={{ padding: "8px", margin: "8px" }} hidden={isActiveAlarmHidden === "hidden"} >
+
 
         <DataGrid
           rows={alarmActivityContent}
@@ -368,7 +414,9 @@ export default function AlarmPage() {
           // checkboxSelection
           disableSelectionOnClick
 
+
         />
+
 
       </div>
 

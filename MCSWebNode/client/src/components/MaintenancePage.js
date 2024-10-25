@@ -63,6 +63,7 @@ export default function MaintenancePage() {
     fetch("/api/MaintenancePage/getAllMaintenance")
       .then((res) => res.json())
       .then((data) => {
+        // console.log(data);
         setMaintenanceData([...data]);
 
       });
@@ -77,14 +78,17 @@ export default function MaintenancePage() {
 
       <div style={{marginLeft:"32px", marginRight:"32px",}}>
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <h3>Schedule</h3>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <h3>Preset</h3>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <h3>Current</h3>
+          </Grid>
+          <Grid item xs={3}>
+            <h3>Duration  of Last Maintenance</h3>
           </Grid>
         </Grid>
 
@@ -92,21 +96,28 @@ export default function MaintenancePage() {
           {maintenanceData.map((element, index) => {
             return (
               <Grid container key={index} sx={{pt:2}}>
-                <Grid item xs={4}>
+                <Grid item xs={3}>
                   <TextField variant="outlined" defaultValue={element.TagName} sx={{ width: 400 }}
                     InputProps={{
                       readOnly: true,
                     }} />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={3}>
                   <TextField variant="outlined" defaultValue={element.PresetNumber} sx={{ width: 400 }}
                     InputProps={{
                       readOnly: true,
                     }} />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={3}>
                   <TextField variant="outlined" 
                     defaultValue={element.CurrentNumber + "  (" + (Math.round(Number(element.CurrentNumber)/Number(element.PresetNumber)*10000)/100) + "%)"} sx={{ width: 400 }}
+                    InputProps={{
+                      readOnly: true,
+                    }} />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField variant="outlined" 
+                    defaultValue={element.DurationMinute? element.DurationMinute + " Minutes" : "N/A"} sx={{ width: 400 }}
                     InputProps={{
                       readOnly: true,
                     }} />

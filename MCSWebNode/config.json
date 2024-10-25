@@ -43,7 +43,7 @@
             "ScheduleNames": [
                 "OP40_SMG.Maint_Counter"
             ],
-            "emailSendHour": 11
+            "emailSendHour": 15
         }
     },
     "settings": {
@@ -56,5 +56,42 @@
             "user": "admin",
             "password": "admin"
         }
-    ]
+    ],
+    "maintenanceDurationRecords": {
+        "MWR_1.Tip_Change_CTR": {
+            "startDateTime": "",
+            "endDateTime": "",
+            "durationMinute": null
+        },
+        "MWR_2.Tip_Change_CTR": {
+            "startDateTime": "",
+            "endDateTime": "",
+            "durationMinute": null
+        },
+        "OP30_SMG.Maint_Counter": {
+            "startDateTime": "",
+            "endDateTime": "",
+            "durationMinute": null
+        },
+        "OP35_SMG.Maint_Counter": {
+            "startDateTime": "",
+            "endDateTime": "",
+            "durationMinute": null
+        },
+        "OP40_SMG.Maint_Counter": {
+            "startDateTime": "",
+            "endDateTime": "",
+            "durationMinute": null
+        },
+        "OP45_SMG.Maint_Counter": {
+            "startDateTime": "",
+            "endDateTime": "",
+            "durationMinute": null
+        },
+        "OP50_SMG.Maint_Counter": {
+            "startDateTime": "",
+            "endDateTime": "",
+            "durationMinute": null
+        }
+    }
 }

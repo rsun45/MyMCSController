@@ -362,7 +362,7 @@ export default function OperatorTimePage() {
             {
               field: key,
               headerName: key,
-              width: 220,
+              width: 240,
               editable: false,
               headerAlign: 'center',
               align: 'center',
@@ -375,7 +375,7 @@ export default function OperatorTimePage() {
             {
               field: key,
               headerName: key,
-              width: 220,
+              width: 240,
               editable: false,
               headerAlign: 'center',
               align: 'center',
@@ -537,7 +537,7 @@ export default function OperatorTimePage() {
           sx={{ ml: 2, mr: 2 }}
 
 
-          // double click event, show fault time detail
+          // click event, show fault time detail
           onCellClick={
             (params) => {
               // console.log(params);
