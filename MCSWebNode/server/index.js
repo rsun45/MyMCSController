@@ -384,7 +384,6 @@ app.get("/api/AverageCycleTimeByStationsQuick", async (req, res) => {
     res.json(jsonData);
   });
 
-  res.json(jsonData);
 });
 
 
@@ -450,7 +449,6 @@ app.get("/api/SumFaultTimeByStationsQuick", async (req, res) => {
     res.json(jsonData);
   });
 
-  res.json(jsonData);
 });
 
 
@@ -508,7 +506,6 @@ app.get("/api/CurrentShiftPassFailCountsQuick", async (req, res) => {
     res.json(jsonData);
   });
   
-  res.json(jsonData);
 });
 
 
@@ -567,7 +564,6 @@ app.get("/api/LastShiftPassFailCountsQuick", async (req, res) => {
     res.json(jsonData);
   });
   
-  res.json(jsonData);
 });
 
 
@@ -625,7 +621,6 @@ app.get("/api/LastTwoShiftPassFailCountsQuick", async (req, res) => {
     res.json(jsonData);
   });
   
-  res.json(jsonData);
 });
 
 
@@ -675,7 +670,6 @@ app.get("/api/RunningPerformanceQuick", async (req, res) => {
     res.json(jsonData);
   });
   
-  res.json(jsonData);
 });
 
 
@@ -736,7 +730,6 @@ app.get("/api/OperatorSummaryTimesQuick", async (req, res) => {
     res.json(jsonData);
   });
   
-  res.json(jsonData);
 });
 
 
