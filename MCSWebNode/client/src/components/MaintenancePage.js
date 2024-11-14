@@ -115,9 +115,16 @@ export default function MaintenancePage() {
                       readOnly: true,
                     }} />
                 </Grid>
-                <Grid item xs={3}>
+                {/* <Grid item xs={3}>
                   <TextField variant="outlined" 
                     defaultValue={element.DurationMinute? element.DurationMinute + " Minutes" : "N/A"} sx={{ width: 400 }}
+                    InputProps={{
+                      readOnly: true,
+                    }} />
+                </Grid> */}
+                <Grid item xs={3}>
+                  <TextField variant="outlined" 
+                    defaultValue={element.MaintenanceTime? Math.round(Number(element.MaintenanceTime)/60 * 100) / 100 + " Minutes" : "N/A"} sx={{ width: 400 }}
                     InputProps={{
                       readOnly: true,
                     }} />

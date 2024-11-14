@@ -43,7 +43,7 @@
             "ScheduleNames": [
                 "OP40_SMG.Maint_Counter"
             ],
-            "emailSendHour": 15
+            "emailSendHour": 23
         }
     },
     "settings": {

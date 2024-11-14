@@ -375,8 +375,15 @@ const saveAverageCycleTimeByStations = async() => {
 app.get("/api/AverageCycleTimeByStationsQuick", async (req, res) => {
   console.log("request /api/AverageCycleTimeByStationsQuick");
 
-  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/AverageCycleTimeByStations.json"));
-  
+  //const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/AverageCycleTimeByStations.json"));
+  var fs = require('fs');
+  let jsonData;
+  fs.readFile(path.join(__dirname, "SummaryPageQueryResults/AverageCycleTimeByStations.json"), 'utf8', function (err, data) {
+    if (err) throw err;
+    jsonData = JSON.parse(data);
+    res.json(jsonData);
+  });
+
   res.json(jsonData);
 });
 
@@ -434,8 +441,15 @@ const saveSumFaultTimeByStations = async () => {
 app.get("/api/SumFaultTimeByStationsQuick", async (req, res) => {
   console.log("request /api/SumFaultTimeByStationsQuick");
 
-  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/SumFaultTimeByStations.json"));
-  
+  // const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/SumFaultTimeByStations.json"));
+  var fs = require('fs');
+  let jsonData;
+  fs.readFile(path.join(__dirname, "SummaryPageQueryResults/SumFaultTimeByStations.json"), 'utf8', function (err, data) {
+    if (err) throw err;
+    jsonData = JSON.parse(data);
+    res.json(jsonData);
+  });
+
   res.json(jsonData);
 });
 
@@ -485,7 +499,14 @@ const saveCurrentShiftPassFailCounts = async () => {
 app.get("/api/CurrentShiftPassFailCountsQuick", async (req, res) => {
   console.log("request /api/CurrentShiftPassFailCountsQuick");
 
-  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/CurrentShiftPassFailCounts.json"));
+  // const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/CurrentShiftPassFailCounts.json"));
+  var fs = require('fs');
+  let jsonData;
+  fs.readFile(path.join(__dirname, "SummaryPageQueryResults/CurrentShiftPassFailCounts.json"), 'utf8', function (err, data) {
+    if (err) throw err;
+    jsonData = JSON.parse(data);
+    res.json(jsonData);
+  });
   
   res.json(jsonData);
 });
@@ -537,7 +558,14 @@ const saveLastShiftPassFailCounts = async () => {
 app.get("/api/LastShiftPassFailCountsQuick", async (req, res) => {
   console.log("request /api/LastShiftPassFailCountsQuick");
 
-  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/LastShiftPassFailCounts.json"));
+  // const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/LastShiftPassFailCounts.json"));
+  var fs = require('fs');
+  let jsonData;
+  fs.readFile(path.join(__dirname, "SummaryPageQueryResults/LastShiftPassFailCounts.json"), 'utf8', function (err, data) {
+    if (err) throw err;
+    jsonData = JSON.parse(data);
+    res.json(jsonData);
+  });
   
   res.json(jsonData);
 });
@@ -588,7 +616,14 @@ const saveLastTwoShiftPassFailCounts = async () => {
 app.get("/api/LastTwoShiftPassFailCountsQuick", async (req, res) => {
   console.log("request /api/LastTwoShiftPassFailCountsQuick");
 
-  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/LastTwoShiftPassFailCounts.json"));
+  // const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/LastTwoShiftPassFailCounts.json"));
+  var fs = require('fs');
+  let jsonData;
+  fs.readFile(path.join(__dirname, "SummaryPageQueryResults/LastTwoShiftPassFailCounts.json"), 'utf8', function (err, data) {
+    if (err) throw err;
+    jsonData = JSON.parse(data);
+    res.json(jsonData);
+  });
   
   res.json(jsonData);
 });
@@ -631,7 +666,14 @@ const saveRunningPerformance = async () => {
 app.get("/api/RunningPerformanceQuick", async (req, res) => {
   console.log("request /api/RunningPerformanceQuick");
 
-  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/RunningPerformance.json"));
+  // const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/RunningPerformance.json"));
+  var fs = require('fs');
+  let jsonData;
+  fs.readFile(path.join(__dirname, "SummaryPageQueryResults/RunningPerformance.json"), 'utf8', function (err, data) {
+    if (err) throw err;
+    jsonData = JSON.parse(data);
+    res.json(jsonData);
+  });
   
   res.json(jsonData);
 });
@@ -685,7 +727,14 @@ const saveOperatorSummaryTimes = async () => {
 app.get("/api/OperatorSummaryTimesQuick", async (req, res) => {
   console.log("request /api/OperatorSummaryTimesQuick");
 
-  const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/OperatorSummaryTimes.json"));
+  // const jsonData = require(path.join(__dirname, "SummaryPageQueryResults/OperatorSummaryTimes.json"));
+  var fs = require('fs');
+  let jsonData;
+  fs.readFile(path.join(__dirname, "SummaryPageQueryResults/OperatorSummaryTimes.json"), 'utf8', function (err, data) {
+    if (err) throw err;
+    jsonData = JSON.parse(data);
+    res.json(jsonData);
+  });
   
   res.json(jsonData);
 });
@@ -2144,18 +2193,21 @@ app.get("/api/MaintenancePage/getAllMaintenance", async (req, res) => {
       "EXEC spGetMaintCounter;"
     );
 
+
     console.log((new Date().getTime() - time1.getTime())/1000 + " seconds used.");
 
-    for (let i=0; i< result.recordsets[0].length; i++){
-      if (configData.maintenanceDurationRecords[result.recordsets[0][i].TagName] && configData.maintenanceDurationRecords[result.recordsets[0][i].TagName].durationMinute){
-        result.recordsets[0][i]["DurationMinute"] = configData.maintenanceDurationRecords[result.recordsets[0][i].TagName].durationMinute;
-      }
-      else {
-        result.recordsets[0][i]["DurationMinute"] = null;
-      }
-    }
+    // for (let i=0; i< result.recordsets[0].length; i++){
+    //   if (configData.maintenanceDurationRecords[result.recordsets[0][i].TagName] && configData.maintenanceDurationRecords[result.recordsets[0][i].TagName].durationMinute){
+    //     result.recordsets[0][i]["DurationMinute"] = configData.maintenanceDurationRecords[result.recordsets[0][i].TagName].durationMinute;
+    //   }
+    //   else {
+    //     result.recordsets[0][i]["DurationMinute"] = null;
+    //   }
+    // }
+
     
     res.json(result.recordsets[0]);
+    
 
     console.log("Finish /api/MaintenancePage/getAllMaintenance");
 
@@ -2167,93 +2219,93 @@ app.get("/api/MaintenancePage/getAllMaintenance", async (req, res) => {
 
 
 // fetch maintenance info and set duration when needed
-const checkMaintenanceSetDuration = async () =>{
-  console.log("check maintenance and set duration.");
-  try {
+// const checkMaintenanceSetDuration = async () =>{
+//   console.log("check maintenance and set duration.");
+//   try {
     
-    await sql.connect(config);
+//     await sql.connect(config);
 
-    const result = await sql.query(
-      "EXEC spGetMaintCounter;"
-    );
+//     const result = await sql.query(
+//       "EXEC spGetMaintCounter;"
+//     );
 
-    // iterate database maintenance result
-    // check if there is new tagName, then add new to config file or delete uncontinued one
-    // calculate duration minutes
-    let configMaintenanceObj = configData.maintenanceDurationRecords;
-    let dbMaintenanceArr = result.recordsets[0];
+//     // iterate database maintenance result
+//     // check if there is new tagName, then add new to config file or delete uncontinued one
+//     // calculate duration minutes
+//     let configMaintenanceObj = configData.maintenanceDurationRecords;
+//     let dbMaintenanceArr = result.recordsets[0];
 
-    let newConfigMaintenanceObj = {};
+//     let newConfigMaintenanceObj = {};
 
-    for (let i=0; i< dbMaintenanceArr.length; i++){
-      newConfigMaintenanceObj[dbMaintenanceArr[i].TagName] = {};
-      // config has the tagName
-      if (configMaintenanceObj[dbMaintenanceArr[i].TagName]){
-        // when current >= preset
-        if (Number(dbMaintenanceArr[i].PresetNumber) <= Number(dbMaintenanceArr[i].CurrentNumber)){
-          // set start time when start time is empty, erase the end time
-          if (!configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime){
-            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = new Date().toLocaleString();
-            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
-            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = configMaintenanceObj[dbMaintenanceArr[i].TagName].durationMinute;
-          }
-        }
-        // when current < preset
-        else {
-          // has start and end is empty, calulate duration minutes, then empty start
-          if (configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime && !configMaintenanceObj[dbMaintenanceArr[i].TagName].endDateTime){
-            let diff = (new Date().getTime() - new Date(configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime).getTime()) / 1000;
-            const durationMinute = Math.abs(Math.ceil(diff/60));
+//     for (let i=0; i< dbMaintenanceArr.length; i++){
+//       newConfigMaintenanceObj[dbMaintenanceArr[i].TagName] = {};
+//       // config has the tagName
+//       if (configMaintenanceObj[dbMaintenanceArr[i].TagName]){
+//         // when current >= preset
+//         if (Number(dbMaintenanceArr[i].PresetNumber) <= Number(dbMaintenanceArr[i].CurrentNumber)){
+//           // set start time when start time is empty, erase the end time
+//           if (!configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime){
+//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = new Date().toLocaleString();
+//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
+//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = configMaintenanceObj[dbMaintenanceArr[i].TagName].durationMinute;
+//           }
+//         }
+//         // when current < preset
+//         else {
+//           // has start and end is empty, calulate duration minutes, then empty start
+//           if (configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime && !configMaintenanceObj[dbMaintenanceArr[i].TagName].endDateTime){
+//             let diff = (new Date().getTime() - new Date(configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime).getTime()) / 1000;
+//             const durationMinute = Math.abs(Math.ceil(diff/60));
 
-            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
-            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = new Date().toLocaleString();
-            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = durationMinute;
-          }
-          else {
-            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
-            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
-            newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
-          }
-        }
-      }
-      // add the new tagName to config
-      else {
-        // current >= preset
-        if (Number(dbMaintenanceArr[i].PresetNumber) <= Number(dbMaintenanceArr[i].CurrentNumber)){
-          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = new Date().toLocaleString();
-          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
-          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
-        }
-        // current < preset
-        else {
-          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
-          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
-          newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
-        }
-      }
-    }
+//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
+//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = new Date().toLocaleString();
+//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = durationMinute;
+//           }
+//           else {
+//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
+//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
+//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
+//           }
+//         }
+//       }
+//       // add the new tagName to config
+//       else {
+//         // current >= preset
+//         if (Number(dbMaintenanceArr[i].PresetNumber) <= Number(dbMaintenanceArr[i].CurrentNumber)){
+//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = new Date().toLocaleString();
+//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
+//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
+//         }
+//         // current < preset
+//         else {
+//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
+//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
+//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
+//         }
+//       }
+//     }
     
-    // write new maintenanceDurationRecords to config file
-    configData.maintenanceDurationRecords = newConfigMaintenanceObj;
+//     // write new maintenanceDurationRecords to config file
+//     configData.maintenanceDurationRecords = newConfigMaintenanceObj;
     
-    let configDataStr = JSON.stringify(configData, null, 4);
-    var fs = require('fs');
-    fs.writeFile(serverConfigPath, configDataStr, 'utf8', ()=>{});
+//     let configDataStr = JSON.stringify(configData, null, 4);
+//     var fs = require('fs');
+//     fs.writeFile(serverConfigPath, configDataStr, 'utf8', ()=>{});
 
-    console.log("Finish check maintenance and set duration.");
+//     console.log("Finish check maintenance and set duration.");
 
-  } catch (err) {
-    console.log(err);
-  }
-};
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
 
 
 // schedule for maintenance schedule checking
-let scheduleMaintenanceDurationChecking = cron.schedule('* * * * *', async () => {
-  console.log('Scheduled maintenance duration checking.');
-  checkMaintenanceSetDuration();
-});
+// let scheduleMaintenanceDurationChecking = cron.schedule('* * * * *', async () => {
+//   console.log('Scheduled maintenance duration checking.');
+//   checkMaintenanceSetDuration();
+// });
 
 
 
