@@ -12,7 +12,7 @@ export default function ActiveAlarmSummaryComp({refresh}) {
     const fetchData = async () => { fetch("/api/AlarmPage/getAlarmActivityForWeb")                            
       .then((res) => res.json())                  
       .then((data) => {
-        // console.log(data.alarmContent);
+        console.log(data.alarmContent);
         setActiveAlarm([...data.alarmContent]);
         
       });    
@@ -43,6 +43,7 @@ export default function ActiveAlarmSummaryComp({refresh}) {
       width: 150,
       editable: false,
       type: 'dateTime',
+      valueGetter: (value) => value && new Date(value),
     }, {
       field: 'TagDescription',
       headerName: 'Tag Description',

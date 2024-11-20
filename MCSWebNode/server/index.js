@@ -6,6 +6,7 @@ const shiftCalculator = require("./ShiftCalculator");
 const serverConfigPath = path.join(__dirname, '../config.json')
 var configData = require(serverConfigPath);
 
+
 const express = require("express");
 
 const PORT = process.env.PORT || 3001;
@@ -2211,95 +2212,6 @@ app.get("/api/MaintenancePage/getAllMaintenance", async (req, res) => {
 });
 
 
-// fetch maintenance info and set duration when needed
-// const checkMaintenanceSetDuration = async () =>{
-//   console.log("check maintenance and set duration.");
-//   try {
-    
-//     await sql.connect(config);
-
-//     const result = await sql.query(
-//       "EXEC spGetMaintCounter;"
-//     );
-
-//     // iterate database maintenance result
-//     // check if there is new tagName, then add new to config file or delete uncontinued one
-//     // calculate duration minutes
-//     let configMaintenanceObj = configData.maintenanceDurationRecords;
-//     let dbMaintenanceArr = result.recordsets[0];
-
-//     let newConfigMaintenanceObj = {};
-
-//     for (let i=0; i< dbMaintenanceArr.length; i++){
-//       newConfigMaintenanceObj[dbMaintenanceArr[i].TagName] = {};
-//       // config has the tagName
-//       if (configMaintenanceObj[dbMaintenanceArr[i].TagName]){
-//         // when current >= preset
-//         if (Number(dbMaintenanceArr[i].PresetNumber) <= Number(dbMaintenanceArr[i].CurrentNumber)){
-//           // set start time when start time is empty, erase the end time
-//           if (!configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime){
-//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = new Date().toLocaleString();
-//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
-//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = configMaintenanceObj[dbMaintenanceArr[i].TagName].durationMinute;
-//           }
-//         }
-//         // when current < preset
-//         else {
-//           // has start and end is empty, calulate duration minutes, then empty start
-//           if (configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime && !configMaintenanceObj[dbMaintenanceArr[i].TagName].endDateTime){
-//             let diff = (new Date().getTime() - new Date(configMaintenanceObj[dbMaintenanceArr[i].TagName].startDateTime).getTime()) / 1000;
-//             const durationMinute = Math.abs(Math.ceil(diff/60));
-
-//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
-//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = new Date().toLocaleString();
-//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = durationMinute;
-//           }
-//           else {
-//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
-//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
-//             newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
-//           }
-//         }
-//       }
-//       // add the new tagName to config
-//       else {
-//         // current >= preset
-//         if (Number(dbMaintenanceArr[i].PresetNumber) <= Number(dbMaintenanceArr[i].CurrentNumber)){
-//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = new Date().toLocaleString();
-//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
-//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
-//         }
-//         // current < preset
-//         else {
-//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["startDateTime"] = "";
-//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["endDateTime"] = "";
-//           newConfigMaintenanceObj[dbMaintenanceArr[i].TagName]["durationMinute"] = null;
-//         }
-//       }
-//     }
-    
-//     // write new maintenanceDurationRecords to config file
-//     configData.maintenanceDurationRecords = newConfigMaintenanceObj;
-    
-//     let configDataStr = JSON.stringify(configData, null, 4);
-//     var fs = require('fs');
-//     fs.writeFile(serverConfigPath, configDataStr, 'utf8', ()=>{});
-
-//     console.log("Finish check maintenance and set duration.");
-
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
-
-
-
-// schedule for maintenance schedule checking
-// let scheduleMaintenanceDurationChecking = cron.schedule('* * * * *', async () => {
-//   console.log('Scheduled maintenance duration checking.');
-//   checkMaintenanceSetDuration();
-// });
-
 
 
 
@@ -2413,6 +2325,75 @@ let backendMaintenanceChecking = cron.schedule('*/5 * * * *', async () => {
 });
 
 
+
+// maintenance duration history saving
+
+// get maintenance duration history file
+const maintenanceDurationHistoryDir = path.join(__dirname, "DataSaved/MaintenanceDurationHistory.json");
+var maintenanceDurationHistoryData = require(maintenanceDurationHistoryDir);
+
+
+// fetch maintenance duration info and save to server side
+const saveMaintenanceDurationHistory = async () =>{
+  console.log("Save maintenance duration to local server.");
+  try {
+    
+    await sql.connect(config);
+
+    const result = await sql.query(
+      "EXEC spGetMaintCounter;"
+    );
+
+    // check history json length, not greater than 90 records
+    if (maintenanceDurationHistoryData.length >= 93){
+      maintenanceDurationHistoryData = maintenanceDurationHistoryData.slice(0,92);
+    }
+
+    // clean result, keep name and duration only
+    let cleanResult = [];
+    for (let it of result.recordset){
+      cleanResult.push({TagName: it.TagName, MaintenanceTime: it.MaintenanceTime});
+    }
+
+    // save current shift maintenance duration result
+    let inputDT = new Date();
+    inputDT.setHours(inputDT.getHours()-1);
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDT);
+    
+    const tempObj = {shiftTitle: shiftArr[2] + ' shift from ' + shiftArr[0] + " to " + shiftArr[1], records: cleanResult};
+    maintenanceDurationHistoryData = [tempObj, ...maintenanceDurationHistoryData];
+
+    // write new maintenanceDurationHistoryData to file
+    
+    let dataStr = JSON.stringify(maintenanceDurationHistoryData, null, 4);
+    var fs = require('fs');
+    fs.writeFile(maintenanceDurationHistoryDir, dataStr, 'utf8', ()=>{});
+
+    console.log("Finish check maintenance duration and save history.");
+
+  } catch (err) {
+    console.log(err);
+  }
+};
+// saveMaintenanceDurationHistory();
+
+
+// schedule for maintenance schedule saving duration history
+let scheduleMaintenanceDurationChecking = cron.schedule('0 7,15,23 * * *', async () => {
+  console.log('Scheduled maintenance duration checking and saving history.');
+  saveMaintenanceDurationHistory();
+});
+
+
+// API get maintenance duration history
+app.get("/api/MaintenancePage/getMaintenanceDurationHistory", async (req, res) => {
+
+  console.log("require /api/MaintenancePage/getMaintenanceDurationHistory" );
+
+  res.json({"MaintenanceDurationHistory": maintenanceDurationHistoryData});
+  console.log("Finish required /api/MaintenancePage/getMaintenanceDurationHistory");
+
+});
 
 
 

@@ -339,6 +339,11 @@ export default function AlarmPage() {
         >
 
           <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              minHeight: 200,
+            }}
             sx={{
               '& .button-layout': {
                 backgroundColor: '#fcdad4',

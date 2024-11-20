@@ -1,14 +1,18 @@
 [
     {
         "tag_name": "State.Fault_Sec",
-        "tag_cont": "14385"
+        "tag_cont": "3200"
     },
     {
         "tag_name": "State.Idle_Sec",
-        "tag_cont": "130"
+        "tag_cont": "4"
     },
     {
         "tag_name": "State.Running_Sec",
-        "tag_cont": "7085"
+        "tag_cont": "397"
+    },
+    {
+        "tag_name": "TipChangeTimer",
+        "tag_cont": "0"
     }
 ]

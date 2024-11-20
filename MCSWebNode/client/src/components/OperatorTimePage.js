@@ -152,9 +152,18 @@ export default function OperatorTimePage() {
   // fault time detail chart data
   const [faultTimeDetail, setFaultTimeDetail] = React.useState([]);
 
+  
+  // fault time loading state
+  const [faultTimeLoading, setFaultTimeLoading] = React.useState(false);
+
 
   // fault time detail fetch api
   const getFaultTimedetail = (serialNumberStr, endDateTimeStr) =>{
+
+    setFaultTimeLoading(true);
+    setAlertMsg("Loading.");
+    setAlertType("info");
+    setAlertOpen(true);
 
     // find last serial number row
     for (let i = 0; i < operatorTimeData.length; i++){
@@ -172,12 +181,14 @@ export default function OperatorTimePage() {
             // console.log(data);
 
             if (data.length === 0){
-              setAlertMsg("Cell stop request.");
-              setAlertType("info");
+              setFaultTimeLoading(false);
+              setAlertMsg("Loading done.");
+              setAlertType("success");
               setAlertOpen(true);
               setConfirmButtonDisable(false);
             }
             else {
+              setFaultTimeLoading(false);
               setAlertMsg("Fault time details are displaying.");
               setAlertType("success");
               setAlertOpen(true);
@@ -189,6 +200,7 @@ export default function OperatorTimePage() {
             
           })
           .catch((error) => {
+            setFaultTimeLoading(false);
             console.log('Error: Failed query fault time detail.');
             console.log(error);
             setAlertMsg("Failed query fault time detail.");
@@ -201,8 +213,9 @@ export default function OperatorTimePage() {
       }
       else if (operatorTimeData[i].serial_number === serialNumberStr && i === 0){
         // no detail
-        setAlertMsg("Cell stop request.");
-        setAlertType("info");
+        setFaultTimeLoading(false);
+        setAlertMsg("Loading done.");
+        setAlertType("success");
         setAlertOpen(true);
         setConfirmButtonDisable(false);
         break;
@@ -224,33 +237,33 @@ export default function OperatorTimePage() {
     {
       field: 'AlarmName',
       headerName: 'Alarm Name',
-      width: 200,
+      width: 250,
       editable: false,
     },
     {
       field: 'TagDescription',
       headerName: 'Tag Description',
-      width: 450,
+      width: 500,
       editable: false,
     },
-    {
-      field: 'Occurrences',
-      headerName: 'Occurrences',
-      width: 170,
-      editable: false,
-      headerAlign: 'center',
-      align: 'center',
-      type: 'number',
-    },
-    {
-      field: 'TotalDuration',
-      headerName: 'Total Duration',
-      width: 170,
-      editable: false,
-      headerAlign: 'center',
-      align: 'center',
-      type: 'number',
-    },
+    // {
+    //   field: 'Occurrences',
+    //   headerName: 'Occurrences',
+    //   width: 170,
+    //   editable: false,
+    //   headerAlign: 'center',
+    //   align: 'center',
+    //   type: 'number',
+    // },
+    // {
+    //   field: 'TotalDuration',
+    //   headerName: 'Total Duration',
+    //   width: 170,
+    //   editable: false,
+    //   headerAlign: 'center',
+    //   align: 'center',
+    //   type: 'number',
+    // },
   ];
 
 
@@ -423,28 +436,35 @@ export default function OperatorTimePage() {
       <Dialog onClose={handleFaultTimeDetailDialogClose} open={faultTimeDetailDialogOpen} fullWidth maxWidth="xl">
         <DialogTitle>Fault Time Detail</DialogTitle>
         <Box sx={{ height: 400, p: 3 }}>
-          {faultTimeDetail.length > 0?
-            <DataGrid
-              rows={faultTimeDetail || []}
-              columns={faultTimeDetailColumns}
+          {
+            faultTimeLoading ?
 
-              density="compact"
-              // Tool Bar
-              slots={{
-                toolbar: CustomToolbar,
-              }}
-              //分页
-              pageSize={pageSize}
-              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-              rowsPerPageOptions={[50, 100]}
-              pagination
-              // checkboxSelection
-              disableSelectionOnClick
-              sx={{ ml: 2, mr: 2 }}
+              <HourglassTopIcon sx={{ color: "#666666", pt: 2, display: 'block' }} />
 
-            />
-            :
-            <p>Cell stop request.</p>
+              :
+
+              faultTimeDetail.length > 0 ?
+                <DataGrid
+                  rows={faultTimeDetail || []}
+                  columns={faultTimeDetailColumns}
+
+                  density="compact"
+                  // Tool Bar
+                  slots={{
+                    toolbar: CustomToolbar,
+                  }}
+                  //分页
+                  pageSize={pageSize}
+                  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                  rowsPerPageOptions={[50, 100]}
+                  pagination
+                  // checkboxSelection
+                  disableSelectionOnClick
+                  sx={{ ml: 2, mr: 2 }}
+
+                />
+                :
+                null
           }
         </Box>
         <DialogActions>
