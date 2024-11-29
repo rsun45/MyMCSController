@@ -42,7 +42,7 @@ export default function OperatorSummaryTimes( {refresh} ) {                    /
 
     
     label: {
-      position: 'top', // Show labels at the middle of bars
+      position: 'top', 
       style: {
         fill: '#333333', // Label text color
         stroke: 'white',
@@ -55,6 +55,13 @@ export default function OperatorSummaryTimes( {refresh} ) {                    /
       label: {
         autoHide: false,
         autoRotate: true,
+      },
+    },
+    legend: {
+      itemName:{
+        style: {
+          fontSize: 18,
+        },
       },
     },
   };

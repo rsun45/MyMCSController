@@ -183,7 +183,7 @@ export default function MaintenancePage() {
           <Grid item xs={3}>
             <div style={{display: "flex"}}>
               <h3>Duration  of Last Maintenance</h3>
-              <Button sx={{ml:2}} variant="text" onClick={()=>{ clickHistoryButton(); setDurationHistoryDialogOpen(true); }}>History</Button>
+              <Button sx={{ml:2, fontSize:20, fontWeight: "bold"}} variant="text" onClick={()=>{ clickHistoryButton(); setDurationHistoryDialogOpen(true); }}>History</Button>
             </div>
           </Grid>
         </Grid>

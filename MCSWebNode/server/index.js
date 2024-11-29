@@ -1438,13 +1438,13 @@ const generateShiftReportCSVByDateTime = async (inputDate) =>{
 
     csvStr += "All Stations Sum Fault Time (Second)\n"
     // tag names row
-    csvStr += "Tag name:"
+    csvStr += "Alarm Group:"
     for (let i=0; i<result.recordsets[0].length; i++){
       csvStr += "," + result.recordsets[0][i].tag_name ;
     }
     csvStr += "\n"
     // time row
-    csvStr += "Sum Fault Time (Second):"
+    csvStr += "Total Duration (Seconds):"
     for (let i=0; i<result.recordsets[0].length; i++){
       csvStr += "," + result.recordsets[0][i].SumFaultTime ;
     }
@@ -1553,9 +1553,38 @@ const generateShiftReportCSVByDateTime = async (inputDate) =>{
       "exec [dbo].[spFindAlarmHistory] @StartTime = '" + shiftArr[0] + "', @EndTime = '" + shiftArr[1] + "';"
     );
 
+
+    // process raw data
+    let tempAlarmGridData = [];
+    let idNum = 0;
+    let occurrenceNum = 1;
+    let totalDurationNum = 0;
+    for (const it of result.recordset) {
+      if (tempAlarmGridData.length === 0) {
+        totalDurationNum = it.DurationInSeconds;
+        tempAlarmGridData.push({ id: idNum, AlarmType: it.AlarmType, AlarmName: it.AlarmName, TagDescription: it.TagDescription, Occurrences: occurrenceNum, TotalDuration: totalDurationNum });
+        idNum++;
+      }
+      else {
+        // same tage name
+        if (tempAlarmGridData[tempAlarmGridData.length - 1].AlarmName === it.AlarmName) {
+          totalDurationNum += it.DurationInSeconds;
+          occurrenceNum++;
+          tempAlarmGridData[tempAlarmGridData.length - 1].Occurrences = occurrenceNum;
+          tempAlarmGridData[tempAlarmGridData.length - 1].TotalDuration = totalDurationNum;
+        }
+        else {
+          totalDurationNum = it.DurationInSeconds;
+          occurrenceNum = 1;
+          tempAlarmGridData.push({ id: idNum, AlarmType: it.AlarmType, AlarmName: it.AlarmName, TagDescription: it.TagDescription, Occurrences: occurrenceNum, TotalDuration: totalDurationNum });
+          idNum++;
+        }
+      }
+    }
+
     csvStr += "Alarm History\n";
     csvStr += "Alarm Type,Alarm Name,Tag Description,Occurrences,Total Duration\n";
-    for (const it of result.recordset){
+    for (const it of tempAlarmGridData){
       csvStr += it.AlarmType + "," + it.AlarmName + "," + it.TagDescription + "," + it.Occurrences + "," + it.TotalDuration ;
       csvStr += "\n";
     }
@@ -1571,7 +1600,7 @@ const generateShiftReportCSVByDateTime = async (inputDate) =>{
     console.log(err);
     return "";
   } 
-}
+};
 
 // async function printCSV () {
 //   let tempstr = await generateShiftReportCSVByDateTime(new Date("2024-05-16 13:00:00"));

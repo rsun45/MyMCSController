@@ -1,9 +1,9 @@
 [
     {
         "prod_name": "boxstep",
-        "tag_cnt": 0,
-        "pass_cnt": 0,
-        "reject_cnt": 0,
+        "tag_cnt": 692,
+        "pass_cnt": 688,
+        "reject_cnt": 4,
         "shift": "Night"
     }
 ]

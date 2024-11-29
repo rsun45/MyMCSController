@@ -445,6 +445,7 @@ export default function QueryPage() {
 
               // checkboxSelection
               disableSelectionOnClick
+              disableRowSelectionOnClick 
 
               // double click event
               // onCellDoubleClick={

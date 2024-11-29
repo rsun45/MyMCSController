@@ -21,20 +21,20 @@ function CustomToolbar() {
 }
 
 //表头
-const columns = [
-  {
-    field: 'tag_name',
-    headerName: 'Station Name',
-    width: 250,
-    editable: false,
-  },{
-    field: 'SumFaultTime',
-    headerName: 'Sum Fault Time',
-    width: 250,
-    editable: false,
-  },
+// const columns = [
+//   {
+//     field: 'tag_name',
+//     headerName: 'Station Name',
+//     width: 250,
+//     editable: false,
+//   },{
+//     field: 'SumFaultTime',
+//     headerName: 'Sum Fault Time',
+//     width: 250,
+//     editable: false,
+//   },
   
-];
+// ];
 
 export default function SumFaultTimeByStations( {refresh} ) {                    // props这里可以代表所有传过来的信息，然后用props.去调取。注意名字要和传过来的时候一致
   
@@ -67,7 +67,7 @@ export default function SumFaultTimeByStations( {refresh} ) {                   
 
       /> */}
 
-      <BarChartComp barChartData={data} xTitle={"tag_name"} yTitle={"SumFaultTime"} barColor={"#f56767"} />
+      <BarChartComp barChartData={data} xTitle={data.length>0?Object.keys(data[0])[0]:""} yTitle={data.length>0?Object.keys(data[0])[1]:""} barColor={"#f56767"} />
 
 
     </div>

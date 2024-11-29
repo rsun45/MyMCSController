@@ -659,6 +659,7 @@ export default function ResultPage() {
 
                     // checkboxSelection
                     disableSelectionOnClick
+                    disableRowSelectionOnClick 
 
                     // double click event
                     onCellDoubleClick={
@@ -707,6 +708,7 @@ export default function ResultPage() {
 
                   // checkboxSelection
                   disableSelectionOnClick
+                  disableRowSelectionOnClick 
 
                 />
             }

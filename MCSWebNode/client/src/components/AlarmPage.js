@@ -40,8 +40,12 @@ function toLocalIsoString(date) {
 export default function AlarmPage() {
   
   // grid rows
-  // const [queryPagedata, setQueryPagedata] = React.useState(null);
+  // raw data from database of alarm history
   const {alarmGridData, setAlarmGridData} = React.useContext(AllPagesContext);
+  // alarm history data grid data
+  const [processedAlarmGridData, setProcessedAlarmGridData] = React.useState([]);
+  // occurrence dialog data grid data
+  const [occurrencesGridData, setOccurrencesGridData] = React.useState([]);
   // confirm button click ability
   const [confirmButtonDisable, setConfirmButtonDisable] = React.useState(false);
   // alart
@@ -87,7 +91,39 @@ export default function AlarmPage() {
       .then((res) => res.json())
       .then((data) => {
         // console.log(data);
-        setAlarmGridData(data);
+
+        // process raw data
+        let tempAlarmGridData = [];
+        let idNum = 0;
+        let occurrenceNum = 1;
+        let totalDurationNum = 0;
+        for (const it of data){
+          if (tempAlarmGridData.length === 0){
+            totalDurationNum = it.DurationInSeconds;
+            tempAlarmGridData.push({id:idNum, AlarmType:it.AlarmType, AlarmName:it.AlarmName, TagDescription:it.TagDescription, Occurrences:occurrenceNum, TotalDuration:totalDurationNum});
+            idNum++;
+          }
+          else {
+            // same tage name
+            if (tempAlarmGridData[tempAlarmGridData.length-1].AlarmName === it.AlarmName){
+              totalDurationNum += it.DurationInSeconds;
+              occurrenceNum++;
+              tempAlarmGridData[tempAlarmGridData.length-1].Occurrences = occurrenceNum;
+              tempAlarmGridData[tempAlarmGridData.length-1].TotalDuration = totalDurationNum;
+            }
+            else {
+              totalDurationNum = it.DurationInSeconds;
+              occurrenceNum = 1;
+              tempAlarmGridData.push({id:idNum, AlarmType:it.AlarmType, AlarmName:it.AlarmName, TagDescription:it.TagDescription, Occurrences:occurrenceNum, TotalDuration:totalDurationNum});
+              idNum++;
+            }
+          }
+        }
+
+
+        setAlarmGridData(data); // raw data
+        setProcessedAlarmGridData(tempAlarmGridData);
+
         setLoadingProcess(false);
         setConfirmButtonDisable(false);
       })
@@ -122,6 +158,38 @@ export default function AlarmPage() {
     }
     getAllProjectNames();
 
+    // process raw data if alarmGridData is not null
+    if (alarmGridData.length > 0){
+      // process raw data
+      let tempAlarmGridData = [];
+      let idNum = 0;
+      let occurrenceNum = 1;
+      let totalDurationNum = 0;
+      for (const it of alarmGridData){
+        if (tempAlarmGridData.length === 0){
+          totalDurationNum = it.DurationInSeconds;
+          tempAlarmGridData.push({id:idNum, AlarmType:it.AlarmType, AlarmName:it.AlarmName, TagDescription:it.TagDescription, Occurrences:occurrenceNum, TotalDuration:totalDurationNum});
+          idNum++;
+        }
+        else {
+          // same tage name
+          if (tempAlarmGridData[tempAlarmGridData.length-1].AlarmName === it.AlarmName){
+            totalDurationNum += it.DurationInSeconds;
+            occurrenceNum++;
+            tempAlarmGridData[tempAlarmGridData.length-1].Occurrences = occurrenceNum;
+            tempAlarmGridData[tempAlarmGridData.length-1].TotalDuration = totalDurationNum;
+          }
+          else {
+            totalDurationNum = it.DurationInSeconds;
+            occurrenceNum = 1;
+            tempAlarmGridData.push({id:idNum, AlarmType:it.AlarmType, AlarmName:it.AlarmName, TagDescription:it.TagDescription, Occurrences:occurrenceNum, TotalDuration:totalDurationNum});
+            idNum++;
+          }
+        }
+      }
+
+      setProcessedAlarmGridData(tempAlarmGridData);
+    }
 
   }, []);
   // when got refresh timer
@@ -178,7 +246,7 @@ export default function AlarmPage() {
     }, {
       field: 'TagDescription',
       headerName: 'Tag Description',
-      width: 300,
+      width: 500,
       editable: false,
     }, {
       field: 'Occurrences',
@@ -191,8 +259,56 @@ export default function AlarmPage() {
       type: 'number',
     }, {
       field: 'TotalDuration',
-      headerName: 'Total Duration',
-      width: 150,
+      headerName: 'Total Duration (seconds)',
+      width: 200,
+      editable: false,
+      headerAlign: 'center',
+      align: 'center',
+      type: 'number',
+    }, 
+
+  ];
+
+  // Occurrences grid headers
+  const occurrencesColumns = [
+    {
+      field: 'AlarmType',
+      headerName: 'Alarm Type',
+      width: 200,
+      editable: false,
+    }, 
+    {
+      field: 'AlarmName',
+      headerName: 'Alarm Name',
+      width: 200,
+      editable: false,
+    }, 
+    {
+      field: 'TagDescription',
+      headerName: 'Tag Description',
+      width: 500,
+      editable: false,
+    },
+    {
+      field: 'StartTime',
+      headerName: 'Start Time',
+      width: 180,
+      editable: false,
+      type: 'dateTime',
+      valueGetter: (value) => value && new Date(value),
+    },
+    {
+      field: 'StopTime',
+      headerName: 'End Time',
+      width: 180,
+      editable: false,
+      type: 'dateTime',
+      valueGetter: (value) => value && new Date(value),
+    },
+     {
+      field: 'DurationInSeconds',
+      headerName: 'Duration (seconds)',
+      width: 200,
       editable: false,
       headerAlign: 'center',
       align: 'center',
@@ -224,6 +340,7 @@ export default function AlarmPage() {
       width: 200,
       editable: false,
       type: 'dateTime',
+      valueGetter: (value) => value && new Date(value),
     }, {
       field: 'TotalDuration',
       headerName: 'Total Duration (Minutes)',
@@ -296,7 +413,25 @@ export default function AlarmPage() {
       <Dialog onClose={handleOccurrenceDialogClose} open={occurrenceDialogOpen} fullWidth maxWidth="xl">
         <DialogTitle>Occurrence Detail</DialogTitle>
         <Box sx={{ height: 400, p: 3 }}>
-          <p>Coming soon.</p>
+          <DataGrid
+            rows={occurrencesGridData}
+            columns={occurrencesColumns}
+            density="compact"
+            slots={{
+              toolbar: CustomToolbar,
+            }}
+            //分页
+            pageSize={pageSize}
+            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+            rowsPerPageOptions={[50, 100]}
+            pagination
+
+            // checkboxSelection
+            disableSelectionOnClick
+
+            disableRowSelectionOnClick
+
+          />
         </Box>
         <DialogActions>
           <Button onClick={handleOccurrenceDialogClose} autoFocus>
@@ -356,7 +491,7 @@ export default function AlarmPage() {
             }}
           >
             <DataGrid
-              rows={alarmGridData}
+              rows={processedAlarmGridData}
               columns={columns}
               density="compact"
               // autoHeight
@@ -378,14 +513,27 @@ export default function AlarmPage() {
               // checkboxSelection
               disableSelectionOnClick
 
+              disableRowSelectionOnClick 
+
               // click event, show fault time detail
               onCellClick={
                 (params) => {
                   // console.log(params);
                   if (params.field === "Occurrences") {
-
+                    // find occurrences grid data from raw data
+                    let tempOccurrencesGridData = [];
+                    let findStart = false;
+                    for (const it of alarmGridData){
+                      if (it.AlarmName === params.row.AlarmName){
+                        findStart = true;
+                        tempOccurrencesGridData.push(it);
+                      }
+                      else if (findStart){
+                        break;
+                      }
+                    }
+                    setOccurrencesGridData(tempOccurrencesGridData);
                     setOccurrenceDialogOpen(true);
-
                   }
                 }
               }
@@ -418,6 +566,8 @@ export default function AlarmPage() {
 
           // checkboxSelection
           disableSelectionOnClick
+
+          disableRowSelectionOnClick 
 
 
         />

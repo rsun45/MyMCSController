@@ -1,5 +1,38 @@
 [
     {
+        "shiftTitle": "Morning shift from 2024-11-29 07:00:00 to 2024-11-29 14:59:59",
+        "records": [
+            {
+                "TagName": "MWR_1.Tip_Change_CTR",
+                "MaintenanceTime": 8102
+            },
+            {
+                "TagName": "MWR_2.Tip_Change_CTR",
+                "MaintenanceTime": 5615
+            },
+            {
+                "TagName": "OP30_SMG.Maint_Counter",
+                "MaintenanceTime": 863
+            },
+            {
+                "TagName": "OP35_SMG.Maint_Counter",
+                "MaintenanceTime": 4344
+            },
+            {
+                "TagName": "OP40_SMG.Maint_Counter",
+                "MaintenanceTime": 9000
+            },
+            {
+                "TagName": "OP45_SMG.Maint_Counter",
+                "MaintenanceTime": 3139
+            },
+            {
+                "TagName": "OP50_SMG.Maint_Counter",
+                "MaintenanceTime": 4273
+            }
+        ]
+    },
+    {
         "shiftTitle": "Afternoon shift from 2024-11-20 15:00:00 to 2024-11-20 22:59:59",
         "records": [
             {

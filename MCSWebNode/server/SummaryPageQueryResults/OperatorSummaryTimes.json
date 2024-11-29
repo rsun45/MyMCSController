@@ -1,1 +1,66 @@
-[]
+[
+    {
+        "Date": "2024-11-18T00:00:00.000Z",
+        "Hour": 15,
+        "TotalOperatorTime": 966,
+        "AverageOperatorTime": 48.3,
+        "TotalOverDesignTime": 617,
+        "TotalOverDesignTimeWithoutFault": 582
+    },
+    {
+        "Date": "2024-11-18T00:00:00.000Z",
+        "Hour": 16,
+        "TotalOperatorTime": 495,
+        "AverageOperatorTime": 15,
+        "TotalOverDesignTime": 0,
+        "TotalOverDesignTimeWithoutFault": 0
+    },
+    {
+        "Date": "2024-11-18T00:00:00.000Z",
+        "Hour": 17,
+        "TotalOperatorTime": 724,
+        "AverageOperatorTime": 16.454545454545453,
+        "TotalOverDesignTime": 32,
+        "TotalOverDesignTimeWithoutFault": 25
+    },
+    {
+        "Date": "2024-11-18T00:00:00.000Z",
+        "Hour": 18,
+        "TotalOperatorTime": 1929,
+        "AverageOperatorTime": 43.84090909090909,
+        "TotalOverDesignTime": 1127,
+        "TotalOverDesignTimeWithoutFault": 1127
+    },
+    {
+        "Date": "2024-11-18T00:00:00.000Z",
+        "Hour": 19,
+        "TotalOperatorTime": 1111,
+        "AverageOperatorTime": 18.21311475409836,
+        "TotalOverDesignTime": 9,
+        "TotalOverDesignTimeWithoutFault": 9
+    },
+    {
+        "Date": "2024-11-18T00:00:00.000Z",
+        "Hour": 20,
+        "TotalOperatorTime": 1086,
+        "AverageOperatorTime": 24.681818181818183,
+        "TotalOverDesignTime": 56,
+        "TotalOverDesignTimeWithoutFault": 56
+    },
+    {
+        "Date": "2024-11-18T00:00:00.000Z",
+        "Hour": 21,
+        "TotalOperatorTime": 1077,
+        "AverageOperatorTime": 19.232142857142858,
+        "TotalOverDesignTime": 25,
+        "TotalOverDesignTimeWithoutFault": 17
+    },
+    {
+        "Date": "2024-11-18T00:00:00.000Z",
+        "Hour": 22,
+        "TotalOperatorTime": 708,
+        "AverageOperatorTime": 21.454545454545453,
+        "TotalOverDesignTime": 72,
+        "TotalOverDesignTimeWithoutFault": 35
+    }
+]

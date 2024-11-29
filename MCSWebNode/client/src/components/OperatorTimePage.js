@@ -460,6 +460,7 @@ export default function OperatorTimePage() {
                   pagination
                   // checkboxSelection
                   disableSelectionOnClick
+                  disableRowSelectionOnClick 
                   sx={{ ml: 2, mr: 2 }}
 
                 />
@@ -571,6 +572,7 @@ export default function OperatorTimePage() {
             }
           }
 
+          disableRowSelectionOnClick 
 
         />
 

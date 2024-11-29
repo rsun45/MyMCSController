@@ -1,1 +1,37 @@
-[]
+[
+    {
+        "AlarmGroup": "MWR_1",
+        "TotalDuration": 1732,
+        "id": 0
+    },
+    {
+        "AlarmGroup": "MWR_2",
+        "TotalDuration": 2337,
+        "id": 1
+    },
+    {
+        "AlarmGroup": "OP35",
+        "TotalDuration": 252,
+        "id": 2
+    },
+    {
+        "AlarmGroup": "OP60",
+        "TotalDuration": 204,
+        "id": 3
+    },
+    {
+        "AlarmGroup": "Side_A",
+        "TotalDuration": 47,
+        "id": 4
+    },
+    {
+        "AlarmGroup": "Side_B",
+        "TotalDuration": 146,
+        "id": 5
+    },
+    {
+        "AlarmGroup": "System",
+        "TotalDuration": 2648,
+        "id": 6
+    }
+]
