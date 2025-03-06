@@ -334,8 +334,8 @@ const saveAverageCycleTimeByStations = async() => {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
 
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     
@@ -400,8 +400,8 @@ const saveSumFaultTimeByStations = async () => {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
 
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 10:00:00"));
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date());
     console.log(shiftArr);
 
     
@@ -685,10 +685,10 @@ const saveOperatorSummaryTimes = async () => {
     // make sure that any items are correctly URL encoded in the connection string
     await sql.connect(config);
 
-    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 14:00:00"));
-    let inputDT = new Date();
-    inputDT.setHours(inputDT.getHours());
-    let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDT);
+    let shiftArr = shiftCalculator.getShiftTimeStrByDate(new Date("2024-05-21 14:00:00"));
+    // let inputDT = new Date();
+    // inputDT.setHours(inputDT.getHours());
+    // let shiftArr = shiftCalculator.getShiftTimeStrByDate(inputDT);
     console.log(shiftArr);
 
     const time1 = new Date();

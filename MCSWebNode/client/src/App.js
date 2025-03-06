@@ -68,6 +68,7 @@ function App() {
 
   return (
     <Router>
+      <div style={{ height:"100vh", display:"flex", flexDirection:"column"}}>
       <TopBar />
       <SectionTabs />
       <AllPagesContext.Provider value={{ resultPageData, setResultPageData, queryPagedata, setQueryPagedata, 
@@ -92,6 +93,7 @@ function App() {
 
         </Routes>
       </AllPagesContext.Provider>
+      </div>
     </Router>
 
   );

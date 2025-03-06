@@ -1,7 +1,10 @@
 import Box from '@mui/material/Box';
 import * as React from 'react';
 // import Graph from './Graph';
-import Paper from '@mui/material/Paper';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Drawer from '@mui/material/Drawer';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -24,6 +27,51 @@ import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import FlowMeter from './machine-meters/FlowMeter';
+import TemperatureMeter from './machine-meters/TemperatureMeter';
+import HumidityMeter from './machine-meters/HumidityMeter';
+import PowerMeter from './machine-meters/PowerMeter';
+import TemperatureRecordsChart from './machine-meters/TemperatureRecordsChart';
+import FlowRecordsChart from './machine-meters/FlowRecordsChart';
+import HumidityRecordsChart from './machine-meters/HumidityRecordsChart';
+import PowerRecordsChart from './machine-meters/PowerRecordsChart';
+import CircularProgress from '@mui/material/CircularProgress';
+import Chip from '@mui/material/Chip';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AnnouncementIcon from '@mui/icons-material/Announcement';
+
+
+function CircularProgressWithLabel(props) {
+    return (
+      <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+        <CircularProgress variant="determinate" {...props} />
+        <Box
+          sx={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            position: 'absolute',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography
+            component="div"
+            variant="body1"
+            sx={{ color: 'text.secondary' }}
+          >
+            {`${Math.round(props.value)}%`}
+          </Typography>
+        </Box>
+      </Box>
+    );
+  }
 
 export default function Summary(){
 
@@ -53,7 +101,8 @@ export default function Summary(){
         .then((data) => {
             // console.log(data);
             setProject(data.result);
-            setCurrentProject(data.result[data.currentLineIndex].label);
+            // setCurrentProject(data.result[data.currentLineIndex].label);
+            setCurrentProject("Air compressor 1");
             setRefreshTimer(Number(data.refreshTimer));
         });    
         }
@@ -219,33 +268,8 @@ export default function Summary(){
 
     return (
         <div
-        // style={{backgroundColor:"#ededed", width:"100%", height:"90vh", marginTop:-15, paddingTop: 15}}
+            style={{ flex: "1", display:"flex", flexDirection:"column" }}
         >
-
-
-            <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={openMenu}
-                onClose={handleCloseMenu}
-                MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                }}
-            >
-                <MenuItem onClick={handleMenuItem1Click}>Sum Fault Time</MenuItem>
-                <MenuItem onClick={handleMenuItem2Click}>Average Cycle Time</MenuItem>
-                <MenuItem onClick={handleMenuItem3Click}>Operator Summary Times</MenuItem>
-                <MenuItem onClick={handleMenuItem4Click}>Current Shift Pass Fail Counts</MenuItem>
-                <MenuItem onClick={handleMenuItem8Click}>Last Shift Pass Fail Counts</MenuItem>
-                <MenuItem onClick={handleMenuItem9Click}>Last Two Shift Pass Fail Counts</MenuItem>
-                <MenuItem onClick={handleMenuItem5Click}>Running Performance</MenuItem>
-                <MenuItem onClick={handleMenuItem6Click}>Maintenance</MenuItem>
-                <MenuItem onClick={handleMenuItem7Click}>Active Alarm</MenuItem>
-            </Menu>
-
-
-
-
             <Box
                 display="flex"
                 alignItems="center"
@@ -254,45 +278,373 @@ export default function Summary(){
                 <Autocomplete
                     disablePortal
                     id="project_name"
-                    options={project.map((option) => option)}
+                    // options={project.map((option) => option)}
+                    options={["Air compressor 1", "Air compressor 2", "Air compressor 3"]}
                     value={currentProject}
-                    sx={{ width: 400, margin: "auto"}}
-                    renderInput={(params) => <TextField required {...params} label="Project Name"  />}
+                    sx={{ width: 400, margin: "auto", pt: 1 }}
+                    renderInput={(params) => <TextField required {...params} label="Air Compressors" />}
                     isOptionEqualToValue={(option, value) => option.label === value}
                     // renderOption={(props, item) => (
                     //     <li {...props} key={item.id}>
                     //     <ListItemText>{item.label}</ListItemText>
                     //     </li>
                     // )}
-                    
+
                     onChange={(event, newValue) => {
                         setCurrentProject(newValue);
-                        changeProject(newValue.label);
+                        // changeProject(newValue.label);
                         setRefresh(!refresh);
                     }}
 
                 />
             </Box>
-            {/* <Box sx={{
-                display: 'flex',
-                '& > :not(style)': {
-                  m: 3,
-                  width: '100%',
-                  height: '350px',
-                },
-            }}>
-                <Paper variant="outlined">
-                    <h3>All Stations Sum Fault Time</h3>
-                    <OptionalFunction1 refresh={refresh}/>
-                </Paper>
-                <Paper variant="outlined">
-                    <h3>All Stations Average Cycle Time</h3>
-                    <OptionalFunction2 refresh={refresh}/>
-                </Paper>
-            </Box> */}
+            <div
+                style={{ flex: "1", backgroundColor: " #f2f6fa", borderTop: "1px solid #dbdbdb", marginTop:"15px"}}
+            >
 
 
-            <Box sx={{ height: "40vh", mb:4}}>
+                <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={openMenu}
+                    onClose={handleCloseMenu}
+                    MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                    }}
+                >
+                    <MenuItem onClick={handleMenuItem1Click}>Sum Fault Time</MenuItem>
+                    <MenuItem onClick={handleMenuItem2Click}>Average Cycle Time</MenuItem>
+                    <MenuItem onClick={handleMenuItem3Click}>Operator Summary Times</MenuItem>
+                    <MenuItem onClick={handleMenuItem4Click}>Current Shift Pass Fail Counts</MenuItem>
+                    <MenuItem onClick={handleMenuItem8Click}>Last Shift Pass Fail Counts</MenuItem>
+                    <MenuItem onClick={handleMenuItem9Click}>Last Two Shift Pass Fail Counts</MenuItem>
+                    <MenuItem onClick={handleMenuItem5Click}>Running Performance</MenuItem>
+                    <MenuItem onClick={handleMenuItem6Click}>Maintenance</MenuItem>
+                    <MenuItem onClick={handleMenuItem7Click}>Active Alarm</MenuItem>
+                </Menu>
+
+
+
+
+
+
+
+
+                {/* air compressor dashboard */}
+                {/* <Box sx={{ height: "12vh", mb: 4, ml: 1, overflow: "auto" }}>
+                    <Grid
+                        container columns={4} sx={{ height: 0.85, }} justifyContent="center" alignItems="center">
+                        <Grid item xs={1} sx={{ height: 0.85, }}>
+                            <TemperatureMeter />
+
+                        </Grid>
+                        <Grid item xs={1} sx={{ height: 0.85, }}>
+                            <AirCompressorMeters />
+
+                        </Grid>
+                        <Grid item xs={1} sx={{ height: 0.85, }}>
+                            <HumidityMeter />
+
+                        </Grid>
+                        <Grid item xs={1} sx={{ height: 0.85, }}>
+                            <VoltageMeter />
+
+                        </Grid>
+                    </Grid>
+                </Box> */}
+
+                <Grid container spacing={3} sx={{ height: 1, p: 3 }}>
+
+
+                    <Grid
+                        item
+                        xs={6}
+                        sx={{
+                            height: "20%",
+                        }}
+                    >
+                        <div style={{ height: "100%" }}>
+                            <Card sx={{ height: 1, borderRadius: 4, overflow: "auto" }}>
+                                <CardHeader sx={{height:18}}
+                                    title={currentProject}
+                                />
+                                <CardContent >
+
+                                    <div style={{ display: "flex" }}>
+                                        <Box>
+                                            <Typography variant="body2" sx={{ color: 'text.secondary', width:280 }}>
+                                                Hours Left to Service: 1500 of 2000 hours
+                                            </Typography>
+                                            <CircularProgressWithLabel variant="determinate" value={25} size={45} />
+                                        </Box>
+
+                                        <Divider orientation="vertical" variant="middle" flexItem sx={{m:2}}/>
+
+                                        <Box>
+                                            <Chip icon={<StopCircleIcon />} label="Remote Halt: OFF" variant="outlined" sx={{color:"rgb(62, 62, 62)", m:"2px"}} />
+                                            <Chip icon={<PlayCircleOutlineIcon />} label="Timer Control: ON" variant="outlined" color="success" sx={{m:"2px"}} />
+                                            <Chip icon={<StopCircleIcon />} label="Auto Restart: OFF" variant="outlined" sx={{color:"rgb(62, 62, 62)", m:"2px"}} />
+                                            <Chip icon={<AccessTimeIcon />} label="Loaded Hours: 144.0" variant="outlined" color="info" sx={{m:"2px"}} />
+                                            <Chip icon={<AccessTimeIcon />} label="Total Run Hours: 164.0" variant="outlined" color="info" sx={{m:"2px"}} />
+                                        </Box>
+
+                                    </div>
+                                    
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </Grid>
+                    <Grid
+                        item
+                        xs={6}
+                        sx={{
+                            height: "20%",
+                        }}
+                    >
+                        <div style={{ height: "100%" }}>
+                            <Card sx={{ height: 1, borderRadius: 4, overflow: "auto" }}>
+                                <CardHeader sx={{height:18}}
+                                    title="Alarms"
+                                />
+                                <CardContent >
+
+                                    <div style={{ display: "flex" }}>
+                                        <Box>
+                                            <Typography variant="body1" sx={{ color: 'text.secondary', width: 220 }}>
+                                                Active Alarms:
+                                            </Typography>
+
+                                            <Chip icon={<AnnouncementIcon />} label="Over Temperature" variant="filled" color="error" sx={{ m: "2px" }} />
+                                        </Box>
+
+                                        <Divider orientation="vertical" variant="middle" flexItem sx={{ m: 2 }} />
+
+                                        <Box sx={{display:"flow"}}>
+                                            <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                                                Alarm History:
+                                            </Typography>
+
+                                            <Chip icon={<AnnouncementIcon />} label="Power Falure Occurred | 2025-03-06 14:05:00" variant="filled" color="info" sx={{ m: "2px" }} />
+                                            <Chip icon={<AnnouncementIcon />} label="Alr filier servce required | 2025-03-06 09:30:00" variant="filled" color="info" sx={{ m: "2px" }} />
+                                            <Chip icon={<AnnouncementIcon />} label="Oil hlter servce required | 2025-03-05 19:00:00" variant="filled" color="info" sx={{ m: "2px" }} />
+                                        </Box>
+
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </Grid>
+
+
+
+
+                    <Grid
+                        item
+                        xs={2}
+                        sx={{
+                            height: "40%",
+                        }}
+                    >
+                        <div style={{ height: "100%" }}>
+                            <Card sx={{ height: 1, borderRadius: 4, overflow: "auto" }}>
+                                <CardHeader
+                                    title="Temperature"
+                                />
+                                <CardContent sx={{ height: "70%" }}>
+
+                                    <TemperatureMeter />
+
+                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </Grid>
+                    <Grid
+                        item
+                        xs={4}
+                        sx={{
+                            height: "40%",
+                        }}
+                    >
+                        <div style={{ height: "100%" }}>
+                            <Card sx={{ height: 1, borderRadius: 4, overflow: "auto" }}>
+                                <CardHeader
+                                    title="Temperature Chart"
+                                />
+                                <CardContent sx={{ height: "70%" }}>
+
+                                    <TemperatureRecordsChart />
+
+                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </Grid>
+
+                    <Grid
+                        item
+                        xs={2}
+                        sx={{
+                            height: "40%",
+                        }}
+                    >
+                        <div style={{ height: "100%" }}>
+                            <Card sx={{ height: 1, borderRadius: 4, overflow: "auto" }}>
+                                <CardHeader
+                                    title="Flow"
+                                />
+                                <CardContent sx={{ height: "70%" }}>
+
+                                    <FlowMeter />
+
+                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </Grid>
+                    <Grid
+                        item
+                        xs={4}
+                        sx={{
+                            height: "40%",
+                        }}
+                    >
+                        <div style={{ height: "100%" }}>
+                            <Card sx={{ height: 1, borderRadius: 4, overflow: "auto" }}>
+                                <CardHeader
+                                    title="Flow Chart"
+                                />
+                                <CardContent sx={{ height: "70%" }}>
+
+                                    <FlowRecordsChart />
+
+                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </Grid>
+
+
+
+
+
+                    <Grid
+                        item
+                        xs={2}
+                        sx={{
+                            height: "40%",
+                        }}
+                    >
+                        <div style={{ height: "100%" }}>
+                            <Card sx={{ height: 1, borderRadius: 4, overflow: "auto" }}>
+                                <CardHeader
+                                    title="Humidity"
+                                />
+                                <CardContent sx={{ height: "70%" }}>
+
+                                    <HumidityMeter />
+
+                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </Grid>
+                    <Grid
+                        item
+                        xs={4}
+                        sx={{
+                            height: "40%",
+                        }}
+                    >
+                        <div style={{ height: "100%" }}>
+                            <Card sx={{ height: 1, borderRadius: 4, overflow: "auto" }}>
+                                <CardHeader
+                                    title="Humidity Chart"
+                                />
+                                <CardContent sx={{ height: "70%" }}>
+
+                                    <HumidityRecordsChart />
+
+                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </Grid>
+
+                    <Grid
+                        item
+                        xs={2}
+                        sx={{
+                            height: "40%",
+                        }}
+                    >
+                        <div style={{ height: "100%" }}>
+                            <Card sx={{ height: 1, borderRadius: 4, overflow: "auto" }}>
+                                <CardHeader
+                                    title="Power"
+                                />
+                                <CardContent sx={{ height: "70%" }}>
+
+                                    <PowerMeter />
+
+                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </Grid>
+                    <Grid
+                        item
+                        xs={4}
+                        sx={{
+                            height: "40%",
+                        }}
+                    >
+                        <div style={{ height: "100%" }}>
+                            <Card sx={{ height: 1, borderRadius: 4, overflow: "auto" }}>
+                                <CardHeader
+                                    title="Power Chart"
+                                />
+                                <CardContent sx={{ height: "70%" }}>
+
+                                    <PowerRecordsChart />
+
+                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </Grid>
+
+
+
+                </Grid>
+
+
+
+
+                
+
+
+
+
+
+
+                {/* <Box sx={{ height: "40vh", mb:4}}>
                 <Grid
                     container spacing={4} columns={2} sx={{ p: 2 }} justifyContent="center" alignItems="center">
                     <Grid item xs={1} style={{ justifyContent: "center" }} sx={{ height: "40vh", }}>
@@ -303,7 +655,6 @@ export default function Summary(){
                             </IconButton>
                         </div>
                         { getGraphCompByCookie(cookies.summaryPageChoices["Graph1"].name) }
-                        {/* <OptionalFunction1 refresh={refresh} /> */}
                     </Grid>
                     <Grid item xs={1} style={{ textAlign: "center" }}sx={{ height: "40vh",}}>
                         <div style={{display:"flex", justifyContent: "center" }}>
@@ -313,13 +664,12 @@ export default function Summary(){
                             </IconButton>
                         </div>
                         { getGraphCompByCookie(cookies.summaryPageChoices["Graph2"].name) }
-                        {/* <OptionalFunction2 refresh={refresh} /> */}
                     </Grid>
                 </Grid>
             </Box>
             
             
-            <Box sx={{ height: "40vh", pr:2}}>
+            <Box sx={{ height: "35vh", pr:2}}>
                 <Grid
                     container spacing={4} columns={4} sx={{ height: "100%"}} >
                     <Grid item xs={1} >
@@ -331,14 +681,9 @@ export default function Summary(){
                         </div>
                         { getGraphCompByCookie(cookies.summaryPageChoices["Graph3"].name) }
                         
-                        {/* <PieChartCurrentShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh} /> */}
                         
                     </Grid>
-                    {/* <Grid item xs={1}>
-                    <PieChartLastShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/>
-                </Grid> */}
                     <Grid item xs={1} >
-                        {/* <PieChartLastTwoShift pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData} refresh={refresh}/> */}
 
                         <div style={{display:"flex", justifyContent: "center" }}>
                             <h3>{cookies.summaryPageChoices["Graph4"].header}</h3>
@@ -348,17 +693,10 @@ export default function Summary(){
                         </div>
                         { getGraphCompByCookie(cookies.summaryPageChoices["Graph4"].name) }
 
-                        {/* <PieChartRunningPerformance refresh={refresh} /> */}
                     </Grid>
-                    {/* <Grid item xs={1}>
-                    <PieChartYesterday pieToggleDrawer={pieToggleDrawer} setShiftData={setShiftData}/>
-                </Grid> */}
 
 
                     <Grid item xs={1}>
-                            {/* <div style={{ display: "flex", justifyContent: "center" }}>
-                                <h3>Maintenance</h3>
-                            </div> */}
                         <div style={{ display: "flex", justifyContent: "center" }}>
                             <h3>{cookies.summaryPageChoices["Graph5"].header}</h3>
                             <IconButton onClick={(event) => handleClickOpenMenu(event, "Graph5")}>
@@ -367,17 +705,12 @@ export default function Summary(){
                         </div>
                         {getGraphCompByCookie(cookies.summaryPageChoices["Graph5"].name)}
 
-                        {/* <MaintenanceSummaryComp refresh={refresh} /> */}
 
                     </Grid>
 
 
 
                     <Grid item xs={1}>
-                            {/* <div style={{ display: "flex", justifyContent: "center" }}>
-                                <h3>Active Alarm</h3>
-                            </div>
-                            <ActiveAlarmSummaryComp refresh={refresh} /> */}
 
                         <div style={{ display: "flex", justifyContent: "center" }}>
                             <h3>{cookies.summaryPageChoices["Graph6"].header}</h3>
@@ -391,9 +724,9 @@ export default function Summary(){
 
 
                 </Grid>
-            </Box>
+            </Box> */}
 
-            {/* <Drawer
+                {/* <Drawer
                 anchor='bottom'
                 open={drawer}
                 onClose={toggleDrawer()}
@@ -407,6 +740,7 @@ export default function Summary(){
             </Drawer>  */}
 
 
+            </div>
         </div>
     );
 }
