@@ -587,7 +587,7 @@ export default function ResultPage() {
   return (
 
     /* 数据表格部分 */
-    <div style={{ height: '83vh', width: '100%', }}>
+    <div style={{ height: '83vh', width: '100%', paddingTop:"15px" }}>
       <Snackbar open={alertOpen} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} >
         <Alert onClose={handleAlertClose} severity={alertType}>
           {alertMsg}

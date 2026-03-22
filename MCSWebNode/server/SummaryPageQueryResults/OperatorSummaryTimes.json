@@ -1,66 +1,66 @@
 [
     {
-        "Date": "2024-11-18T00:00:00.000Z",
-        "Hour": 15,
-        "TotalOperatorTime": 966,
-        "AverageOperatorTime": 48.3,
-        "TotalOverDesignTime": 617,
-        "TotalOverDesignTimeWithoutFault": 582
+        "Date": "2024-05-21T00:00:00.000Z",
+        "Hour": 7,
+        "TotalOperatorTime": 2177,
+        "AverageOperatorTime": 49.47727272727273,
+        "TotalOverDesignTime": 1001,
+        "TotalOverDesignTimeWithoutFault": 242
     },
     {
-        "Date": "2024-11-18T00:00:00.000Z",
-        "Hour": 16,
-        "TotalOperatorTime": 495,
-        "AverageOperatorTime": 15,
-        "TotalOverDesignTime": 0,
-        "TotalOverDesignTimeWithoutFault": 0
+        "Date": "2024-05-21T00:00:00.000Z",
+        "Hour": 8,
+        "TotalOperatorTime": 717,
+        "AverageOperatorTime": 25.607142857142858,
+        "TotalOverDesignTime": 4,
+        "TotalOverDesignTimeWithoutFault": 4
     },
     {
-        "Date": "2024-11-18T00:00:00.000Z",
-        "Hour": 17,
-        "TotalOperatorTime": 724,
-        "AverageOperatorTime": 16.454545454545453,
-        "TotalOverDesignTime": 32,
-        "TotalOverDesignTimeWithoutFault": 25
+        "Date": "2024-05-21T00:00:00.000Z",
+        "Hour": 9,
+        "TotalOperatorTime": 1514,
+        "AverageOperatorTime": 24.81967213114754,
+        "TotalOverDesignTime": 91,
+        "TotalOverDesignTimeWithoutFault": 82
     },
     {
-        "Date": "2024-11-18T00:00:00.000Z",
-        "Hour": 18,
-        "TotalOperatorTime": 1929,
-        "AverageOperatorTime": 43.84090909090909,
-        "TotalOverDesignTime": 1127,
-        "TotalOverDesignTimeWithoutFault": 1127
+        "Date": "2024-05-21T00:00:00.000Z",
+        "Hour": 10,
+        "TotalOperatorTime": 1285,
+        "AverageOperatorTime": 22.54385964912281,
+        "TotalOverDesignTime": 5,
+        "TotalOverDesignTimeWithoutFault": 5
     },
     {
-        "Date": "2024-11-18T00:00:00.000Z",
-        "Hour": 19,
-        "TotalOperatorTime": 1111,
-        "AverageOperatorTime": 18.21311475409836,
-        "TotalOverDesignTime": 9,
-        "TotalOverDesignTimeWithoutFault": 9
+        "Date": "2024-05-21T00:00:00.000Z",
+        "Hour": 11,
+        "TotalOperatorTime": 1808,
+        "AverageOperatorTime": 28.25,
+        "TotalOverDesignTime": 63,
+        "TotalOverDesignTimeWithoutFault": 52
     },
     {
-        "Date": "2024-11-18T00:00:00.000Z",
-        "Hour": 20,
-        "TotalOperatorTime": 1086,
-        "AverageOperatorTime": 24.681818181818183,
-        "TotalOverDesignTime": 56,
-        "TotalOverDesignTimeWithoutFault": 56
+        "Date": "2024-05-21T00:00:00.000Z",
+        "Hour": 12,
+        "TotalOperatorTime": 1435,
+        "AverageOperatorTime": 23.14516129032258,
+        "TotalOverDesignTime": 18,
+        "TotalOverDesignTimeWithoutFault": 4
     },
     {
-        "Date": "2024-11-18T00:00:00.000Z",
-        "Hour": 21,
-        "TotalOperatorTime": 1077,
-        "AverageOperatorTime": 19.232142857142858,
-        "TotalOverDesignTime": 25,
-        "TotalOverDesignTimeWithoutFault": 17
+        "Date": "2024-05-21T00:00:00.000Z",
+        "Hour": 13,
+        "TotalOperatorTime": 1288,
+        "AverageOperatorTime": 28.622222222222224,
+        "TotalOverDesignTime": 94,
+        "TotalOverDesignTimeWithoutFault": 85
     },
     {
-        "Date": "2024-11-18T00:00:00.000Z",
-        "Hour": 22,
-        "TotalOperatorTime": 708,
-        "AverageOperatorTime": 21.454545454545453,
-        "TotalOverDesignTime": 72,
-        "TotalOverDesignTimeWithoutFault": 35
+        "Date": "2024-05-21T00:00:00.000Z",
+        "Hour": 14,
+        "TotalOperatorTime": 1072,
+        "AverageOperatorTime": 28.972972972972972,
+        "TotalOverDesignTime": 97,
+        "TotalOverDesignTimeWithoutFault": 96
     }
 ]

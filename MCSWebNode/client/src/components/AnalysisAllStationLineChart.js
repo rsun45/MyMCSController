@@ -236,7 +236,7 @@ export default function AnalysisAllStationLineChart() {
 
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', paddingTop:"15px" }}>
       
       <Snackbar open={alertOpen} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} >
         <Alert onClose={handleAlertClose} severity={alertType}>

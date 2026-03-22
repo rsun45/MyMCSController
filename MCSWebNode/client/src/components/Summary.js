@@ -268,7 +268,7 @@ export default function Summary(){
 
     return (
         <div
-            style={{ flex: "1", display:"flex", flexDirection:"column" }}
+            style={{ flex: "1", display:"flex", flexDirection:"column", paddingTop:"10px" }}
         >
             <Box
                 display="flex"

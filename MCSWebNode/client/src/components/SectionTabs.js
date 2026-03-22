@@ -46,6 +46,9 @@ import './SectionTabs.css';
       else if (currentTab === "maintenance"){
         currentTab = 'MaintenancePage';
       }
+      else if (currentTab === "Schedule"){
+        currentTab = 'SchedulePage';
+      }
       else {
         currentTab = 'SummaryPage';
       }
@@ -55,9 +58,10 @@ import './SectionTabs.css';
     }, []);
   
     return (
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', marginBottom: 2, }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', marginBottom: 0, }}>
         <Tabs value={value.activeTab} onChange={handleChange} aria-label="navigation bar" >
           <Tab sx={value.activeTab==="SummaryPage"?{fontWeight: 'bold', }:{}} label="Summary" value="SummaryPage" component={Link} to={"/"} />
+          <Tab sx={value.activeTab==="SchedulePage"?{fontWeight: 'bold', }:{}} label="Schedule" value="SchedulePage" component={Link} to={"/schedule"} />
           <Tab sx={value.activeTab==="ResultPage"?{fontWeight: 'bold', }:{}} label="Data" value="ResultPage" component={Link} to={"/result"} />
           {/* <Tab sx={value.activeTab==="QueryPage"?{fontWeight: 'bold', }:{}} label="Query" value="QueryPage" component={Link} to={"/query"} /> */}
           <Tab sx={value.activeTab==="AnalysisPage"?{fontWeight: 'bold', }:{}} label="Analysis" value="AnalysisPage" component={Link} to={"/analysis"} />
